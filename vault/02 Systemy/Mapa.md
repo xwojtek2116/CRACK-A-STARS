@@ -13,3 +13,5 @@ tags: [system]
 - **Niebo**: skybox z mgławicą, 2–3 wielkie planety, `Atmosphere` fioletowo-niebieska.
 - Granice: niewidzialne ściany + kopuła pola siłowego.
 - Blockout w Studio (dzień 2), finalne propsy z Blendera (dzień 8). Zapis `.rbxm` w `game/assets/map/`.
+
+**Blockout (T03, 2026-11-07):** hub r ≤ 110, działki `Workspace.Plots/Plot_1..8` na r=300, strefy `Workspace.Map.Zones.<Theme>.LandingZone` (tag `StarLandingZone`, atrybut `Theme`) na r=600, granice r=790 / y=400. Szczegóły: [[2026-11-07 Blockout mapy]]. Zrzut: ![[T03 blockout z gory.jpg]]
