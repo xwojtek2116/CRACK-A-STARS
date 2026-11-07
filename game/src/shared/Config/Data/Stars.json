@@ -1,11 +1,87 @@
 {
-  "order": ["Dust", "Bright", "Nova", "Giant", "Supernova"],
+  "order": [
+    "Small",
+    "Medium",
+    "Large",
+    "Huge",
+    "Supernova"
+  ],
   "classes": {
-    "Dust":      { "displayName": "Dust Star",  "size": 6,   "hp": 200,    "intervalMin": 45,  "intervalMax": 90,   "lifetime": 120, "lootRolls": 1, "luck": 1.0, "minShare": 0.0,  "zones": 1, "warning": 8,  "themes": { "Lava": 40, "Frost": 35, "Nebula": 20, "Diamond": 5 } },
-    "Bright":    { "displayName": "Bright Star","size": 12,  "hp": 1500,   "intervalMin": 120, "intervalMax": 180,  "lifetime": 180, "lootRolls": 1, "luck": 1.5, "minShare": 0.05, "zones": 1, "warning": 10, "themes": { "Lava": 30, "Frost": 30, "Nebula": 25, "Diamond": 10, "Toxic": 5 } },
-    "Nova":      { "displayName": "Nova",       "size": 22,  "hp": 8000,   "intervalMin": 300, "intervalMax": 300,  "lifetime": 240, "lootRolls": 2, "luck": 2.5, "minShare": 0.05, "zones": 3, "warning": 15, "themes": { "Lava": 20, "Frost": 20, "Nebula": 25, "Diamond": 18, "Toxic": 12, "Solar": 5 } },
-    "Giant":     { "displayName": "Giant Star", "size": 40,  "hp": 60000,  "intervalMin": 600, "intervalMax": 600,  "lifetime": 300, "lootRolls": 3, "luck": 4.0, "minShare": 0.02, "zones": 6, "warning": 20, "themes": { "Nebula": 25, "Diamond": 25, "Toxic": 25, "Solar": 25 } },
-    "Supernova": { "displayName": "Supernova",  "size": 70,  "hp": 400000, "intervalMin": 3600,"intervalMax": 3600, "lifetime": 420, "lootRolls": 5, "luck": 8.0, "minShare": 0.01, "zones": 10,"warning": 30, "themes": { "Solar": 40, "Void": 60 } }
+    "Small": {
+      "displayName": "Small",
+      "size": 6,
+      "hp": 250,
+      "intervalMin": 40,
+      "intervalMax": 80,
+      "lifetime": 120,
+      "lootRolls": 1,
+      "luck": 1.0,
+      "minShare": 0.0,
+      "zones": 1,
+      "warning": 8,
+      "rareTypeBoost": 1.0,
+      "event": false
+    },
+    "Medium": {
+      "displayName": "Medium",
+      "size": 12,
+      "hp": 2000,
+      "intervalMin": 100,
+      "intervalMax": 160,
+      "lifetime": 180,
+      "lootRolls": 1,
+      "luck": 1.6,
+      "minShare": 0.05,
+      "zones": 2,
+      "warning": 10,
+      "rareTypeBoost": 1.5,
+      "event": false
+    },
+    "Large": {
+      "displayName": "Large",
+      "size": 24,
+      "hp": 12000,
+      "intervalMin": 240,
+      "intervalMax": 360,
+      "lifetime": 240,
+      "lootRolls": 2,
+      "luck": 2.8,
+      "minShare": 0.04,
+      "zones": 4,
+      "warning": 15,
+      "rareTypeBoost": 2.5,
+      "event": false
+    },
+    "Huge": {
+      "displayName": "Huge",
+      "size": 45,
+      "hp": 90000,
+      "intervalMin": 540,
+      "intervalMax": 720,
+      "lifetime": 300,
+      "lootRolls": 3,
+      "luck": 4.5,
+      "minShare": 0.02,
+      "zones": 8,
+      "warning": 20,
+      "rareTypeBoost": 4.0,
+      "event": false
+    },
+    "Supernova": {
+      "displayName": "Supernova",
+      "size": 75,
+      "hp": 500000,
+      "intervalMin": 3600,
+      "intervalMax": 3600,
+      "lifetime": 420,
+      "lootRolls": 5,
+      "luck": 9.0,
+      "minShare": 0.01,
+      "zones": 12,
+      "warning": 30,
+      "rareTypeBoost": 6.0,
+      "event": true
+    }
   },
-  "notes": "zones = ile osobnych stref/odłamków ma gwiazda (duże gwiazdy rozbija wiele osób naraz). minShare = minimalny udział w obrażeniach, żeby dostać łup. luck dzieli mianownik oneIn dla rzadkości od Rare w górę."
+  "notes": "Gwiazda = rodzaj (Themes.json, 12) × rozmiar (tu). Nazwa w grze: '<Rozmiar> <displayName rodzaju>', np. 'Huge Lava Star'. Waga rodzaju = weight × (1 + (rareTypeBoost − 1) × indeks/11) — większe gwiazdy częściej są rzadkimi rodzajami. zones = liczba stref rozbijania (duże gwiazdy bije wiele osób). minShare = minimalny udział w obrażeniach, żeby dostać łup. luck dzieli mianownik oneIn od Rare w górę. Supernova = event Deszcz Gwiazd, jedyne źródło Secret."
 }

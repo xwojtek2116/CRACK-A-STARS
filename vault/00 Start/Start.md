@@ -8,8 +8,8 @@ tags: [start]
 
 | Projekt | Systemy | Katalog | Biznes |
 | --- | --- | --- | --- |
-| [[GDD]] | [[Gwiazdy i spadanie]] | [[Dust Star\|Gwiazdy]] | [[Monetyzacja]] |
-| [[Pętla gry.canvas\|Pętla gry]] | [[Minigra rozbijania]] | [[Lava\|Łup]] | [[Strategia premiery]] |
+| [[GDD]] | [[Gwiazdy i spadanie]] | [[Iron Meteorite\|Gwiazdy]] | [[Monetyzacja]] |
+| [[Pętla gry.canvas\|Pętla gry]] | [[Minigra rozbijania]] | [[Łup.base\|Łup]] | [[Strategia premiery]] |
 | [[Plan 14 dni]] | [[Łup i losowanie]] | [[Stone Pickaxe\|Narzędzia]] | [[Checklista premiery]] |
 | [[Lista błędów]] | [[Baza i dochód]] | [[Hoverboard\|Pojazdy]] | [[Live ops i retencja]] |
 

@@ -27,6 +27,6 @@
   "starRain": {
     "everyMinutes": 60,
     "durationSeconds": 300,
-    "dustMultiplier": 4
+    "smallMultiplier": 4
   }
 }

@@ -1,12 +1,151 @@
 {
-  "order": ["Lava", "Frost", "Nebula", "Diamond", "Toxic", "Solar", "Void"],
+  "order": [
+    "Iron",
+    "Lava",
+    "Frost",
+    "Geode",
+    "Comet",
+    "Toxic",
+    "Electric",
+    "Nebula",
+    "Diamond",
+    "Ringed",
+    "Solar",
+    "Void"
+  ],
   "themes": {
-    "Lava":    { "displayName": "Lava",    "incomeMult": 1.0, "color": "#FF5A1F", "glow": "#FFB347", "zone": "LavaFields",     "eventOnly": false, "desc": "Molten rock, ember cracks, orange glow." },
-    "Frost":   { "displayName": "Frost",   "incomeMult": 1.2, "color": "#7FD8FF", "glow": "#E6FBFF", "zone": "FrostCrater",    "eventOnly": false, "desc": "Ice shards, snowy crust, cold blue light." },
-    "Nebula":  { "displayName": "Nebula",  "incomeMult": 1.5, "color": "#8A5CFF", "glow": "#FF7AE6", "zone": "NebulaPlateau",  "eventOnly": false, "desc": "Swirling purple-pink cosmic gas trapped in crystal." },
-    "Diamond": { "displayName": "Diamond", "incomeMult": 2.0, "color": "#BFF6FF", "glow": "#FFFFFF", "zone": "CrystalCanyon",  "eventOnly": false, "desc": "Clear faceted crystal, rainbow sparkle." },
-    "Toxic":   { "displayName": "Toxic",   "incomeMult": 2.6, "color": "#7CFF2E", "glow": "#D9FF5C", "zone": "AnyZone",        "eventOnly": false, "desc": "Bubbling green slime, radioactive glow." },
-    "Solar":   { "displayName": "Solar",   "incomeMult": 3.5, "color": "#FFD23F", "glow": "#FFF5B8", "zone": "AnyZone",        "eventOnly": false, "desc": "Liquid gold and sun flares." },
-    "Void":    { "displayName": "Void",    "incomeMult": 6.0, "color": "#14101F", "glow": "#9D4DFF", "zone": "AnyZone",        "eventOnly": true,  "desc": "Black matter with violet event-horizon rim. Star Rain event only." }
-  }
+    "Iron": {
+      "displayName": "Iron Meteorite",
+      "incomeMult": 1.0,
+      "weight": 30,
+      "color": "#9A9AA6",
+      "glow": "#FF9A3C",
+      "shell": "#3A3A40",
+      "zone": "AnyZone",
+      "eventOnly": false,
+      "shape": "pitted metallic rock with thumbprint dents, hot orange seams, smoking"
+    },
+    "Lava": {
+      "displayName": "Lava Star",
+      "incomeMult": 1.2,
+      "weight": 22,
+      "color": "#FF5A1F",
+      "glow": "#FFB347",
+      "shell": "#1C1412",
+      "zone": "LavaFields",
+      "eventOnly": false,
+      "shape": "black basalt plates floating on magma, glowing veins, dripping lava blobs"
+    },
+    "Frost": {
+      "displayName": "Frost Star",
+      "incomeMult": 1.4,
+      "weight": 18,
+      "color": "#7FD8FF",
+      "glow": "#E6FBFF",
+      "shell": "#B9D4E6",
+      "zone": "FrostCrater",
+      "eventOnly": false,
+      "shape": "dense cluster of long ice spikes, snowy crust, cold mist"
+    },
+    "Geode": {
+      "displayName": "Geode Star",
+      "incomeMult": 1.7,
+      "weight": 14,
+      "color": "#B06BFF",
+      "glow": "#E3C4FF",
+      "shell": "#5B4A3E",
+      "zone": "CrystalCanyon",
+      "eventOnly": false,
+      "shape": "rough rock egg split open, amethyst crystal cave inside"
+    },
+    "Comet": {
+      "displayName": "Comet",
+      "incomeMult": 2.0,
+      "weight": 12,
+      "color": "#9EE7FF",
+      "glow": "#FFFFFF",
+      "shell": "#4E6A80",
+      "zone": "FrostCrater",
+      "eventOnly": false,
+      "shape": "icy dirty nucleus with long glowing tail ribbon and sparkle trail"
+    },
+    "Toxic": {
+      "displayName": "Toxic Star",
+      "incomeMult": 2.4,
+      "weight": 10,
+      "color": "#7CFF2E",
+      "glow": "#D9FF5C",
+      "shell": "#1B2A14",
+      "zone": "AnyZone",
+      "eventOnly": false,
+      "shape": "bubbling slime blob with glowing spore pods and drips"
+    },
+    "Electric": {
+      "displayName": "Storm Star",
+      "incomeMult": 2.8,
+      "weight": 8,
+      "color": "#FFE14D",
+      "glow": "#9FE8FF",
+      "shell": "#2A2E3A",
+      "zone": "AnyZone",
+      "eventOnly": false,
+      "shape": "metal core inside a cage of floating rods, lightning arcs"
+    },
+    "Nebula": {
+      "displayName": "Nebula Star",
+      "incomeMult": 3.3,
+      "weight": 6,
+      "color": "#8A5CFF",
+      "glow": "#FF7AE6",
+      "shell": "#1E1A33",
+      "zone": "NebulaPlateau",
+      "eventOnly": false,
+      "shape": "swirling purple-pink gas trapped in a faceted glass shell"
+    },
+    "Diamond": {
+      "displayName": "Diamond Star",
+      "incomeMult": 4.0,
+      "weight": 5,
+      "color": "#BFF6FF",
+      "glow": "#FFFFFF",
+      "shell": "#8FA6B8",
+      "zone": "CrystalCanyon",
+      "eventOnly": false,
+      "shape": "giant faceted octahedron gem surrounded by smaller gems"
+    },
+    "Ringed": {
+      "displayName": "Ringed Star",
+      "incomeMult": 5.0,
+      "weight": 3.5,
+      "color": "#FFB36B",
+      "glow": "#FFE2B8",
+      "shell": "#6B4A35",
+      "zone": "NebulaPlateau",
+      "eventOnly": false,
+      "shape": "mini planet with tilted rings of orbiting rock shards"
+    },
+    "Solar": {
+      "displayName": "Solar Star",
+      "incomeMult": 6.5,
+      "weight": 2,
+      "color": "#FFD23F",
+      "glow": "#FFF5B8",
+      "shell": "#5A3A10",
+      "zone": "LavaFields",
+      "eventOnly": false,
+      "shape": "liquid gold sun with flare arcs and corona spikes"
+    },
+    "Void": {
+      "displayName": "Void Star",
+      "incomeMult": 9.0,
+      "weight": 1,
+      "color": "#14101F",
+      "glow": "#9D4DFF",
+      "shell": "#07060C",
+      "zone": "AnyZone",
+      "eventOnly": false,
+      "shape": "black sphere with violet accretion disk and warped edges"
+    }
+  },
+  "notes": "Rodzaj gwiazdy = motyw łupu. weight = bazowa szansa pojawienia się rodzaju; większe rozmiary przesuwają szanse w stronę rzadszych rodzajów (Stars.json → rareTypeBoost). Każdy rodzaj ma własną sylwetkę modelu (shape)."
 }

@@ -1,50 +1,458 @@
 {
   "items": [
-    { "id": "lava_pebble",     "name": "Magma Pebble",      "theme": "Lava",    "rarity": "Common" },
-    { "id": "lava_shard",      "name": "Ember Shard",       "theme": "Lava",    "rarity": "Uncommon" },
-    { "id": "lava_crystal",    "name": "Cinder Crystal",    "theme": "Lava",    "rarity": "Rare" },
-    { "id": "lava_core",       "name": "Molten Core",       "theme": "Lava",    "rarity": "Epic" },
-    { "id": "lava_orb",        "name": "Phoenix Ember",     "theme": "Lava",    "rarity": "Legendary" },
-    { "id": "lava_heart",      "name": "Inferno Heart",     "theme": "Lava",    "rarity": "Mythic" },
-
-    { "id": "frost_pebble",    "name": "Frost Pebble",      "theme": "Frost",   "rarity": "Common" },
-    { "id": "frost_shard",     "name": "Icicle Shard",      "theme": "Frost",   "rarity": "Uncommon" },
-    { "id": "frost_crystal",   "name": "Glacier Crystal",   "theme": "Frost",   "rarity": "Rare" },
-    { "id": "frost_core",      "name": "Frozen Core",       "theme": "Frost",   "rarity": "Epic" },
-    { "id": "frost_orb",       "name": "Aurora Prism",      "theme": "Frost",   "rarity": "Legendary" },
-    { "id": "frost_heart",     "name": "Blizzard Heart",    "theme": "Frost",   "rarity": "Mythic" },
-
-    { "id": "nebula_pebble",   "name": "Stardust Pebble",   "theme": "Nebula",  "rarity": "Common" },
-    { "id": "nebula_shard",    "name": "Comet Shard",       "theme": "Nebula",  "rarity": "Uncommon" },
-    { "id": "nebula_crystal",  "name": "Nebula Crystal",    "theme": "Nebula",  "rarity": "Rare" },
-    { "id": "nebula_core",     "name": "Pulsar Core",       "theme": "Nebula",  "rarity": "Epic" },
-    { "id": "nebula_orb",      "name": "Galaxy Orb",        "theme": "Nebula",  "rarity": "Legendary" },
-    { "id": "nebula_heart",    "name": "Cosmic Heart",      "theme": "Nebula",  "rarity": "Mythic" },
-
-    { "id": "diamond_pebble",  "name": "Diamond Pebble",    "theme": "Diamond", "rarity": "Common" },
-    { "id": "diamond_shard",   "name": "Prism Shard",       "theme": "Diamond", "rarity": "Uncommon" },
-    { "id": "diamond_crystal", "name": "Brilliant Crystal", "theme": "Diamond", "rarity": "Rare" },
-    { "id": "diamond_core",    "name": "Diamond Core",      "theme": "Diamond", "rarity": "Epic" },
-    { "id": "diamond_orb",     "name": "Radiant Gem",       "theme": "Diamond", "rarity": "Legendary" },
-    { "id": "diamond_heart",   "name": "Crown Jewel",       "theme": "Diamond", "rarity": "Mythic" },
-
-    { "id": "toxic_pebble",    "name": "Slime Pebble",      "theme": "Toxic",   "rarity": "Common" },
-    { "id": "toxic_shard",     "name": "Venom Shard",       "theme": "Toxic",   "rarity": "Uncommon" },
-    { "id": "toxic_crystal",   "name": "Toxic Crystal",     "theme": "Toxic",   "rarity": "Rare" },
-    { "id": "toxic_core",      "name": "Mutagen Core",      "theme": "Toxic",   "rarity": "Epic" },
-    { "id": "toxic_orb",       "name": "Plague Orb",        "theme": "Toxic",   "rarity": "Legendary" },
-    { "id": "toxic_heart",     "name": "Biohazard Heart",   "theme": "Toxic",   "rarity": "Mythic" },
-
-    { "id": "solar_pebble",    "name": "Sun Pebble",        "theme": "Solar",   "rarity": "Common" },
-    { "id": "solar_shard",     "name": "Flare Shard",       "theme": "Solar",   "rarity": "Uncommon" },
-    { "id": "solar_crystal",   "name": "Corona Crystal",    "theme": "Solar",   "rarity": "Rare" },
-    { "id": "solar_core",      "name": "Solar Core",        "theme": "Solar",   "rarity": "Epic" },
-    { "id": "solar_orb",       "name": "Sunburst Orb",      "theme": "Solar",   "rarity": "Legendary" },
-    { "id": "solar_heart",     "name": "Heart of the Sun",  "theme": "Solar",   "rarity": "Mythic" },
-
-    { "id": "void_orb",        "name": "Void Orb",          "theme": "Void",    "rarity": "Legendary" },
-    { "id": "void_heart",      "name": "Event Horizon",     "theme": "Void",    "rarity": "Mythic" },
-    { "id": "void_secret",     "name": "Singularity",       "theme": "Void",    "rarity": "Secret" }
+    {
+      "id": "iron_pebble",
+      "name": "Rusty Nugget",
+      "theme": "Iron",
+      "rarity": "Common"
+    },
+    {
+      "id": "iron_shard",
+      "name": "Iron Chunk",
+      "theme": "Iron",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "iron_crystal",
+      "name": "Meteor Ingot",
+      "theme": "Iron",
+      "rarity": "Rare"
+    },
+    {
+      "id": "iron_core",
+      "name": "Magnet Core",
+      "theme": "Iron",
+      "rarity": "Epic"
+    },
+    {
+      "id": "iron_orb",
+      "name": "Titan Alloy",
+      "theme": "Iron",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "iron_heart",
+      "name": "Ironheart Relic",
+      "theme": "Iron",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "lava_pebble",
+      "name": "Magma Pebble",
+      "theme": "Lava",
+      "rarity": "Common"
+    },
+    {
+      "id": "lava_shard",
+      "name": "Ember Shard",
+      "theme": "Lava",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "lava_crystal",
+      "name": "Cinder Crystal",
+      "theme": "Lava",
+      "rarity": "Rare"
+    },
+    {
+      "id": "lava_core",
+      "name": "Molten Core",
+      "theme": "Lava",
+      "rarity": "Epic"
+    },
+    {
+      "id": "lava_orb",
+      "name": "Phoenix Ember",
+      "theme": "Lava",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "lava_heart",
+      "name": "Inferno Heart",
+      "theme": "Lava",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "frost_pebble",
+      "name": "Frost Pebble",
+      "theme": "Frost",
+      "rarity": "Common"
+    },
+    {
+      "id": "frost_shard",
+      "name": "Icicle Shard",
+      "theme": "Frost",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "frost_crystal",
+      "name": "Glacier Crystal",
+      "theme": "Frost",
+      "rarity": "Rare"
+    },
+    {
+      "id": "frost_core",
+      "name": "Frozen Core",
+      "theme": "Frost",
+      "rarity": "Epic"
+    },
+    {
+      "id": "frost_orb",
+      "name": "Aurora Prism",
+      "theme": "Frost",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "frost_heart",
+      "name": "Blizzard Heart",
+      "theme": "Frost",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "geode_pebble",
+      "name": "Quartz Pebble",
+      "theme": "Geode",
+      "rarity": "Common"
+    },
+    {
+      "id": "geode_shard",
+      "name": "Amethyst Shard",
+      "theme": "Geode",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "geode_crystal",
+      "name": "Geode Cluster",
+      "theme": "Geode",
+      "rarity": "Rare"
+    },
+    {
+      "id": "geode_core",
+      "name": "Crystal Egg",
+      "theme": "Geode",
+      "rarity": "Epic"
+    },
+    {
+      "id": "geode_orb",
+      "name": "Prism Geode",
+      "theme": "Geode",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "geode_heart",
+      "name": "Heart of Amethyst",
+      "theme": "Geode",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "comet_pebble",
+      "name": "Comet Dust",
+      "theme": "Comet",
+      "rarity": "Common"
+    },
+    {
+      "id": "comet_shard",
+      "name": "Tail Shard",
+      "theme": "Comet",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "comet_crystal",
+      "name": "Ice Comet Crystal",
+      "theme": "Comet",
+      "rarity": "Rare"
+    },
+    {
+      "id": "comet_core",
+      "name": "Comet Nucleus",
+      "theme": "Comet",
+      "rarity": "Epic"
+    },
+    {
+      "id": "comet_orb",
+      "name": "Stardrift Orb",
+      "theme": "Comet",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "comet_heart",
+      "name": "Comet Heart",
+      "theme": "Comet",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "toxic_pebble",
+      "name": "Slime Pebble",
+      "theme": "Toxic",
+      "rarity": "Common"
+    },
+    {
+      "id": "toxic_shard",
+      "name": "Venom Shard",
+      "theme": "Toxic",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "toxic_crystal",
+      "name": "Toxic Crystal",
+      "theme": "Toxic",
+      "rarity": "Rare"
+    },
+    {
+      "id": "toxic_core",
+      "name": "Mutagen Core",
+      "theme": "Toxic",
+      "rarity": "Epic"
+    },
+    {
+      "id": "toxic_orb",
+      "name": "Plague Orb",
+      "theme": "Toxic",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "toxic_heart",
+      "name": "Biohazard Heart",
+      "theme": "Toxic",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "electric_pebble",
+      "name": "Static Pebble",
+      "theme": "Electric",
+      "rarity": "Common"
+    },
+    {
+      "id": "electric_shard",
+      "name": "Spark Shard",
+      "theme": "Electric",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "electric_crystal",
+      "name": "Volt Crystal",
+      "theme": "Electric",
+      "rarity": "Rare"
+    },
+    {
+      "id": "electric_core",
+      "name": "Arc Coil",
+      "theme": "Electric",
+      "rarity": "Epic"
+    },
+    {
+      "id": "electric_orb",
+      "name": "Storm Orb",
+      "theme": "Electric",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "electric_heart",
+      "name": "Thunder Heart",
+      "theme": "Electric",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "nebula_pebble",
+      "name": "Stardust Pebble",
+      "theme": "Nebula",
+      "rarity": "Common"
+    },
+    {
+      "id": "nebula_shard",
+      "name": "Cosmic Shard",
+      "theme": "Nebula",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "nebula_crystal",
+      "name": "Nebula Crystal",
+      "theme": "Nebula",
+      "rarity": "Rare"
+    },
+    {
+      "id": "nebula_core",
+      "name": "Pulsar Core",
+      "theme": "Nebula",
+      "rarity": "Epic"
+    },
+    {
+      "id": "nebula_orb",
+      "name": "Galaxy Orb",
+      "theme": "Nebula",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "nebula_heart",
+      "name": "Cosmic Heart",
+      "theme": "Nebula",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "diamond_pebble",
+      "name": "Diamond Pebble",
+      "theme": "Diamond",
+      "rarity": "Common"
+    },
+    {
+      "id": "diamond_shard",
+      "name": "Prism Shard",
+      "theme": "Diamond",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "diamond_crystal",
+      "name": "Brilliant Crystal",
+      "theme": "Diamond",
+      "rarity": "Rare"
+    },
+    {
+      "id": "diamond_core",
+      "name": "Diamond Core",
+      "theme": "Diamond",
+      "rarity": "Epic"
+    },
+    {
+      "id": "diamond_orb",
+      "name": "Radiant Gem",
+      "theme": "Diamond",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "diamond_heart",
+      "name": "Crown Jewel",
+      "theme": "Diamond",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "ringed_pebble",
+      "name": "Ring Pebble",
+      "theme": "Ringed",
+      "rarity": "Common"
+    },
+    {
+      "id": "ringed_shard",
+      "name": "Orbit Shard",
+      "theme": "Ringed",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "ringed_crystal",
+      "name": "Halo Crystal",
+      "theme": "Ringed",
+      "rarity": "Rare"
+    },
+    {
+      "id": "ringed_core",
+      "name": "Planet Core",
+      "theme": "Ringed",
+      "rarity": "Epic"
+    },
+    {
+      "id": "ringed_orb",
+      "name": "Ringworld Orb",
+      "theme": "Ringed",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "ringed_heart",
+      "name": "Heart of Rings",
+      "theme": "Ringed",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "solar_pebble",
+      "name": "Sun Pebble",
+      "theme": "Solar",
+      "rarity": "Common"
+    },
+    {
+      "id": "solar_shard",
+      "name": "Flare Shard",
+      "theme": "Solar",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "solar_crystal",
+      "name": "Corona Crystal",
+      "theme": "Solar",
+      "rarity": "Rare"
+    },
+    {
+      "id": "solar_core",
+      "name": "Solar Core",
+      "theme": "Solar",
+      "rarity": "Epic"
+    },
+    {
+      "id": "solar_orb",
+      "name": "Sunburst Orb",
+      "theme": "Solar",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "solar_heart",
+      "name": "Heart of the Sun",
+      "theme": "Solar",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "void_pebble",
+      "name": "Void Pebble",
+      "theme": "Void",
+      "rarity": "Common"
+    },
+    {
+      "id": "void_shard",
+      "name": "Shadow Shard",
+      "theme": "Void",
+      "rarity": "Uncommon"
+    },
+    {
+      "id": "void_crystal",
+      "name": "Dark Matter Crystal",
+      "theme": "Void",
+      "rarity": "Rare"
+    },
+    {
+      "id": "void_core",
+      "name": "Void Core",
+      "theme": "Void",
+      "rarity": "Epic"
+    },
+    {
+      "id": "void_orb",
+      "name": "Event Horizon Orb",
+      "theme": "Void",
+      "rarity": "Legendary"
+    },
+    {
+      "id": "void_heart",
+      "name": "Abyss Heart",
+      "theme": "Void",
+      "rarity": "Mythic"
+    },
+    {
+      "id": "secret_singularity",
+      "name": "Singularity",
+      "theme": "Void",
+      "rarity": "Secret",
+      "supernovaOnly": true
+    },
+    {
+      "id": "secret_starseed",
+      "name": "Star Seed",
+      "theme": "Solar",
+      "rarity": "Secret",
+      "supernovaOnly": true
+    },
+    {
+      "id": "secret_cosmicegg",
+      "name": "Cosmic Egg",
+      "theme": "Nebula",
+      "rarity": "Secret",
+      "supernovaOnly": true
+    }
   ],
   "shapes": {
     "Common": "pebble",
@@ -53,6 +461,6 @@
     "Epic": "glowing core in cage",
     "Legendary": "floating orb with rings",
     "Mythic": "heart relic with orbiting fragments",
-    "Secret": "black hole sphere with accretion disk"
+    "Secret": "unique cosmic relic"
   }
 }

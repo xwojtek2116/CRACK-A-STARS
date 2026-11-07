@@ -30,26 +30,41 @@ tags: [gdd]
 7. **Wydawanie** — [[Narzędzia]], [[Pojazdy i ruch|pojazdy]], sloty, jetpack → większe gwiazdy → **Rebirth**.
 
 ## 3. Gwiazdy
-Klasy (szczegóły i liczby w `03 Gwiazdy`, źródło: `Stars.json`):
+**Gwiazda = rodzaj × rozmiar.** 12 rodzajów, każdy z **własną sylwetką** (nie tylko kolorem) i **własnym łupem**, każdy w 4 rozmiarach + Supernowa jako event. Nazwa w grze: np. „Huge Lava Star”. Liczby: `Themes.json` (rodzaje) i `Stars.json` (rozmiary).
 
-| Klasa | Rola |
+| # | Rodzaj | Sylwetka | Mnożnik łupu |
+| --- | --- | --- | --- |
+| 1 | [[Iron Meteorite]] | metalowa skała z wgłębieniami, żarzące szwy | ×1,0 |
+| 2 | [[Lava Star]] | bazaltowe płyty na magmie, kapiąca lawa | ×1,2 |
+| 3 | [[Frost Star]] | gęsty klaster lodowych kolców, szron | ×1,4 |
+| 4 | [[Geode Star]] | pęknięte skalne jajo, w środku ametysty | ×1,7 |
+| 5 | [[Comet]] | lodowe jądro z długim świecącym ogonem | ×2,0 |
+| 6 | [[Toxic Star]] | bulgocząca maź ze świecącymi zarodnikami | ×2,4 |
+| 7 | [[Storm Star]] | metalowy rdzeń w klatce prętów, błyskawice | ×2,8 |
+| 8 | [[Nebula Star]] | wirująca mgławica w szklanej skorupie | ×3,3 |
+| 9 | [[Diamond Star]] | ogromny oszlifowany ośmiościan z klejnotami | ×4,0 |
+| 10 | [[Ringed Star]] | mini planeta z pochylonymi pierścieniami | ×5,0 |
+| 11 | [[Solar Star]] | płynne złote słońce z protuberancjami | ×6,5 |
+| 12 | [[Void Star]] | czarna kula z fioletowym dyskiem akrecyjnym | ×9,0 |
+
+| Rozmiar | Rola |
 | --- | --- |
-| [[Dust Star]] | częsta, solo, wprowadzenie |
-| [[Bright Star]] | 2–4 graczy, pierwsze Rare |
-| [[Nova]] | wymaga tier 3+, kilka stref rozbijania |
-| [[Giant Star]] | cały serwer, 6 stref, każdy bije swoją część |
-| [[Supernova]] | boss serwera w evencie **Deszcz Gwiazd** co godzinę |
+| [[Small]] | często (40–80 s), solo, 1 strefa |
+| [[Medium]] | 2–4 graczy, 2 strefy |
+| [[Large]] | wymaga tier 3+, 4 strefy, 2 losowania łupu |
+| [[Huge]] | cały serwer, 8 stref, każdy bije swoją część, 3 losowania |
+| [[Supernova]] | event **Deszcz Gwiazd** co godzinę, 12 stref, jedyne źródło **Secret** |
 
-Duże gwiazdy mają **strefy (odłamki)** — osobne punkty rozbijania rozłożone na bryle, żeby wielu graczy biło naraz i nikt nie rozbił całej sam. Łup dzieli się według **% udziału**.
+Im większa gwiazda, tym częściej jest rzadkim rodzajem (`rareTypeBoost`) i tym większy Luck. Duże gwiazdy mają **strefy** — osobne punkty rozbijania, żeby wielu graczy biło naraz i nikt nie rozbił całej sam. Łup dzieli się według **% udziału**.
 
 ## 4. Minigra
 Patrz [[Minigra rozbijania]]. Skrót: tarcza z 3–5 kurczącymi się punktami, Perfect/Good/Miss, mnożnik 0,2–2,0×, krytyk ×2,5. Działa myszką, dotykiem, padem. Serwer waliduje czasy.
 
 ## 5. Łup
+- **Każdy rodzaj gwiazdy ma własne 6 przedmiotów** (Common → Mythic): 12 × 6 = **72** + **3 Secret** tylko z Supernowej = **75 przedmiotów**.
 - Rzadkości: Common 1/1 · Uncommon 1/3 · Rare 1/10 · Epic 1/30 · Legendary 1/100 · Mythic 1/500 · Secret 1/5000.
-- Motywy: [[Lava]], [[Frost]], [[Nebula]], [[Diamond]], [[Toxic]], [[Solar]], [[Void]] (tylko event).
 - Mutacje: Shiny 1/25 (×2), Golden 1/200 (×5). Pity: Legendary 250, Mythic 1200 rozbić.
-- Katalog: `04 Łup` (widok [[Łup.base]]).
+- Katalog: `04 Łup` (widok [[Łup.base]]), karty rodzajów: `03 Gwiazdy/Rodzaje`.
 
 ## 6. Baza
 Działka w pierścieniu wokół hubu. Postumenty (start 6, max 30, kupowane), przedmiot na postumencie = $/s. Zarobek offline 50% przez max 8 h. Indeks kolekcji: komplet motywu = +5% Luck na stałe.
@@ -71,9 +86,9 @@ Patrz [[Monetyzacja]]. Gamepassy: 2× Cash, VIP, Lucky, Auto Crack, Fast Vehicle
 Patrz [[Live ops i retencja]]. Deszcz Gwiazd co godzinę, nagroda dzienna 7 dni, kody z TikToka, grupa, cele polubień, weekendowy motyw ×2.
 
 ## 12. Zakres 1.0 (nienaruszalne)
-Pętla + spadanie 5 klas · minigra · łup 36 + Void 3 · baza z postumentami · 8 narzędzi · 3 pojazdy + jetpack · sklep · Rebirth · monetyzacja · nagroda dzienna + kody · tutorial · mobile.
+Pętla + 12 rodzajów gwiazd × 4 rozmiary + Supernowa · minigra · łup 75 · baza z postumentami · 8 narzędzi · 3 pojazdy + jetpack · sklep · Rebirth · monetyzacja · nagroda dzienna + kody · tutorial · mobile.
 
-**Tniemy w tej kolejności, gdy brakuje czasu:** UFO → Jet Pod → motyw Toxic → Indeks (zostaje licznik) → Rebirth.
+**Tniemy w tej kolejności, gdy brakuje czasu:** UFO → Jet Pod → rodzaje 11–12 przechodzą do update'u w tygodniu po premierze (Solar, Void) → Indeks (zostaje licznik) → Rebirth. Rozmiary zostają zawsze.
 
 ## 13. Technika
 [[Architektura]] · [[Dane gracza]] · [[Analityka]] · [[Audio i VFX]] · [[UI]]

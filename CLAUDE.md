@@ -1,6 +1,6 @@
 # Crack a Stars — zasady projektu dla Claude Code
 
-Gra Roblox: na planetę w kosmosie spadają gwiazdy, gracze ścigają się do nich (bieg, jetpack, pojazdy), rozbijają je w minigrze celowania i zabierają łup (przedmioty w motywach Lava/Frost/Nebula/Diamond/Toxic/Solar/Void), który stawiają w bazie, żeby zarabiał.
+Gra Roblox: na planetę w kosmosie spadają gwiazdy, gracze ścigają się do nich (bieg, jetpack, pojazdy), rozbijają je w minigrze celowania i zabierają łup (12 rodzajów gwiazd × 4 rozmiary, każdy rodzaj ma własne 6 przedmiotów), który stawiają w bazie, żeby zarabiał.
 Projekt gry: `vault/01 GDD/GDD.md`. Przed pisaniem systemu przeczytaj jego notatkę w `vault/02 Systemy/`.
 
 ## Terminy

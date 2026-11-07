@@ -1,21 +1,36 @@
 filters:
   or:
-    - typ == "gwiazda"
+    - typ == "rodzaj"
+    - typ == "rozmiar"
     - typ == "narzedzie"
     - typ == "pojazd"
 views:
   - type: table
-    name: Gwiazdy
+    name: Rodzaje gwiazd
     filters:
       and:
-        - typ == "gwiazda"
+        - typ == "rodzaj"
+    order:
+      - nr
+      - file.name
+      - mnoznik
+      - waga
+      - model
+    sort:
+      - property: nr
+        direction: ASC
+  - type: table
+    name: Rozmiary
+    filters:
+      and:
+        - typ == "rozmiar"
     order:
       - file.name
+      - studow
       - hp
       - co_ile_s
       - luck
-      - losowania
-      - model
+      - strefy
     sort:
       - property: hp
         direction: ASC

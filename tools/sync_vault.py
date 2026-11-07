@@ -72,6 +72,14 @@ def main() -> int:
     vehicles = load("Vehicles")
     written: set[Path] = set()
 
+    order = themes["order"]
+
+    def type_weights(size_id: str) -> dict[str, float]:
+        boost = stars["classes"][size_id]["rareTypeBoost"]
+        raw = {tid: themes["themes"][tid]["weight"] * (1 + (boost - 1) * i / max(1, len(order) - 1)) for i, tid in enumerate(order)}
+        total = sum(raw.values())
+        return {k: v / total for k, v in raw.items()}
+
     # --- Łup ---
     shapes = items["shapes"]
     for it in items["items"]:
@@ -89,61 +97,67 @@ def main() -> int:
             "model": "brak",
             "tags": [f"lup/{it['theme'].lower()}", f"rarity/{it['rarity'].lower()}"],
         }
+        src = "tylko z [[Supernova]] (event)" if it.get("supernovaOnly") else f"z gwiazdy [[{t['displayName']}]]"
         body = (
             f"# {it['name']}\n\n"
-            f"> [!{it['rarity'].lower()}] {it['rarity']} · motyw [[{it['theme']}]] · szansa **1/{r['oneIn']}**\n\n"
+            f"> [!{it['rarity'].lower()}] {it['rarity']} · {src} · szansa **1/{r['oneIn']}**\n\n"
             f"| Pole | Wartość |\n| --- | --- |\n"
             f"| Dochód w bazie | **{money(income)}/s** (Shiny ×{rar['mutations']['Shiny']['incomeMult']}, Golden ×{rar['mutations']['Golden']['incomeMult']}) |\n"
             f"| Kształt | {shapes[it['rarity']]} |\n"
-            f"| Wygląd motywu | {t['desc']} |\n"
+            f"| Styl rodzaju | {t['shape']} |\n"
             f"| Kolor / poświata | `{t['color']}` / `{t['glow']}` |\n"
             f"| Model | `art/items/{it['theme'].lower()}/{it['id']}.blend` |\n\n"
             f"![[{it['id']}.png|220]]\n"
         )
-        write_note(VAULT / "04 Łup" / it["theme"] / f"{it['name']}.md", props, body, written)
+        write_note(VAULT / "04 Łup" / t["displayName"] / f"{it['name']}.md", props, body, written)
 
-    # --- Motywy (huby) ---
-    for tid in themes["order"]:
+    # --- Rodzaje gwiazd ---
+    for i, tid in enumerate(order):
         t = themes["themes"][tid]
-        rows = "\n".join(
-            f"| [[{i['name']}]] | {i['rarity']} | 1/{rar['tiers'][i['rarity']]['oneIn']} | {money(rar['tiers'][i['rarity']]['incomePerSec'] * t['incomeMult'])}/s |"
-            for i in items["items"]
-            if i["theme"] == tid
+        loot = "\n".join(
+            f"| [[{x['name']}]] | {x['rarity']} | 1/{rar['tiers'][x['rarity']]['oneIn']} | {money(rar['tiers'][x['rarity']]['incomePerSec'] * t['incomeMult'])}/s |"
+            for x in items["items"]
+            if x["theme"] == tid and not x.get("supernovaOnly")
         )
-        props = {"typ": "motyw", "motyw": tid, "mnoznik": t["incomeMult"], "tylko_event": t["eventOnly"], "tags": ["motyw"]}
+        sizes = "\n".join(
+            f"| [[{sid}]] | {stars['classes'][sid]['size']} | {stars['classes'][sid]['hp']:,} | {type_weights(sid)[tid]:.1%} |"
+            for sid in stars["order"]
+            if not stars["classes"][sid]["event"]
+        )
+        props = {"typ": "rodzaj", "rodzaj": tid, "nazwa": t["displayName"], "nr": i + 1, "mnoznik": t["incomeMult"],
+                 "waga": t["weight"], "model": "brak", "tags": ["gwiazda", "rodzaj"]}
         body = (
-            f"# {tid}\n\n{t['desc']}\n\n"
-            f"Mnożnik dochodu **×{t['incomeMult']}** · strefa `{t['zone']}` · kolor `{t['color']}` · poświata `{t['glow']}`"
-            + (" · **tylko event Deszcz Gwiazd**" if t["eventOnly"] else "")
-            + f"\n\n| Przedmiot | Rzadkość | Szansa | Dochód |\n| --- | --- | --- | --- |\n{rows}\n"
+            f"# {t['displayName']}\n\n![[star_{tid.lower()}.png|320]]\n\n"
+            f"**Sylwetka:** {t['shape']}\n\n"
+            f"Mnożnik dochodu łupu **×{t['incomeMult']}** · strefa `{t['zone']}` · kolor `{t['color']}` · poświata `{t['glow']}` · skorupa `{t['shell']}`\n\n"
+            f"## Rozmiary\n| Rozmiar | Studów | HP | Szansa, że spadnie ten rodzaj |\n| --- | --- | --- | --- |\n{sizes}\n\n"
+            f"## Łup\n| Przedmiot | Rzadkość | Szansa | Dochód |\n| --- | --- | --- | --- |\n{loot}\n\n"
+            f"Model: `art/stars/{tid.lower()}/` (4 rozmiary: rosnąca liczba detali, kryształów i stref)\n"
         )
-        write_note(VAULT / "04 Łup" / tid / f"{tid}.md", props, body, written)
+        write_note(VAULT / "03 Gwiazdy" / "Rodzaje" / f"{t['displayName']}.md", props, body, written)
 
-    # --- Gwiazdy ---
+    # --- Rozmiary ---
     for sid in stars["order"]:
         s = stars["classes"][sid]
-        total = sum(s["themes"].values())
-        th = "\n".join(f"| [[{k}]] | {v / total:.0%} |" for k, v in s["themes"].items())
-        props = {
-            "typ": "gwiazda",
-            "klasa": sid,
-            "hp": s["hp"],
-            "co_ile_s": f"{s['intervalMin']}-{s['intervalMax']}",
-            "luck": s["luck"],
-            "losowania": s["lootRolls"],
-            "model": "brak",
-            "tags": ["gwiazda"],
-        }
+        if s["event"]:
+            dist = "Losowy rodzaj z przesunięciem do rzadkich + jedyne źródło **Secret**: " + ", ".join(
+                f"[[{x['name']}]]" for x in items["items"] if x.get("supernovaOnly"))
+        else:
+            w = type_weights(sid)
+            dist = "| Rodzaj | Szansa |\n| --- | --- |\n" + "\n".join(
+                f"| [[{themes['themes'][k]['displayName']}]] | {v:.1%} |" for k, v in w.items())
+        props = {"typ": "rozmiar", "rozmiar": sid, "hp": s["hp"], "studow": s["size"], "co_ile_s": f"{s['intervalMin']}-{s['intervalMax']}",
+                 "luck": s["luck"], "losowania": s["lootRolls"], "strefy": s["zones"], "event": s["event"], "tags": ["gwiazda", "rozmiar"]}
         body = (
-            f"# {s['displayName']}\n\n"
+            f"# {sid}\n\n"
             f"| Pole | Wartość |\n| --- | --- |\n"
             f"| Rozmiar | {s['size']} studów |\n| HP | {s['hp']:,} |\n"
             f"| Spada co | {s['intervalMin']}–{s['intervalMax']} s (ostrzeżenie {s['warning']} s) |\n"
             f"| Znika po | {s['lifetime']} s |\n| Strefy rozbijania | {s['zones']} |\n"
             f"| Losowania łupu | {s['lootRolls']} × Luck {s['luck']} |\n| Min. udział | {s['minShare']:.0%} |\n\n"
-            f"**Motywy:**\n\n| Motyw | Szansa |\n| --- | --- |\n{th}\n\n![[star_{sid.lower()}.png|260]]\n"
+            f"## Jaki rodzaj spadnie\n{dist}\n"
         )
-        write_note(VAULT / "03 Gwiazdy" / f"{s['displayName']}.md", props, body, written)
+        write_note(VAULT / "03 Gwiazdy" / "Rozmiary" / f"{sid}.md", props, body, written)
 
     # --- Narzędzia ---
     for tid in tools["order"]:
