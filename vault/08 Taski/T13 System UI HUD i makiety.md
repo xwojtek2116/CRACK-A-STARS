@@ -26,8 +26,9 @@ System UI HUD i makiety.
 - src/client/UI/{App,Store,Theme,Motion,Components}/*, src/client/Controllers/UIController.luau
 
 ## Do zrobienia
-- [ ] Makiety w Claude Design (HUD, minigra, karta łupu, sklep) → akceptacja z telefonu
-- [ ] Kopia komponentów z CarImportEmpire + kosmiczny Theme
+- [ ] Makiety w Claude Design w stylu referencji z [[UI]] (ramka z ozdobami, nagłówek-wstążka z ikoną, karty ofert, zielone ceny, czerwony X) w kosmicznym motywie → akceptacja z telefonu
+- [ ] Kopia komponentów z CarImportEmpire + kosmiczny Theme + komponenty `Window`, `RibbonHeader`, `OfferCard`, `PriceButton`
+- [ ] `Motion`: pop z overshootem, sprężynujące przyciski, liczenie kasy
 - [ ] HUD: kasa, $/s, paliwo, kompas, licznik gwiazdy
 
 ## Kryteria akceptacji

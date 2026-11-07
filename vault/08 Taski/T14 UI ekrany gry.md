@@ -26,7 +26,7 @@ UI ekrany gry.
 - src/client/UI/Screens/*
 
 ## Do zrobienia
-- [ ] Karta łupu z animacją rzadkości
+- [ ] Karta łupu z animacją rzadkości (rozbłysk, tilt, shine; Legendary+ z promieniami — [[Animacje i cinematiki]])
 - [ ] Sklep narzędzi, garaż, baza, indeks, rebirth, ustawienia
 
 ## Kryteria akceptacji

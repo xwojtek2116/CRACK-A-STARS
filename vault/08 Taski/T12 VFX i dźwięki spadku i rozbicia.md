@@ -1,38 +1,45 @@
 ---
 id: T12
-tytul: "VFX i dźwięki spadku i rozbicia"
+tytul: "Cinematiki spadku, uderzenia i rozpadu, VFX i dźwięki"
 status: todo
 dzien: 10
 data: 2026-11-16
 tor: B
-effort: medium
+effort: high
 zalezy: [T05, T07]
 tags: [task, tor/art]
 ---
 # T12 VFX i dźwięki spadku i rozbicia
 
-**Dzień 10** (2026-11-16) · tor **B** (art) · Opus 5.5 **medium** · zależy od: [[T05]], [[T07]]
+**Dzień 10** (2026-11-16) · tor **B** (art) · Opus 5.5 **high** · zależy od: [[T05]], [[T07]]
 
 ## Cel
-VFX i dźwięki spadku i rozbicia.
+Płynne cinematiki świata: wylot gwiazdy z nieba, uderzenie, rozbijanie, rozpad, lot łupu. Plus dźwięki.
 
 ## Kontekst
 - [[Audio i VFX]]
+- [[Animacje i cinematiki]]
 
 ## Skille
 - roblox-world-building
 - roblox-audio
+- roblox-characters-animation
+- roblox-input
 
 ## Pliki
-- src/client/Controllers/StarFxController.luau, src/client/Controllers/SoundController.luau, tools/sfx_gen.py
+- src/client/Controllers/StarFxController.luau, src/client/Controllers/CinematicController.luau, src/shared/Config/AnimConfig.luau, src/client/Controllers/SoundController.luau, tools/sfx_gen.py
 
 ## Do zrobienia
-- [ ] Smuga, uderzenie, pył, odłamki
-- [ ] Rozpad i lot łupu
+- [ ] `CinematicController` + `AnimConfig` (kolejka, Skip, Reduce motion)
+- [ ] Wylot z nieba (rozbłysk, smuga, cień, kamera dla Large+), uderzenie (fala, pył, odłamki, wstrząs)
+- [ ] Rozbijanie: odpryski, liczby obrażeń, slow-mo krytyka
+- [ ] Rozpad na płyty i lot łupu łukiem
 - [ ] Dźwięki rzadkości, muzyka
 
 ## Kryteria akceptacji
 - [ ] Efekty nie spadają poniżej 60 FPS na telefonie
+- [ ] Gracz nie traci sterowania > 1,5 s; kamera zawsze wraca do Custom
+- [ ] Wideo/zrzuty każdego momentu wysłane na telefon do akceptacji
 
 ## Raport
 _(uzupełnia Claude po zakończeniu: co zrobiono, pliki, użyte skille, wynik testów, problemy; „Zaległe kroki” tylko dla tego, czego żadne narzędzie nie pozwoliło zrobić)_

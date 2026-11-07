@@ -19,8 +19,8 @@ Tory pracują równolegle (do 3 sesji): **A** kod · **B** art (Blender) · **C*
 | 7 | pt 13.11 | [[T10 Ruch jetpack i pojazdy\|T10]] | [[T24 Modele pojazdów\|T24]] | [[T25 Alfa pełna pętla i test wielu graczy\|T25]] | **ALFA** |
 | 8 | sob 14.11 | [[T19 Rebirth Indeks i Supernowa\|T19]] | [[T23 Modele łupu rodzaje 9-12 i Secret\|T23]] | [[T15 Mapa finalna strefy propsy niebo\|T15]] | pełna zawartość |
 | 9 | nd 15.11 | [[T16 Monetyzacja gamepassy produkty Policy\|T16]] | [[T34 Modele gwiazd rodzaje 9-12 i Supernowa\|T34]] | [[T17 Creator Hub produkty ceny ikony\|T17]] | sklep Robux |
-| 10 | pn 16.11 | [[T18 Retencja daily kody grupa odznaki Deszcz Gwiazd analityka\|T18]] | [[T12 VFX i dźwięki spadku i rozbicia\|T12]] | [[T20 Tutorial i onboarding\|T20]] | **BETA** |
-| 11 | wt 17.11 | [[T26 Wydajność i mobile\|T26]] | poprawki modeli | [[T27 Balans ekonomii\|T27]] | 60 FPS na telefonie |
+| 10 | pn 16.11 | [[T18 Retencja daily kody grupa odznaki Deszcz Gwiazd analityka\|T18]] | [[T12 VFX i dźwięki spadku i rozbicia\|T12]] cinematiki | [[T20 Tutorial i onboarding\|T20]] | **BETA** |
+| 11 | wt 17.11 | [[T26 Wydajność i mobile\|T26]] | [[T35 Animacje dropu nagród i UI\|T35]] + poprawki modeli | [[T27 Balans ekonomii\|T27]] | 60 FPS na telefonie |
 | 12 | śr 18.11 | [[T28 Feature freeze przegląd bezpieczeństwa bug bash\|T28]] | [[T29 Miniatury ikona opis klipy TikTok\|T29]] | marketing | **FEATURE FREEZE** |
 | 13 | cz 19.11 | poprawki | klipy | [[T30 Test obciążenia i prywatny test\|T30]] | test ze znajomymi |
 | 14 | pt 20.11 | poprawki RC | — | [[T31 RC publish prywatny Maturity checklista\|T31]] | **RC** |

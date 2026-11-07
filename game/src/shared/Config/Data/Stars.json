@@ -1,4 +1,14 @@
 {
+  "landing": {
+    "minRadius": 140,
+    "maxRadius": 760,
+    "plotClearance": 70,
+    "starSpacing": 40,
+    "maxSlopeDeg": 35,
+    "maxTries": 20,
+    "biomeTypeBoost": 2.0,
+    "notes": "Losowy punkt na całej planecie; promienie wg blockoutu T03 (hub 110, działki r=300, granica 790)."
+  },
   "order": [
     "Small",
     "Medium",

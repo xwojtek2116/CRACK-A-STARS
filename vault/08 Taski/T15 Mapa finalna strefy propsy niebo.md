@@ -31,6 +31,7 @@ Mapa finalna strefy propsy niebo.
 - [ ] Propsy z Blendera dla 4 stref i hubu
 - [ ] Skybox z mgławicą, planety
 - [ ] Budynki hubu (sklep, garaż, portal)
+- [ ] Teren między biomami grywalny i ładny (gwiazdy spadają losowo po całej planecie — [[2026-11-08 UI spadanie i animacje]])
 
 ## Kryteria akceptacji
 - [ ] Zrzuty każdej strefy na telefon

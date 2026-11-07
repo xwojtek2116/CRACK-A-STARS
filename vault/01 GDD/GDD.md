@@ -12,11 +12,12 @@ tags: [gdd]
 > Krótkie, głośne cykle co 1–4 minuty, kolekcjonowanie świecących reliktów i baza, która zarabia nawet offline.
 
 ## 1. Filary
-1. **Wyścig** — każde spadnięcie to mini-wydarzenie dla całego serwera: ostrzeżenie, smuga na niebie, wstrząs, krater.
+1. **Wyścig** — każde spadnięcie to mini-wydarzenie dla całego serwera: ostrzeżenie, smuga na niebie, wstrząs, krater. Gwiazdy spadają **w losowe miejsca** na całej planecie.
 2. **Uderzenie ma znaczenie** — minigra celowania nagradza skill (Perfect = 2× obrażeń), lepszy sprzęt ją ułatwia.
 3. **Łup, którym chce się chwalić** — 7 rzadkości, 7 motywów, mutacje Shiny/Golden, ogłoszenia na cały serwer.
 4. **Baza rośnie** — każdy przedmiot stoi na postumencie i sypie kasą; widać postęp.
-5. **Robimy wszystko sami** — własne modele (Blender), własny styl, zero gotowców z Creator Store.
+5. **Wygląda i czuje się świetnie** — płynne cinematiki w ważnych momentach (spadek, uderzenie, drop, rzadki łup) i kreskówkowe UI. Patrz [[Animacje i cinematiki]], [[UI]].
+6. **Robimy wszystko sami** — własne modele (Blender), własny styl, zero gotowców z Creator Store.
 
 ## 2. Pętla gry
 ![[Pętla gry.canvas]]
@@ -91,4 +92,4 @@ Pętla + 12 rodzajów gwiazd × 4 rozmiary + Supernowa · minigra · łup 75 · 
 **Tniemy w tej kolejności, gdy brakuje czasu:** UFO → Jet Pod → rodzaje 11–12 przechodzą do update'u w tygodniu po premierze (Solar, Void) → Indeks (zostaje licznik) → Rebirth. Rozmiary zostają zawsze.
 
 ## 13. Technika
-[[Architektura]] · [[Dane gracza]] · [[Analityka]] · [[Audio i VFX]] · [[UI]]
+[[Animacje i cinematiki]] · [[Architektura]] · [[Dane gracza]] · [[Analityka]] · [[Audio i VFX]] · [[UI]]

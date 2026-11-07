@@ -29,8 +29,8 @@ StarService harmonogram spadek krater HP.
 
 ## Do zrobienia
 - [ ] Harmonogram wg Stars.json
-- [ ] Wybór punktu lądowania (raycast, odstępy)
-- [ ] Ogłoszenie + smuga + cień + uderzenie (klient)
+- [ ] Losowy punkt lądowania na całej planecie (`Stars.json` → `landing`: raycast, odrzucenie hubu/działek/stoków, odstępy, biom pod punktem → boost rodzaju)
+- [ ] Ogłoszenie + smuga + cień + uderzenie (klient) — wersja podstawowa, pełny cinematic w T12
 - [ ] Model, krater, HP, strefy, gaśnięcie po lifetime
 - [ ] Kompas do najbliższej gwiazdy
 
