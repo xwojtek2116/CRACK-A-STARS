@@ -1,0 +1,22 @@
+{
+  "order": ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Secret"],
+  "tiers": {
+    "Common":    { "oneIn": 1,    "incomePerSec": 1,     "color": "#B8C2CC", "fx": 1 },
+    "Uncommon":  { "oneIn": 3,    "incomePerSec": 4,     "color": "#52D273", "fx": 2 },
+    "Rare":      { "oneIn": 10,   "incomePerSec": 15,    "color": "#3D9BFF", "fx": 3 },
+    "Epic":      { "oneIn": 30,   "incomePerSec": 60,    "color": "#B45CFF", "fx": 4 },
+    "Legendary": { "oneIn": 100,  "incomePerSec": 300,   "color": "#FFB21F", "fx": 5 },
+    "Mythic":    { "oneIn": 500,  "incomePerSec": 2000,  "color": "#FF3D7F", "fx": 6 },
+    "Secret":    { "oneIn": 5000, "incomePerSec": 20000, "color": "#1A1A2E", "fx": 7 }
+  },
+  "mutations": {
+    "order": ["None", "Shiny", "Golden"],
+    "None":   { "oneIn": 1,   "incomeMult": 1 },
+    "Shiny":  { "oneIn": 25,  "incomeMult": 2 },
+    "Golden": { "oneIn": 200, "incomeMult": 5 }
+  },
+  "pity": {
+    "Legendary": 250,
+    "Mythic": 1200
+  }
+}

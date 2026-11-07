@@ -1,0 +1,25 @@
+{
+  "order": ["hoverboard", "moon_rover", "rocket_bike", "jet_pod", "ufo"],
+  "vehicles": {
+    "hoverboard":  { "name": "Hoverboard",  "price": 2500,     "speed": 40,  "flies": false, "seats": 1, "launch": true,  "look": "neon hoverboard with under-glow" },
+    "moon_rover":  { "name": "Moon Rover",  "price": 25000,    "speed": 55,  "flies": false, "seats": 2, "launch": true,  "look": "six-wheel lunar buggy, big balloon tyres" },
+    "rocket_bike": { "name": "Rocket Bike", "price": 200000,   "speed": 75,  "flies": false, "seats": 1, "launch": true,  "look": "hover bike with twin rocket exhausts" },
+    "jet_pod":     { "name": "Jet Pod",     "price": 1500000,  "speed": 95,  "flies": true,  "seats": 1, "launch": false, "look": "bubble cockpit pod with jet fans" },
+    "ufo":         { "name": "UFO",         "price": 12000000, "speed": 120, "flies": true,  "seats": 2, "launch": false, "look": "classic saucer, rotating light ring" }
+  },
+  "jetpack": {
+    "levels": [
+      { "level": 1, "price": 0,      "fuel": 2.0, "thrust": 1.0 },
+      { "level": 2, "price": 3000,   "fuel": 3.0, "thrust": 1.15 },
+      { "level": 3, "price": 30000,  "fuel": 4.5, "thrust": 1.3 },
+      { "level": 4, "price": 300000, "fuel": 6.5, "thrust": 1.5 }
+    ]
+  },
+  "world": {
+    "gravity": 98,
+    "walkSpeed": 20,
+    "sprintSpeed": 28,
+    "jumpPower": 60,
+    "notes": "launch = pojazd dostępny na premierę; reszta tnie się pierwsza przy opóźnieniu. Grawitacja 98 (zamiast 196.2) = niska grawitacja planety."
+  }
+}

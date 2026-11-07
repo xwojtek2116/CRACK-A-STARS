@@ -1,0 +1,29 @@
+# Paczki Wally (odtwarza je `wally install`)
+game/Packages/
+game/ServerPackages/
+game/sourcemap.json
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+build/
+
+# Obsidian — ustawienia okien są lokalne
+vault/.obsidian/workspace*.json
+vault/.obsidian/cache
+vault/.trash/
+
+# Blender — kopie zapasowe
+*.blend1
+*.blend2
+art/**/Temp/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Claude Code — ustawienia lokalne
+.claude/settings.local.json
+
+
+

@@ -1,0 +1,21 @@
+{
+  "order": ["stone_pickaxe", "iron_hammer", "crystal_axe", "plasma_saw", "laser_sword", "gravity_hammer", "nova_cannon", "starbreaker"],
+  "tools": {
+    "stone_pickaxe":  { "name": "Stone Pickaxe",  "tier": 1, "price": 0,        "damage": 10,   "cooldown": 1.2, "targets": 3, "targetSize": 0.18, "shrinkTime": 1.4, "crit": 0.02, "look": "chunky stone head on wooden handle" },
+    "iron_hammer":    { "name": "Iron Hammer",    "tier": 2, "price": 500,      "damage": 25,   "cooldown": 1.1, "targets": 3, "targetSize": 0.19, "shrinkTime": 1.5, "crit": 0.03, "look": "riveted iron sledge with leather grip" },
+    "crystal_axe":    { "name": "Crystal Axe",    "tier": 3, "price": 5000,     "damage": 60,   "cooldown": 1.0, "targets": 4, "targetSize": 0.20, "shrinkTime": 1.6, "crit": 0.04, "look": "blue crystal blade, glowing edge" },
+    "plasma_saw":     { "name": "Plasma Saw",     "tier": 4, "price": 40000,    "damage": 150,  "cooldown": 0.9, "targets": 4, "targetSize": 0.21, "shrinkTime": 1.7, "crit": 0.05, "look": "sci-fi circular saw, cyan plasma ring" },
+    "laser_sword":    { "name": "Laser Sword",    "tier": 5, "price": 250000,   "damage": 400,  "cooldown": 0.8, "targets": 4, "targetSize": 0.22, "shrinkTime": 1.8, "crit": 0.06, "look": "metal hilt, long emissive beam blade" },
+    "gravity_hammer": { "name": "Gravity Hammer", "tier": 6, "price": 1500000,  "damage": 1100, "cooldown": 0.75,"targets": 5, "targetSize": 0.23, "shrinkTime": 1.9, "crit": 0.07, "look": "massive hammer with floating rings around head" },
+    "nova_cannon":    { "name": "Nova Cannon",    "tier": 7, "price": 10000000, "damage": 3000, "cooldown": 0.7, "targets": 5, "targetSize": 0.24, "shrinkTime": 2.0, "crit": 0.08, "look": "shoulder cannon with star-core chamber" },
+    "starbreaker":    { "name": "Starbreaker",    "tier": 8, "price": 75000000, "damage": 9000, "cooldown": 0.6, "targets": 5, "targetSize": 0.25, "shrinkTime": 2.1, "crit": 0.10, "look": "legendary greataxe forged from a star, gold and violet" }
+  },
+  "minigame": {
+    "perfect": { "window": 0.33, "mult": 2.0 },
+    "good":    { "window": 0.75, "mult": 1.0 },
+    "miss":    { "mult": 0.2 },
+    "critMult": 2.5,
+    "autoCrackGrade": "good",
+    "notes": "window = ułamek czasu kurczenia, w którym trafienie liczy się jako perfect/good. Mnożnik ataku = średnia z punktów."
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "colorGroups": [
+    {
+      "query": "tag:#system",
+      "color": {
+        "a": 1,
+        "rgb": 9067775
+      }
+    },
+    {
+      "query": "tag:#task",
+      "color": {
+        "a": 1,
+        "rgb": 5427059
+      }
+    },
+    {
+      "query": "tag:#gwiazda",
+      "color": {
+        "a": 1,
+        "rgb": 16757279
+      }
+    },
+    {
+      "query": "path:\"04 \u0141up\"",
+      "color": {
+        "a": 1,
+        "rgb": 16726655
+      }
+    }
+  ],
+  "showTags": false
+}

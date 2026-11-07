@@ -1,0 +1,12 @@
+{
+  "order": ["Lava", "Frost", "Nebula", "Diamond", "Toxic", "Solar", "Void"],
+  "themes": {
+    "Lava":    { "displayName": "Lava",    "incomeMult": 1.0, "color": "#FF5A1F", "glow": "#FFB347", "zone": "LavaFields",     "eventOnly": false, "desc": "Molten rock, ember cracks, orange glow." },
+    "Frost":   { "displayName": "Frost",   "incomeMult": 1.2, "color": "#7FD8FF", "glow": "#E6FBFF", "zone": "FrostCrater",    "eventOnly": false, "desc": "Ice shards, snowy crust, cold blue light." },
+    "Nebula":  { "displayName": "Nebula",  "incomeMult": 1.5, "color": "#8A5CFF", "glow": "#FF7AE6", "zone": "NebulaPlateau",  "eventOnly": false, "desc": "Swirling purple-pink cosmic gas trapped in crystal." },
+    "Diamond": { "displayName": "Diamond", "incomeMult": 2.0, "color": "#BFF6FF", "glow": "#FFFFFF", "zone": "CrystalCanyon",  "eventOnly": false, "desc": "Clear faceted crystal, rainbow sparkle." },
+    "Toxic":   { "displayName": "Toxic",   "incomeMult": 2.6, "color": "#7CFF2E", "glow": "#D9FF5C", "zone": "AnyZone",        "eventOnly": false, "desc": "Bubbling green slime, radioactive glow." },
+    "Solar":   { "displayName": "Solar",   "incomeMult": 3.5, "color": "#FFD23F", "glow": "#FFF5B8", "zone": "AnyZone",        "eventOnly": false, "desc": "Liquid gold and sun flares." },
+    "Void":    { "displayName": "Void",    "incomeMult": 6.0, "color": "#14101F", "glow": "#9D4DFF", "zone": "AnyZone",        "eventOnly": true,  "desc": "Black matter with violet event-horizon rim. Star Rain event only." }
+  }
+}

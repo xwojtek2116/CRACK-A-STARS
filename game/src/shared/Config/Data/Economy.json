@@ -1,0 +1,32 @@
+{
+  "startingCash": 0,
+  "base": {
+    "startSlots": 6,
+    "maxSlots": 30,
+    "slotPriceBase": 1000,
+    "slotPriceGrowth": 1.6,
+    "offlineCapHours": 8,
+    "offlineRate": 0.5,
+    "sellBackRate": 0.0
+  },
+  "rebirth": {
+    "costBase": 1000000,
+    "costGrowth": 3.0,
+    "cashMultPerRebirth": 0.5,
+    "keeps": ["vehicles", "index", "gamepasses"],
+    "resets": ["cash", "tools", "baseItems", "slots"]
+  },
+  "index": {
+    "themeCompleteReward": { "luckBonus": 0.05, "cash": 0 },
+    "notes": "Komplet motywu (wszystkie rzadkości poza Secret) = stałe +5% Luck."
+  },
+  "daily": {
+    "rewards": [500, 1500, 3000, 6000, 12000, 25000, 60000],
+    "streakResetHours": 48
+  },
+  "starRain": {
+    "everyMinutes": 60,
+    "durationSeconds": 300,
+    "dustMultiplier": 4
+  }
+}

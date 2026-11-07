@@ -1,0 +1,11 @@
+{
+  "order": ["Dust", "Bright", "Nova", "Giant", "Supernova"],
+  "classes": {
+    "Dust":      { "displayName": "Dust Star",  "size": 6,   "hp": 200,    "intervalMin": 45,  "intervalMax": 90,   "lifetime": 120, "lootRolls": 1, "luck": 1.0, "minShare": 0.0,  "zones": 1, "warning": 8,  "themes": { "Lava": 40, "Frost": 35, "Nebula": 20, "Diamond": 5 } },
+    "Bright":    { "displayName": "Bright Star","size": 12,  "hp": 1500,   "intervalMin": 120, "intervalMax": 180,  "lifetime": 180, "lootRolls": 1, "luck": 1.5, "minShare": 0.05, "zones": 1, "warning": 10, "themes": { "Lava": 30, "Frost": 30, "Nebula": 25, "Diamond": 10, "Toxic": 5 } },
+    "Nova":      { "displayName": "Nova",       "size": 22,  "hp": 8000,   "intervalMin": 300, "intervalMax": 300,  "lifetime": 240, "lootRolls": 2, "luck": 2.5, "minShare": 0.05, "zones": 3, "warning": 15, "themes": { "Lava": 20, "Frost": 20, "Nebula": 25, "Diamond": 18, "Toxic": 12, "Solar": 5 } },
+    "Giant":     { "displayName": "Giant Star", "size": 40,  "hp": 60000,  "intervalMin": 600, "intervalMax": 600,  "lifetime": 300, "lootRolls": 3, "luck": 4.0, "minShare": 0.02, "zones": 6, "warning": 20, "themes": { "Nebula": 25, "Diamond": 25, "Toxic": 25, "Solar": 25 } },
+    "Supernova": { "displayName": "Supernova",  "size": 70,  "hp": 400000, "intervalMin": 3600,"intervalMax": 3600, "lifetime": 420, "lootRolls": 5, "luck": 8.0, "minShare": 0.01, "zones": 10,"warning": 30, "themes": { "Solar": 40, "Void": 60 } }
+  },
+  "notes": "zones = ile osobnych stref/odłamków ma gwiazda (duże gwiazdy rozbija wiele osób naraz). minShare = minimalny udział w obrażeniach, żeby dostać łup. luck dzieli mianownik oneIn dla rzadkości od Rare w górę."
+}

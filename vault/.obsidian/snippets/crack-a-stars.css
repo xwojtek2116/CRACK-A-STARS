@@ -1,0 +1,18 @@
+/* Crack a Stars — kolory rzadkości (callouty [!legendary] itd.) i dashboard. Generowane z Rarities.json. */
+.callout[data-callout="common"] { --callout-color: 184, 194, 204; --callout-icon: lucide-gem; }
+a.tag[href="#rarity/common"] { background-color: rgba(184,194,204,.18); color: rgb(184,194,204); }
+.callout[data-callout="uncommon"] { --callout-color: 82, 210, 115; --callout-icon: lucide-gem; }
+a.tag[href="#rarity/uncommon"] { background-color: rgba(82,210,115,.18); color: rgb(82,210,115); }
+.callout[data-callout="rare"] { --callout-color: 61, 155, 255; --callout-icon: lucide-gem; }
+a.tag[href="#rarity/rare"] { background-color: rgba(61,155,255,.18); color: rgb(61,155,255); }
+.callout[data-callout="epic"] { --callout-color: 180, 92, 255; --callout-icon: lucide-gem; }
+a.tag[href="#rarity/epic"] { background-color: rgba(180,92,255,.18); color: rgb(180,92,255); }
+.callout[data-callout="legendary"] { --callout-color: 255, 178, 31; --callout-icon: lucide-gem; }
+a.tag[href="#rarity/legendary"] { background-color: rgba(255,178,31,.18); color: rgb(255,178,31); }
+.callout[data-callout="mythic"] { --callout-color: 255, 61, 127; --callout-icon: lucide-gem; }
+a.tag[href="#rarity/mythic"] { background-color: rgba(255,61,127,.18); color: rgb(255,61,127); }
+.callout[data-callout="secret"] { --callout-color: 157, 77, 255; --callout-icon: lucide-gem; }
+a.tag[href="#rarity/secret"] { background-color: rgba(157,77,255,.18); color: rgb(157,77,255); }
+.dashboard .markdown-preview-sizer { max-width: 1100px !important; }
+.dashboard h1 { font-size: 2.4em; background: linear-gradient(90deg,#ffd23f,#ff7ae6,#8a5cff); -webkit-background-clip: text; color: transparent; }
+.dashboard table { width: 100%; }

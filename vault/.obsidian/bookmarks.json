@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "type": "file",
+      "path": "00 Start/Start.md",
+      "title": "Start"
+    },
+    {
+      "type": "file",
+      "path": "07 Sprinty/Plan 14 dni.md",
+      "title": "Plan 14 dni"
+    },
+    {
+      "type": "file",
+      "path": "00 Start/Taski.base",
+      "title": "Taski"
+    },
+    {
+      "type": "file",
+      "path": "01 GDD/GDD.md",
+      "title": "GDD"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+filters:
+  and:
+    - file.inFolder("08 Taski")
+    - file.ext == "md"
+properties:
+  id:
+    displayName: ID
+  tytul:
+    displayName: Task
+  dzien:
+    displayName: Dzień
+  tor:
+    displayName: Tor
+  effort:
+    displayName: Effort
+  status:
+    displayName: Status
+views:
+  - type: table
+    name: Aktywne
+    filters:
+      or:
+        - status == "todo"
+        - status == "doing"
+        - status == "blocked"
+    order:
+      - file.name
+      - dzien
+      - tor
+      - effort
+      - status
+    sort:
+      - property: dzien
+        direction: ASC
+  - type: table
+    name: Wg dnia
+    groupBy:
+      property: dzien
+      direction: ASC
+    order:
+      - file.name
+      - tor
+      - effort
+      - status
+  - type: table
+    name: Wg toru
+    groupBy:
+      property: tor
+      direction: ASC
+    order:
+      - file.name
+      - dzien
+      - effort
+      - status
+    sort:
+      - property: dzien
+        direction: ASC
+  - type: table
+    name: Zrobione
+    filters:
+      and:
+        - status == "done"
+    order:
+      - file.name
+      - dzien
+      - tor

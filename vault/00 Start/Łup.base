@@ -1,0 +1,50 @@
+filters:
+  and:
+    - typ == "przedmiot"
+properties:
+  nazwa:
+    displayName: Przedmiot
+  motyw:
+    displayName: Motyw
+  rzadkosc:
+    displayName: Rzadkość
+  szansa:
+    displayName: Szansa
+  dochod_s:
+    displayName: $/s
+  model:
+    displayName: Model
+views:
+  - type: table
+    name: Wg motywu
+    groupBy:
+      property: motyw
+      direction: ASC
+    order:
+      - nazwa
+      - rzadkosc
+      - szansa
+      - dochod_s
+      - model
+    sort:
+      - property: dochod_s
+        direction: ASC
+  - type: table
+    name: Wg rzadkości
+    groupBy:
+      property: rzadkosc
+      direction: ASC
+    order:
+      - nazwa
+      - motyw
+      - dochod_s
+      - model
+  - type: table
+    name: Brak modelu
+    filters:
+      and:
+        - model == "brak"
+    order:
+      - nazwa
+      - motyw
+      - rzadkosc

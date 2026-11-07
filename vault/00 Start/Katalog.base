@@ -1,0 +1,50 @@
+filters:
+  or:
+    - typ == "gwiazda"
+    - typ == "narzedzie"
+    - typ == "pojazd"
+views:
+  - type: table
+    name: Gwiazdy
+    filters:
+      and:
+        - typ == "gwiazda"
+    order:
+      - file.name
+      - hp
+      - co_ile_s
+      - luck
+      - losowania
+      - model
+    sort:
+      - property: hp
+        direction: ASC
+  - type: table
+    name: Narzędzia
+    filters:
+      and:
+        - typ == "narzedzie"
+    order:
+      - file.name
+      - tier
+      - cena
+      - obrazenia
+      - model
+    sort:
+      - property: tier
+        direction: ASC
+  - type: table
+    name: Pojazdy
+    filters:
+      and:
+        - typ == "pojazd"
+    order:
+      - file.name
+      - cena
+      - predkosc
+      - lata
+      - na_premiere
+      - model
+    sort:
+      - property: cena
+        direction: ASC

@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.bat text eol=crlf
+
+# Duże pliki graficzne i 3D przez Git LFS
+art/**/*.blend filter=lfs diff=lfs merge=lfs -text
+art/**/*.fbx filter=lfs diff=lfs merge=lfs -text
+art/**/*.obj filter=lfs diff=lfs merge=lfs -text
+art/**/*.png filter=lfs diff=lfs merge=lfs -text
+art/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+art/**/*.wav filter=lfs diff=lfs merge=lfs -text
+art/**/*.ogg filter=lfs diff=lfs merge=lfs -text
+*.rbxm filter=lfs diff=lfs merge=lfs -text

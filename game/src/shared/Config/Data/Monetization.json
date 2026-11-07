@@ -1,0 +1,26 @@
+{
+  "gamepasses": [
+    { "id": "double_cash",   "name": "2x Cash",        "robux": 199, "effect": "Base income x2" },
+    { "id": "vip",           "name": "VIP",            "robux": 299, "effect": "VIP tag, chat color, +1 base slot, +10% luck" },
+    { "id": "lucky",         "name": "Lucky",          "robux": 249, "effect": "+25% luck on every loot roll" },
+    { "id": "auto_crack",    "name": "Auto Crack",     "robux": 399, "effect": "Minigame auto-plays at Good grade" },
+    { "id": "fast_vehicles", "name": "Fast Vehicles",  "robux": 149, "effect": "+30% vehicle speed" },
+    { "id": "extra_slots",   "name": "+5 Base Slots",  "robux": 179, "effect": "+5 pedestal slots" }
+  ],
+  "products": [
+    { "id": "cash_s",       "name": "Pile of Cash",    "robux": 49,  "effect": "cash = 15 min of current income (min 1,000)" },
+    { "id": "cash_m",       "name": "Bag of Cash",     "robux": 149, "effect": "cash = 60 min of current income (min 5,000)" },
+    { "id": "cash_l",       "name": "Vault of Cash",   "robux": 449, "effect": "cash = 4 h of current income (min 25,000)" },
+    { "id": "luck_boost",   "name": "Luck Boost 15m",  "robux": 79,  "effect": "x2 luck for 15 min" },
+    { "id": "summon_star",  "name": "Summon a Star",   "robux": 99,  "effect": "Nova falls for the whole server; buyer +50% share bonus", "paidRandom": true },
+    { "id": "starter_pack", "name": "Starter Pack",    "robux": 99,  "effect": "Crystal Axe + Hoverboard + 10,000 cash (once)" }
+  ],
+  "free": [
+    "Daily reward (7-day streak)",
+    "Codes from TikTok",
+    "Group join reward (+5% cash)",
+    "Like goal events",
+    "Premium Payouts"
+  ],
+  "policy": "Produkty z paidRandom: widoczne szanse w UI + PolicyService ArePaidRandomItemsRestricted blokuje zakup."
+}

@@ -1,0 +1,144 @@
+{
+ "nodes": [
+  {
+   "id": "a",
+   "type": "text",
+   "text": "## ☄️ Ogłoszenie\nbanner, znacznik, kompas\n8–30 s",
+   "x": 0,
+   "y": 0,
+   "width": 260,
+   "height": 110,
+   "color": "5"
+  },
+  {
+   "id": "b",
+   "type": "text",
+   "text": "## 💥 Spadek\nsmuga, wstrząs, krater",
+   "x": 340,
+   "y": 0,
+   "width": 260,
+   "height": 110,
+   "color": "1"
+  },
+  {
+   "id": "c",
+   "type": "text",
+   "text": "## 🏃 Wyścig\nsprint, jetpack, pojazdy",
+   "x": 680,
+   "y": 0,
+   "width": 260,
+   "height": 110,
+   "color": "3"
+  },
+  {
+   "id": "d",
+   "type": "text",
+   "text": "## 🎯 Minigra\nPerfect 2× · Good 1× · Miss 0,2×",
+   "x": 680,
+   "y": 200,
+   "width": 260,
+   "height": 110,
+   "color": "6"
+  },
+  {
+   "id": "e",
+   "type": "text",
+   "text": "## 💎 Łup\n7 rzadkości × 7 motywów\nShiny / Golden",
+   "x": 340,
+   "y": 200,
+   "width": 260,
+   "height": 110,
+   "color": "4"
+  },
+  {
+   "id": "f",
+   "type": "text",
+   "text": "## 🏠 Baza\npostumenty → $/s\noffline 50%",
+   "x": 0,
+   "y": 200,
+   "width": 260,
+   "height": 110,
+   "color": "2"
+  },
+  {
+   "id": "g",
+   "type": "text",
+   "text": "## 🛒 Wydawanie\nnarzędzia, sloty, pojazdy, jetpack",
+   "x": 0,
+   "y": 400,
+   "width": 260,
+   "height": 110
+  },
+  {
+   "id": "h",
+   "type": "text",
+   "text": "## 🔁 Rebirth\nreset → +0,5× dochodu",
+   "x": 340,
+   "y": 400,
+   "width": 260,
+   "height": 110
+  },
+  {
+   "id": "i",
+   "type": "text",
+   "text": "## 💰 Robux\n2× Cash, Lucky, Auto Crack,\nSummon a Star",
+   "x": 680,
+   "y": 400,
+   "width": 260,
+   "height": 110,
+   "color": "4"
+  }
+ ],
+ "edges": [
+  {
+   "id": "e0",
+   "fromNode": "a",
+   "toNode": "b"
+  },
+  {
+   "id": "e1",
+   "fromNode": "b",
+   "toNode": "c"
+  },
+  {
+   "id": "e2",
+   "fromNode": "c",
+   "toNode": "d"
+  },
+  {
+   "id": "e3",
+   "fromNode": "d",
+   "toNode": "e"
+  },
+  {
+   "id": "e4",
+   "fromNode": "e",
+   "toNode": "f"
+  },
+  {
+   "id": "e5",
+   "fromNode": "f",
+   "toNode": "g"
+  },
+  {
+   "id": "e6",
+   "fromNode": "g",
+   "toNode": "h"
+  },
+  {
+   "id": "e7",
+   "fromNode": "g",
+   "toNode": "c"
+  },
+  {
+   "id": "e8",
+   "fromNode": "i",
+   "toNode": "d"
+  },
+  {
+   "id": "e9",
+   "fromNode": "i",
+   "toNode": "e"
+  }
+ ]
+}
