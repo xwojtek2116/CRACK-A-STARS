@@ -15,6 +15,10 @@ Projekt gry: `vault/01 GDD/GDD.md`. Przed pisaniem systemu przeczytaj jego notat
 - **Model: zawsze Opus 5.5** (`claude-opus-5-5`, ustawiony w `.claude/settings.json`). **Effort: `high`** dla modeli 3D i złożonych systemów (gwiazdy, minigra, łup, monetyzacja, mapa), **`medium`** dla reszty. Karta taska ma pole `effort`; przy starcie sesji ustaw je (`/effort high|medium` albo w aplikacji).
 - O grę pytaj użytkownika śmiało (krótkie pytania z opcjami), gdy decyzja projektowa nie wynika z GDD.
 - Użytkownik pisze z telefonu (Remote Control). Działaj sam; wysyłaj zrzuty i rendery przez `SendUserFile`. Odpowiedzi krótkie, po polsku.
+- **Najpierw plan, potem praca.** Nowy temat = najpierw plan (tryb Plan, skill `zaplanuj`) i akceptacja użytkownika; nie zaczynaj budować bez akceptacji.
+- **Jeden czat = jeden task.** Po zakończeniu taska nie bierz następnego w tym samym czacie.
+- **Otwarte pliki:** jeśli w Blenderze/Studio jest otwarty inny plik — najpierw go zapisz (Ctrl+S), potem otwórz nowy plik do pracy. Nigdy nie zostawiaj niezapisanych zmian.
+- **Po testach zamykaj zbędne okna Roblox Studio — zostaje dokładnie jedno** (główne okno edycji gry).
 - **Jedna sesja = jeden task** (`/task T07`). Do **3 sesji równolegle** — tory: **A kod**, **B art (Blender)**, **C świat/UI/biznes**. Dwie sesje nigdy nie zmieniają tych samych plików (karta ma pole „Pliki”).
 - Nie zmieniaj zakresu taska. Brak czegoś albo błąd w karcie → zapisz w Raporcie.
 - Szukaj grepem, nie czytaj całych folderów. Nie wypisuj całych plików w czacie.

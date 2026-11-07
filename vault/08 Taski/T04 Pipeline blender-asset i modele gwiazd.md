@@ -1,7 +1,7 @@
 ---
 id: T04
 tytul: "Pipeline blender-asset i modele gwiazd"
-status: doing
+status: todo
 dzien: 1
 data: 2026-11-07
 tor: B
@@ -38,4 +38,4 @@ Pipeline blender-asset i modele gwiazd.
 - [ ] Gwiazda w Studio ma Attachmenty stref
 
 ## Raport
-_(uzupełnia Claude po zakończeniu: co zrobiono, pliki, użyte skille, wynik testów, problemy; „Zaległe kroki” tylko dla tego, czego żadne narzędzie nie pozwoliło zrobić)_
+**Rozpoczęte w czacie planowania (7.11), niedokończone.** Jest `art/stars/build_star.py` (Blender w tle: `E:lenderlender.exe -b --factory-startup -P art/stars/build_star.py -- --render --lineup`): skorupa z płyt Voronoi + świecący rdzeń + kryształy, 5 klas, FBX + rendery w `vault/_img/star_*.png`, 1,3k–5,1k tris. Do zrobienia w tym tasku: ocena wyglądu z użytkownikiem, poprawki, skill `blender-asset`, import do Studio (ServerStorage.Stars), Attachmenty stref.
