@@ -5,7 +5,7 @@ nazwa: "Frost Star"
 nr: 3
 mnoznik: 1.4
 waga: 18
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Frost Star

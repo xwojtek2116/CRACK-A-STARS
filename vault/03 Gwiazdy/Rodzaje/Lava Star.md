@@ -5,7 +5,7 @@ nazwa: "Lava Star"
 nr: 2
 mnoznik: 1.2
 waga: 22
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Lava Star

@@ -57,4 +57,4 @@ Blockout mapy Lighting i niebo.
 - Karta mówi „Lighting: Future” — w tej wersji Studio to `LightingStyle.Realistic`.
 
 ## Zaległe kroki
-- [ ] **Zapisać miejsce w Studio (Ctrl+S)** — `game/places/CrackAStars.rbxl` ma mapę i Lighting tylko w pamięci Studio. Jeśli Studio zostało zamknięte bez zapisu: wstaw `game/assets/map/blockout.rbxm` do Workspace (Map i Plots), dzieci `LightingPreset` z `lighting.rbxm` przenieś do Lighting, a właściwości Lighting ustaw wg [[2026-11-07 Blockout mapy]]. Powód: sterowanie komputerem odrzucone.
+- [ ] **Zapisać miejsce w Studio (Ctrl+S)** — `game/places/CrackAStars.rbxl` ma mapę i Lighting tylko w pamięci Studio. Jeśli Studio zostało zamknięte bez zapisu: wstaw `game/assets/map/blockout.rbxm` do Workspace (Map i Plots), dzieci `LightingPreset` z `lighting.rbxm` przenieś do Lighting, a właściwości Lighting ustaw wg [[2026-11-07 Blockout mapy]]. Powód: sterowanie komputerem odrzucone. (T04: ponowna próba — odrzucone, krok przeniesiony do Zaległych T04.)

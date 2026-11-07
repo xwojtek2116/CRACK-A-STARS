@@ -5,7 +5,7 @@ nazwa: "Iron Meteorite"
 nr: 1
 mnoznik: 1.0
 waga: 30
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Iron Meteorite

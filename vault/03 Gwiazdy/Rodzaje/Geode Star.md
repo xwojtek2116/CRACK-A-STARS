@@ -5,7 +5,7 @@ nazwa: "Geode Star"
 nr: 4
 mnoznik: 1.7
 waga: 14
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Geode Star
