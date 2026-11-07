@@ -6,7 +6,7 @@ dzien: 8
 data: 2026-11-14
 tor: C
 effort: high
-zalezy: [T03]
+zalezy: [T36, T03]
 tags: [task, tor/swiat-ui-biznes]
 ---
 # T15 Mapa finalna strefy propsy niebo

@@ -6,7 +6,7 @@ dzien: 5
 data: 2026-11-11
 tor: C
 effort: high
-zalezy: [T02, T03]
+zalezy: [T02, T36]
 tags: [task, tor/swiat-ui-biznes]
 ---
 # T08 Baza działki postumenty dochód offline
@@ -31,6 +31,7 @@ Baza działki postumenty dochód offline.
 - [ ] Postumenty z modelem przedmiotu, obrót, poświata, tabliczka $/s
 - [ ] Tick dochodu 1 s, offline 50%/8 h
 - [ ] Kupno slotów, auto-place best
+- [ ] `SellService` + Sell Station w lobby (cena $/s × 300 s, potwierdzenie od Legendary, walidacja serwera)
 
 ## Kryteria akceptacji
 - [ ] Dochód rośnie zgodnie z wzorem

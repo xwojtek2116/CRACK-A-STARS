@@ -11,7 +11,7 @@ Tory pracują równolegle (do 3 sesji): **A** kod · **B** art (Blender) · **C*
 | Dzień | Data | A — kod | B — art | C — świat/UI/biznes | Kamień milowy |
 | --- | --- | --- | --- | --- | --- |
 | 1 | sob 7.11 | [[T01 Setup projektu vault i połączenia\|T01]] [[T02 Bootstrap DataService i Config z JSON\|T02]] | [[T04 Generator gwiazd i rodzaje 1-4\|T04]] | vault | repo + vault + kod bazowy |
-| 2 | nd 8.11 | — (wsparcie T03) | T04 (akceptacja wyglądu) | [[T03 Blockout mapy Lighting i niebo\|T03]] | mapa z klocków |
+| 2 | nd 8.11 | — (wsparcie T03) | T04 (akceptacja wyglądu) | [[T03 Blockout mapy Lighting i niebo\|T03]] ✅ → [[T36 Powiększenie mapy i lobby\|T36]] | duża mapa + lobby |
 | 3 | pn 9.11 | [[T05 StarService harmonogram spadek krater HP\|T05]] | [[T11 Modele narzędzi tier 1-8\|T11]] | [[T13 System UI HUD i makiety\|T13]] | gwiazdy spadają |
 | 4 | wt 10.11 | [[T06 Minigra rozbijania klient i serwer\|T06]] | [[T33 Modele gwiazd rodzaje 5-8\|T33]] | T13 | da się rozbić gwiazdę |
 | 5 | śr 11.11 | [[T07 LootService losowanie pity mutacje ogłoszenia\|T07]] | [[T21 Modele łupu rodzaje 1-4\|T21]] | [[T08 Baza działki postumenty dochód offline\|T08]] | łup → baza → kasa |

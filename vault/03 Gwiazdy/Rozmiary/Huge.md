@@ -16,7 +16,7 @@ tags: ["gwiazda", "rozmiar"]
 | --- | --- |
 | Rozmiar | 45 studów |
 | HP | 90,000 |
-| Spada co | 540–720 s (ostrzeżenie 20 s) |
+| Spada co | 540–720 s (ostrzeżenie 30 s) |
 | Znika po | 300 s |
 | Strefy rozbijania | 8 |
 | Losowania łupu | 3 × Luck 4.5 |

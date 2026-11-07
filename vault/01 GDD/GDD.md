@@ -27,7 +27,7 @@ tags: [gdd]
 3. **Wyścig** — sprint, jetpack (paliwo), pojazdy. Niska grawitacja = długie skoki.
 4. **Rozbijanie** — podchodzisz, klikasz/tapasz gwiazdę → [[Minigra rozbijania]]. Wynik × obrażenia narzędzia → HP gwiazdy spada; pasek udziału każdego gracza.
 5. **Rozpad** — gwiazda pęka, łup wylatuje do graczy z min. udziałem → [[Łup i losowanie]].
-6. **Baza** — przedmiot na postumencie → $/s → [[Baza i dochód]].
+6. **Baza** — przedmiot na postumencie → $/s → [[Baza i dochód]]. Zbędne przedmioty można **sprzedać** w lobby (Sell Station: $/s × 300 s).
 7. **Wydawanie** — [[Narzędzia]], [[Pojazdy i ruch|pojazdy]], sloty, jetpack → większe gwiazdy → **Rebirth**.
 
 ## 3. Gwiazdy
@@ -78,7 +78,7 @@ Działka w pierścieniu wokół hubu. Postumenty (start 6, max 30, kupowane), pr
 Cash → narzędzia/sloty/pojazdy → większe gwiazdy → **Rebirth** (koszt 1M × 3ⁿ): reset kasy, narzędzi i bazy, zostają pojazdy, indeks, gamepassy; +0,5× do dochodu za każdy.
 
 ## 9. Świat
-Patrz [[Mapa]]. Mała planeta-hub (sklepy, garaż pojazdów, tablica eventów, portal Rebirth) + 4 strefy: Pola Lawy, Lodowy Krater, Kryształowy Kanion, Mgławicowy Płaskowyż. Niebo: planety, pierścienie, mgławica. Styl: [[Styl graficzny]].
+Patrz [[Mapa]]. **Duża planeta** (promień 2000 studs) — do gwiazdy trzeba się ścigać. **Lobby w centrum**: spawn, Tool Shop, Garage, **Sell Station** (sprzedaż łupu), ulepszenia, Robux Shop/VIP, Index Hall z portalem Rebirth, Daily/Codes. Wokół lobby 8 działek graczy, dalej 4 biomy: Pola Lawy, Lodowy Krater, Kryształowy Kanion, Mgławicowy Płaskowyż — gwiazdy spadają losowo po całym terenie. Niebo: planety, pierścienie, mgławica. Styl: [[Styl graficzny]].
 
 ## 10. Monetyzacja
 Patrz [[Monetyzacja]]. Gamepassy: 2× Cash, VIP, Lucky, Auto Crack, Fast Vehicles, +5 Slots. Produkty: paczki kasy, Luck Boost, **Summon a Star** (dla całego serwera), Starter Pack.

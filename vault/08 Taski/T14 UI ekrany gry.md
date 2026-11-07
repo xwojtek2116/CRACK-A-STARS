@@ -27,7 +27,8 @@ UI ekrany gry.
 
 ## Do zrobienia
 - [ ] Karta łupu z animacją rzadkości (rozbłysk, tilt, shine; Legendary+ z promieniami — [[Animacje i cinematiki]])
-- [ ] Sklep narzędzi, garaż, baza, indeks, rebirth, ustawienia
+- [ ] Sklep narzędzi, garaż, baza, **sprzedaż (Sell)**, indeks, rebirth, ustawienia
+- [ ] Przycisk Return to Lobby w HUD
 
 ## Kryteria akceptacji
 - [ ] Każdy ekran działa dotykiem i padem

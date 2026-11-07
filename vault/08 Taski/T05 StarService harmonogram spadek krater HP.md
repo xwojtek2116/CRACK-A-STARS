@@ -6,7 +6,7 @@ dzien: 3
 data: 2026-11-09
 tor: A
 effort: high
-zalezy: [T02, T03, T04]
+zalezy: [T36, T02, T03, T04]
 tags: [task, tor/kod]
 ---
 # T05 StarService harmonogram spadek krater HP

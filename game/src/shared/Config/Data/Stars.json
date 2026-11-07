@@ -1,13 +1,13 @@
 {
   "landing": {
-    "minRadius": 140,
-    "maxRadius": 760,
-    "plotClearance": 70,
-    "starSpacing": 40,
+    "minRadius": 450,
+    "maxRadius": 1900,
+    "plotClearance": 90,
+    "starSpacing": 120,
     "maxSlopeDeg": 35,
     "maxTries": 20,
     "biomeTypeBoost": 2.0,
-    "notes": "Losowy punkt na całej planecie; promienie wg blockoutu T03 (hub 110, działki r=300, granica 790)."
+    "notes": "Losowy punkt na całej planecie poza lobby i działkami. Mapa: lobby r<=180, działki r=320, granica r=2000 (decyzja 2026-11-08)."
   },
   "order": [
     "Small",
@@ -73,7 +73,7 @@
       "luck": 4.5,
       "minShare": 0.02,
       "zones": 8,
-      "warning": 20,
+      "warning": 30,
       "rareTypeBoost": 4.0,
       "event": false
     },
@@ -88,7 +88,7 @@
       "luck": 9.0,
       "minShare": 0.01,
       "zones": 12,
-      "warning": 30,
+      "warning": 45,
       "rareTypeBoost": 6.0,
       "event": true
     }
