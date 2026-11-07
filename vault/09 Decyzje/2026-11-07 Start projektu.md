@@ -15,3 +15,5 @@ tags: [decyzja]
 - Vault bez wtyczek społeczności (Bases, Canvas, Properties).
 
 **Dlaczego:** 14 dni → minimum ręcznej pracy i jedno źródło prawdy; telefon jako główny kanał użytkownika.
+
+**Odpowiedzi użytkownika (7.11):** jedna planeta z 4 strefami · minigra „kurczące się punkty” · 8 graczy na serwer · handel przedmiotami dopiero po premierze (w [[Pomysły]]).
