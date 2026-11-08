@@ -54,7 +54,7 @@ local function App(props: Props)
 	}, {
 		Scale = e("UIScale", { Scale = scale }),
 		Hud = e(Hud, { compact = compact }),
-		Windows = e(Windows),
+		Windows = e(Windows, { viewport = size / scale }),
 		Toasts = e(Toasts),
 	})
 end

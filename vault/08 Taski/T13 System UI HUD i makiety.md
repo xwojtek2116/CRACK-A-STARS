@@ -80,3 +80,28 @@ System UI HUD i makiety.
 - Emulator w oknie edycji Studio został na widoku iPhone 17 Pro. To ustawienie widoku Studio, nie gry; wraca się listą urządzeń nad widokiem.
 - Równolegle sesja T06 zmieniała `init.client.luau` i `UI/Minigame/`. Commit obejmuje tylko pliki T13.
 - `Theme.TIMER_ALERT` (pulsowanie licznika w ostatnich 10 s) pominięty, bo użytkownik go nie wybrał.
+
+## Poprawki (8.11, prośba użytkownika: „ładniejsze, bardziej kosmiczne”)
+Decyzje: cienki pasek gwiazdy u góry, wjazd z glitchem, rendery narzędzi + odświeżone ikony, nowy styl okien i sklep narzędzi (reszta ekranów → T14).
+- **Pasek gwiazdy** (`UI/Components/StarBar.luau`) zastępuje licznik i duże banery „INCOMING”.
+  - Cisza: `NEXT STAR 02:14`. Spadek: `LARGE LAVA STAR · IMPACT 0:04` w kolorze rodzaju, z linią postępu i kometą. Po uderzeniu `LANDED!`; przy kilku gwiazdach plakietka „+N”.
+  - Wjazd z góry z glitchem (kopie tekstu cyjan/magenta, migotanie, błysk). Tło: obracający się neon i mgławica.
+  - `Fx/StarHud` nie rysuje już banerów, tylko przekazuje ogłoszenia do `Store.incoming`.
+- **Efekty kosmiczne** (`UI/Components/SpaceFx.luau`): dryfująca mgławica, iskierki, obracający się neonowy obrys, pulsująca flara. Używają tekstur VFX z T38.
+- **Okna** (`Window`):
+  - Rozmycie świata (BlurEffect), podwójna ramka z obracającym się neonem, dwie warstwy mgławicy, poświata u góry, iskierki.
+  - Ozdoby w rogach z aurą, fala światła przy otwarciu, zakładki.
+  - Dopasowanie do ekranu (`fit`) — na telefonie okno się mieści.
+- **Karty ofert** (`OfferCard`): ciemne szkło, ukośny baner rzadkości (Secret = tęcza), render na podeście z aurą, plakietka rzadkości, chipy statystyk, błysk co kilka sekund, powiększenie po najechaniu.
+- **Sklep:** zakładki TOOLS (8 narzędzi z renderami) i EXCLUSIVES (`Monetization.json → exclusives`, ceny w R$). Kupowanie nadal pokazuje toast (T09/T14).
+- **Blender:**
+  - `art/ui/build_tool_icons.py`: rendery 8 narzędzi → `art/ui/tools/`, ID w `Theme.TOOL_RENDERS`, podgląd `vault/_img/T13 narzedzia.png`.
+  - Ikony HUD v2: lakier, kolorowe światła obrysowe cyjan/magenta, jaśniejsze złoto, nowe ID w `Theme.ICONS`.
+- **Haki Studio:** `DevWindow` (np. `Shop/exclusives`) otwiera okno i zakładkę do testów przez MCP.
+- **Testy:**
+  - `stylua --check`, `selene` (pliki T13) 0/0, `rojo build` OK.
+  - Studio Play na emulatorze telefonu: pasek w trybie ciszy i spadku, plakietka +N, LANDED. Sklep (obie zakładki) mieści się na ekranie, rendery się wczytują. Konsola bez błędów UI.
+  - Zrzuty: `T13 pasek gwiazdy.jpg`, `T13 sklep v2.jpg`, `T13 exclusives.jpg`.
+- **Uwagi:**
+  - Sterowanie ekranem zajmowała inna sesja, więc zrzuty są ze Studio MCP (`screen_capture`), tylko na emulatorze telefonu. Okno na PC ma `fit` = 1, więc wygląda jak wcześniej, tylko w nowym stylu.
+  - Rendery do Comet Blade i Galaxy Hammer to na razie miecz laserowy i Gravity Hammer; własne dojdą w T11/T24.

@@ -84,6 +84,16 @@ function UIController.Start()
 	-- Tylko Studio: atrybut gracza DevCash podmienia wyświetlaną kasę (test licznika i monet przez MCP,
 	-- bo execute_luau ma osobny cache require i nie dosięga DataService). Nie zmienia danych gracza.
 	if RunService:IsStudio() then
+		-- DevWindow = "Shop" | "Shop/exclusives" | "Base" | … otwiera okno (i zakładkę) (test UI przez MCP bez klikania), "" zamyka.
+		player:GetAttributeChangedSignal("DevWindow"):Connect(function()
+			local id = player:GetAttribute("DevWindow")
+			if type(id) == "string" and id ~= "" then
+				local window, tab = string.match(id, "^([^/]+)/?(.*)$")
+				Store.set({ window = window, tab = if tab ~= "" then tab else Store.none })
+			else
+				Store.closeWindow()
+			end
+		end)
 		player:GetAttributeChangedSignal("DevCash"):Connect(function()
 			local cash = number(player:GetAttribute("DevCash"))
 			if cash then

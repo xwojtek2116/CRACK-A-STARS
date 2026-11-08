@@ -49,7 +49,9 @@ def mat(key, rough=0.35, emit=0.3):
     b = m.node_tree.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*hex_lin(C[key]), 1)
     b.inputs["Roughness"].default_value = rough
-    b.inputs["Specular IOR Level"].default_value = 0.7
+    b.inputs["Specular IOR Level"].default_value = 0.8
+    b.inputs["Coat Weight"].default_value = 0.6
+    b.inputs["Coat Roughness"].default_value = 0.08
     if emit:
         b.inputs["Emission Color"].default_value = (*hex_lin(C[key]), 1)
         b.inputs["Emission Strength"].default_value = emit
@@ -173,14 +175,14 @@ def group(coll, parts, rot_deg, loc=(0, 0, 0)):
 # ------------------------------------------------------------------ ikony (płaskie w XY, przód = +Z)
 
 def icon_coin(c):
-    body = obj("Coin_Body", cyl(1.0, 1.0, 0.32, 48), c, mat("gold", 0.25), bevel=0.06, smooth=True)
-    rim = obj("Coin_Rim", cyl(0.8, 0.8, 0.36, 48), c, mat("star", 0.3), smooth=True, outline=False)
+    body = obj("Coin_Body", cyl(1.0, 1.0, 0.32, 48), c, mat("gold", 0.25, 0.65), bevel=0.06, smooth=True)
+    rim = obj("Coin_Rim", cyl(0.8, 0.8, 0.36, 48), c, mat("star", 0.3, 0.7), smooth=True, outline=False)
     st = obj("Coin_Star", chunky_star(0.55, 0.25, 0.12, 0.2), c, mat("gold_lt", 0.2, 0.6))
     group(c, [body, rim, st], (75, 0, -18))
 
 
 def icon_star(c):
-    s = obj("Star_Body", chunky_star(1.0, 0.46, 0.42), c, mat("star", 0.25, 0.15))
+    s = obj("Star_Body", chunky_star(1.0, 0.46, 0.42), c, mat("star", 0.25, 0.7))
     g = obj("Star_Glint", chunky_star(0.22, 0.1, 0.05, 0.36), c, mat("cyan_lt", 0.1, 0.5), outline=False)
     g.location = (-0.22, 0.28, 0)
     group(c, [s, g], (72, 0, 12))
@@ -275,7 +277,7 @@ def icon_premium(c):
         bm.faces.new((top[j], mid[i], mid[j]))
         bm.faces.new((mid[i], tip, mid[j]))
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
-    g = obj("Premium_Gem", bm, c, mat("gold", 0.15, 0.2))
+    g = obj("Premium_Gem", bm, c, mat("gold", 0.15, 0.7))
     sp = obj("Premium_Spark", chunky_star(0.22, 0.08, 0.04), c, mat("cyan_lt", 0.1, 1.5), outline=False)
     sp.location, sp.rotation_euler = (0.55, -0.6, 0.35), (math.radians(90), 0, 0)
     group(c, [g, sp], (22, 0, 10))
@@ -304,7 +306,8 @@ def setup_scene():
     sc.world = w
     for name, energy, loc, col in (("Key", 2200, (5, -9, 8), (1, 0.97, 0.92)),
                                    ("Fill", 350, (-8, -7, 1), (0.75, 0.8, 1.0)),
-                                   ("Rim", 1600, (-3, 9, 6), (1.0, 0.5, 0.95))):
+                                   ("RimCyan", 1500, (-7, 7, 4), (0.3, 0.95, 1.0)),
+                                   ("RimMagenta", 1500, (7, 7, 4), (1.0, 0.3, 0.85))):
         li = bpy.data.lights.new(name, "AREA")
         li.energy, li.size, li.color = energy, 8, col
         ob = bpy.data.objects.new(name, li)
@@ -368,4 +371,5 @@ def main():
     print("ICONS_OK", tri_report)
 
 
-main()
+if __name__ == "__main__":
+    main()

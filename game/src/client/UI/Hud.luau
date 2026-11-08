@@ -1,11 +1,10 @@
 --!strict
--- Hud — interfejs w grze: kasa + $/s (lewy górny róg), licznik do następnej gwiazdy (góra, środek),
+-- Hud — interfejs w grze: kasa + $/s (lewy górny róg), pasek gwiazdy (góra, środek: Components/StarBar),
 -- menu Shop/Base/Index/Rides/R$ (lewa krawędź; na telefonie 2 kolumny), paliwo jetpacka (prawy dół, tylko
 -- gdy jest atrybut Fuel) i latające monety przy większym przyroście kasy. Kompas do gwiazdy rysuje Fx/StarHud.
 -- Lekkie animacje „życia”: oddychające neonowe obrysy, unoszące się przyciski, błyski, kołysząca się gwiazda.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
 
 local React = require(ReplicatedStorage:WaitForChild("Packages").React)
 
@@ -15,6 +14,7 @@ local Format = require(UI.Format)
 local Label = require(UI.Components.Label)
 local Motion = require(UI.Motion)
 local Sfx = require(UI.Sfx)
+local StarBar = require(UI.Components.StarBar)
 local Store = require(UI.Store)
 local Theme = require(UI.Theme)
 
@@ -142,114 +142,6 @@ local function Cash(props: { coinRef: Ref<ImageLabel> })
 					text = `+{Format.cash(income)}/s`,
 					textSize = Theme.TEXT_SIZE.body,
 					color = Theme.COLORS.cash,
-				}),
-			}),
-		}),
-	})
-end
-
--- ---------------------------------------------------------------- licznik gwiazdy
-
-local function StarTimer(props: { frameRef: Ref<Frame> })
-	local nextStarAt = Store.use(function(state)
-		return state.nextStarAt
-	end)
-	local remaining, setRemaining = React.useState(0)
-	local totalRef = React.useRef(1)
-	local starRef = React.useRef(nil :: ImageLabel?)
-	local fillRef = React.useRef(nil :: Frame?)
-	Motion.useLoop(starRef :: any, Theme.IDLE.wiggleTime, { Rotation = Theme.IDLE.wiggleDegrees }, {})
-
-	React.useEffect(function()
-		if not nextStarAt then
-			return nil
-		end
-		totalRef.current = math.max(1, nextStarAt - Workspace:GetServerTimeNow())
-		local running = true
-		task.spawn(function()
-			while running do
-				local left = nextStarAt - Workspace:GetServerTimeNow()
-				setRemaining(math.max(0, math.ceil(left)))
-				local fill = fillRef.current
-				if fill then
-					local fraction = 1 - math.clamp(left / (totalRef.current or 1), 0, 1)
-					Motion.tween(fill, TweenInfo.new(0.25, Enum.EasingStyle.Linear), {
-						Size = UDim2.fromScale(fraction, 1),
-					})
-				end
-				task.wait(0.25)
-			end
-		end)
-		return function()
-			running = false
-		end
-	end, { nextStarAt })
-
-	local incoming = nextStarAt ~= nil and remaining <= 0
-	return e("Frame", {
-		ref = props.frameRef,
-		AnchorPoint = Vector2.new(0.5, 0),
-		Position = UDim2.new(0.5, 0, 0, 10),
-		Size = UDim2.new(),
-		AutomaticSize = Enum.AutomaticSize.XY,
-		BackgroundTransparency = 1,
-		Visible = nextStarAt ~= nil,
-	}, {
-		List = e("UIListLayout", {
-			HorizontalAlignment = Enum.HorizontalAlignment.Center,
-			Padding = UDim.new(0, 8),
-			SortOrder = Enum.SortOrder.LayoutOrder,
-		}),
-		Pill = e(Pill, { color = Theme.COLORS.neonMagenta, layoutOrder = 1, padding = 24, breatheDelay = 0.35 }, {
-			Row = row(10),
-			Star = e("ImageLabel", {
-				ref = starRef,
-				Image = Theme.ICONS.star,
-				Rotation = -Theme.IDLE.wiggleDegrees,
-				Size = UDim2.fromOffset(46, 46),
-				BackgroundTransparency = 1,
-				LayoutOrder = 1,
-			}),
-			Text = e("Frame", {
-				Size = UDim2.new(),
-				AutomaticSize = Enum.AutomaticSize.XY,
-				BackgroundTransparency = 1,
-				LayoutOrder = 2,
-			}, {
-				List = e("UIListLayout", { SortOrder = Enum.SortOrder.LayoutOrder }),
-				Caption = e(Label, {
-					text = if incoming then "STAR" else "NEXT STAR",
-					textSize = Theme.TEXT_SIZE.tiny,
-					font = Theme.FONTS.body,
-					color = Color3.fromHex("#FFB3EC"),
-					stroke = 2,
-					xAlignment = Enum.TextXAlignment.Left,
-					layoutOrder = 1,
-				}),
-				Time = e(Label, {
-					text = if incoming then "INCOMING!" else Format.duration(remaining),
-					textSize = Theme.TEXT_SIZE.title + 6,
-					stroke = 4,
-					color = if incoming then Theme.COLORS.starYellow else Theme.COLORS.text,
-					layoutOrder = 2,
-				}),
-			}),
-		}),
-		Bar = e("Frame", {
-			Size = UDim2.fromOffset(200, 12),
-			BackgroundColor3 = Theme.COLORS.space,
-			LayoutOrder = 2,
-		}, {
-			Corner = e("UICorner", { CornerRadius = Theme.PILL }),
-			Stroke = e("UIStroke", { Color = Theme.COLORS.ink, Thickness = 3 }),
-			Fill = e("Frame", {
-				ref = fillRef,
-				Size = UDim2.fromScale(0, 1),
-				BackgroundColor3 = Color3.new(1, 1, 1),
-			}, {
-				Corner = e("UICorner", { CornerRadius = Theme.PILL }),
-				Gradient = e("UIGradient", {
-					Color = ColorSequence.new(Theme.COLORS.neonMagenta, Theme.COLORS.starYellow),
 				}),
 			}),
 		}),
@@ -600,7 +492,7 @@ local function Hud(props: { compact: boolean })
 	useInsets(timerRef, menuRef)
 	return e("Frame", { Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1 }, {
 		Cash = e(Cash, { coinRef = coinRef }),
-		Timer = e(StarTimer, { frameRef = timerRef }),
+		Timer = e(StarBar, { frameRef = timerRef }),
 		Menu = e(Menu, { compact = props.compact, frameRef = menuRef }),
 		Fuel = e(Fuel, { compact = props.compact }),
 		Coins = e(FlyingCoins, { coinRef = coinRef }),

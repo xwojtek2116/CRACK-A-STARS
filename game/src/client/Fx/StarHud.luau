@@ -12,19 +12,11 @@ local Types = require(Shared.Types)
 local VfxIds = require(Shared.Config.VfxIds)
 
 local FxUtil = require(script.Parent.FxUtil)
+local Store = require(script.Parent.Parent:WaitForChild("UI"):WaitForChild("Store"))
 
 type StarInfo = Types.StarInfo
 
-type Banner = {
-	frame: Frame,
-	title: TextLabel,
-	sub: TextLabel,
-	fill: Frame,
-	gradient: UIGradient,
-	info: StarInfo,
-	removeAt: number,
-	glitchUntil: number,
-}
+type Banner = { info: StarInfo, removeAt: number }
 
 type Label = {
 	billboard: BillboardGui,
@@ -43,16 +35,12 @@ local DETAILS_DISTANCE = 260 -- bliżej: pasek HP i licznik nad gwiazdą
 local LABEL_HIDE_MARKER = 300 -- leżąca gwiazda bliżej niż to: znacznik kompasu chowa się
 local LABEL_MAX_DISTANCE = 1500 -- dalej gwiazdę wskazuje tylko kompas
 local EDGE_MARGIN = 72
-local MAX_BANNERS = 2
 local BANNER_LINGER = 3 -- s po uderzeniu
-local GLITCH_SECONDS = 0.45
 
-local rng = Random.new()
 local player = Players.LocalPlayer
 
 local banners: { [string]: Banner } = {}
 local labels: { [Model]: Label } = {}
-local bannerList: Frame
 local compassArrow: Frame
 local compassArrowStroke: UIStroke
 local compassArrowLabel: TextLabel
@@ -109,110 +97,30 @@ local function label(
 	return textLabel
 end
 
--- ===== Baner =====
+-- ===== Pasek gwiazdy (T13) =====
+-- Ogłoszenia spadających gwiazd rysuje pasek w HUD (UI/Hud → StarBar). Tu tylko lista w UI/Store
+-- i usuwanie wpisu BANNER_LINGER s po uderzeniu.
 
 local function removeBanner(id: string)
-	local banner = banners[id]
-	if not banner then
-		return
+	if banners[id] then
+		banners[id] = nil
+		Store.removeIncoming(id)
 	end
-	banners[id] = nil
-	local frame = banner.frame
-	FxUtil.tween(
-		frame,
-		0.3,
-		{ Position = UDim2.fromOffset(0, -70), BackgroundTransparency = 1 },
-		Enum.EasingStyle.Back,
-		Enum.EasingDirection.In
-	)
-	for _, child in frame:GetDescendants() do
-		if child:IsA("TextLabel") then
-			FxUtil.tween(child, 0.3, { TextTransparency = 1 })
-		elseif child:IsA("UIStroke") then
-			FxUtil.tween(child, 0.3, { Transparency = 1 })
-		elseif child:IsA("Frame") then
-			FxUtil.tween(child, 0.3, { BackgroundTransparency = 1 })
-		end
-	end
-	task.delay(0.35, function()
-		frame:Destroy()
-	end)
 end
 
 function StarHud.showBanner(info: StarInfo)
 	if banners[info.id] then
 		return
 	end
-	-- Przy komplecie chowamy baner gwiazdy, która uderzyła najwcześniej.
-	local count, oldestId, oldestAt = 0, nil :: string?, math.huge
-	for id, banner in banners do
-		count += 1
-		if banner.info.impactAt < oldestAt then
-			oldestId, oldestAt = id, banner.info.impactAt
-		end
-	end
-	if count >= MAX_BANNERS and oldestId then
-		removeBanner(oldestId)
-	end
-
-	local color = StarConfig.color(info.type)
-	local glow = StarConfig.glow(info.type)
-	local holder = Instance.new("Frame")
-	holder.Name = info.id
-	holder.BackgroundTransparency = 1
-	holder.Size = UDim2.new(1, 0, 0, 66)
-	holder.LayoutOrder = math.floor(info.impactAt * 10) % 1e6
-	holder.ClipsDescendants = false
-	local frame = Instance.new("Frame")
-	frame.Size = UDim2.fromScale(1, 1)
-	frame.Position = UDim2.fromOffset(0, -70)
-	frame.BackgroundColor3 = PANEL_COLOR
-	frame.BackgroundTransparency = 0.12
-	corner(frame, UDim.new(0, 14))
-	local stroke = Instance.new("UIStroke")
-	stroke.Color = Color3.new(1, 1, 1)
-	stroke.Thickness = 3
-	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	local gradient = Instance.new("UIGradient")
-	gradient.Color = FxUtil.colorSeq(color, FxUtil.lighten(glow, 0.5), color)
-	gradient.Parent = stroke
-	stroke.Parent = frame
-	local title = label(
-		frame,
-		`{StarConfig.displayName(info.size, info.type):upper()} INCOMING!`,
-		UDim2.new(1, -20, 0, 30),
-		UDim2.fromOffset(10, 4),
-		color,
-		28
-	)
-	local sub = label(frame, "", UDim2.new(1, -20, 0, 18), UDim2.fromOffset(10, 34), Color3.new(1, 1, 1), 18)
-	local bar = Instance.new("Frame")
-	bar.Size = UDim2.new(1, -24, 0, 6)
-	bar.Position = UDim2.new(0, 12, 1, -10)
-	bar.BackgroundColor3 = Color3.new(0, 0, 0)
-	bar.BackgroundTransparency = 0.4
-	corner(bar, UDim.new(1, 0))
-	bar.Parent = frame
-	local fill = Instance.new("Frame")
-	fill.Size = UDim2.fromScale(1, 1)
-	fill.BackgroundColor3 = glow
-	corner(fill, UDim.new(1, 0))
-	fill.Parent = bar
-	frame.Parent = holder
-	holder.Parent = bannerList
-	FxUtil.tween(frame, 0.45, { Position = UDim2.new() }, Enum.EasingStyle.Back, Enum.EasingDirection.Out)
-
-	local clock = os.clock()
-	banners[info.id] = {
-		frame = holder,
-		title = title,
-		sub = sub,
-		fill = fill,
-		gradient = gradient,
-		info = info,
-		removeAt = info.impactAt + BANNER_LINGER,
-		glitchUntil = clock + GLITCH_SECONDS,
-	}
+	banners[info.id] = { info = info, removeAt = info.impactAt + BANNER_LINGER }
+	Store.addIncoming({
+		id = info.id,
+		name = StarConfig.displayName(info.size, info.type),
+		color = StarConfig.color(info.type),
+		glow = StarConfig.glow(info.type),
+		launchedAt = info.launchedAt,
+		impactAt = info.impactAt,
+	})
 end
 
 function StarHud.hideBanner(id: string)
@@ -220,29 +128,9 @@ function StarHud.hideBanner(id: string)
 end
 
 local function updateBanners(serverNow: number)
-	local clock = os.clock()
 	for id, banner in banners do
-		local info = banner.info
 		if serverNow >= banner.removeAt then
 			removeBanner(id)
-			continue
-		end
-		-- Glitch przy wjeździe: migotanie i przesunięcie tytułu.
-		if clock < banner.glitchUntil then
-			banner.title.TextTransparency = if rng:NextNumber() < 0.4 then 0.7 else 0
-			banner.title.Position = UDim2.fromOffset(10 + rng:NextInteger(-4, 4), 4)
-		else
-			banner.title.TextTransparency = 0
-			banner.title.Position = UDim2.fromOffset(10, 4)
-		end
-		banner.gradient.Rotation = (clock * 120) % 360
-		local total = math.max(info.impactAt - info.launchedAt, 0.01)
-		local left = math.clamp((info.impactAt - serverNow) / total, 0, 1)
-		banner.fill.Size = UDim2.fromScale(left, 1)
-		if serverNow < info.impactAt then
-			banner.sub.Text = `Impact in {math.ceil(info.impactAt - serverNow)}s`
-		else
-			banner.sub.Text = "LANDED! Go crack it!"
 		end
 	end
 end
@@ -462,9 +350,6 @@ local function updateCompass(serverNow: number, stars: { StarInfo })
 end
 
 function StarHud.update(serverNow: number, stars: { StarInfo })
-	-- Banery pod licznikiem gwiazdy z HUD (atrybut HudTopInset z UI/Hud).
-	local topInset = tonumber(player.PlayerGui:GetAttribute("HudTopInset")) or 0
-	bannerList.Position = UDim2.new(0.5, 0, 0, topInset + 8)
 	updateBanners(serverNow)
 	updateCompass(serverNow, stars)
 end
@@ -580,27 +465,6 @@ end
 
 function StarHud.build()
 	local playerGui = player:WaitForChild("PlayerGui")
-
-	local bannerGui = Instance.new("ScreenGui")
-	bannerGui.Name = "StarBanner"
-	bannerGui.ResetOnSpawn = false
-	bannerGui.DisplayOrder = 6
-	bannerGui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
-	bannerList = Instance.new("Frame")
-	bannerList.BackgroundTransparency = 1
-	bannerList.AnchorPoint = Vector2.new(0.5, 0)
-	bannerList.Position = UDim2.new(0.5, 0, 0, 8)
-	bannerList.Size = UDim2.new(0.62, 0, 0, 220)
-	local sizeLimit = Instance.new("UISizeConstraint")
-	sizeLimit.MaxSize = Vector2.new(520, 220)
-	sizeLimit.Parent = bannerList
-	local list = Instance.new("UIListLayout")
-	list.Padding = UDim.new(0, 6)
-	list.SortOrder = Enum.SortOrder.LayoutOrder
-	list.HorizontalAlignment = Enum.HorizontalAlignment.Center
-	list.Parent = bannerList
-	bannerList.Parent = bannerGui
-	bannerGui.Parent = playerGui
 
 	-- Kompas w pikselach viewportu (IgnoreGuiInset + bez wcięć), żeby pasował do WorldToViewportPoint.
 	local compassGui = Instance.new("ScreenGui")

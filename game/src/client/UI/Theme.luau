@@ -6,7 +6,9 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local Rarities = require(ReplicatedStorage:WaitForChild("Shared").Config.Data.Rarities) :: any
+local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Rarities = require(Shared.Config.Data.Rarities) :: any
+local VfxIds = require(Shared.Config.VfxIds) :: any
 
 local Theme = {}
 
@@ -39,17 +41,50 @@ Theme.RARITY_COLORS = {} :: { [string]: Color3 }
 for id, tier in Rarities.tiers do
 	Theme.RARITY_COLORS[id] = Color3.fromHex(tier.color)
 end
+-- Secret ma w JSON prawie czarny kolor (efekt w grze), w UI dostaje tęczowy gradient i jasny akcent.
+Theme.RARITY_COLORS.Secret = Color3.fromHex("#FF4FD8")
+Theme.SECRET_GRADIENT = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromHex("#FF3DCB")),
+	ColorSequenceKeypoint.new(0.5, Color3.fromHex("#3DF2FF")),
+	ColorSequenceKeypoint.new(1, Color3.fromHex("#FFD84D")),
+})
 
--- Ikony 3D z Blendera (art/ui/build_icons.py → upload Open Cloud, T13).
+-- Rzadkość narzędzia z jego tieru (1 Common … 6 Mythic, 7 Mythic, 8 Secret).
+local TIER_RARITY = { "Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic", "Mythic", "Secret" }
+function Theme.tierRarity(tier: number): string
+	return TIER_RARITY[math.clamp(tier, 1, #TIER_RARITY)]
+end
+
+-- Ikony 3D z Blendera (art/ui/build_icons.py → upload Open Cloud, T13; wersja 2 z połyskiem).
 Theme.ICONS = {
-	coin = "rbxassetid://83928946522485",
-	star = "rbxassetid://78594741768294",
-	fuel = "rbxassetid://93959983021150",
-	shop = "rbxassetid://126896503668931",
-	base = "rbxassetid://135283876558468",
-	index = "rbxassetid://86174375553736",
-	rides = "rbxassetid://78353578143907",
-	premium = "rbxassetid://96416828252798",
+	coin = "rbxassetid://100441590402887",
+	star = "rbxassetid://99338036477586",
+	fuel = "rbxassetid://140596732914601",
+	shop = "rbxassetid://78830333459609",
+	base = "rbxassetid://116878094330744",
+	index = "rbxassetid://89753898429765",
+	rides = "rbxassetid://90527318240283",
+	premium = "rbxassetid://120994393070841",
+}
+
+-- Rendery narzędzi do kart sklepu (art/ui/build_tool_icons.py). Klucze = Tools.json → order.
+Theme.TOOL_RENDERS = {
+	stone_pickaxe = "rbxassetid://111934838668648",
+	iron_hammer = "rbxassetid://130751804546775",
+	crystal_axe = "rbxassetid://123525833261720",
+	plasma_saw = "rbxassetid://130523779856707",
+	laser_sword = "rbxassetid://129320924967145",
+	gravity_hammer = "rbxassetid://140000492473746",
+	nova_cannon = "rbxassetid://113112919754407",
+	starbreaker = "rbxassetid://84499103926215",
+} :: { [string]: string }
+
+-- Tekstury efektów UI (te same co VFX gwiazd, T38): mgławica (bezszwowa), flara, błysk-gwiazdka, iskra.
+Theme.FX = {
+	nebula = VfxIds.NEBULA,
+	flare = VfxIds.FLARE,
+	glint = VfxIds.GLINT,
+	spark = VfxIds.SPARK,
 }
 
 Theme.FONTS = {

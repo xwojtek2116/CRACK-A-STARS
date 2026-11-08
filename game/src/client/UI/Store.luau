@@ -11,6 +11,15 @@ local Theme = require(script.Parent.Theme)
 
 export type ToastKind = "info" | "success" | "error"
 export type Toast = { id: number, text: string, kind: ToastKind }
+-- Spadająca gwiazda dla paska w HUD (wypełnia Fx/StarHud z ogłoszeń StarService). Czasy = czas serwera.
+export type Incoming = {
+	id: string,
+	name: string,
+	color: Color3,
+	glow: Color3,
+	launchedAt: number,
+	impactAt: number,
+}
 export type WindowId = "Shop" | "Base" | "Index" | "Rides" | "Premium"
 export type State = {
 	loaded: boolean,
@@ -20,7 +29,9 @@ export type State = {
 	fuel: number?, -- atrybut Fuel (ustawia jetpack, T10); nil = pasek ukryty
 	fuelMax: number,
 	nextStarAt: number?, -- atrybut Workspace.NextStarAt (StarService), czas serwera
+	incoming: { Incoming }, -- spadające gwiazdy, najbliższe uderzenie pierwsze
 	window: WindowId?,
+	tab: string?, -- zakładka otwartego okna (np. sklep: "tools" | "exclusives")
 	toasts: { Toast },
 	hudHidden: boolean,
 }
@@ -33,6 +44,7 @@ local state: State = {
 	fuel = nil,
 	fuelMax = 1,
 	nextStarAt = nil,
+	incoming = {},
 	window = nil,
 	toasts = {},
 	hudHidden = false,
@@ -104,6 +116,27 @@ function Store.toast(text: string, kind: ToastKind?)
 			Store.set({ toasts = remaining })
 		end
 	end)
+end
+
+function Store.addIncoming(entry: Incoming)
+	local list = table.clone(state.incoming)
+	table.insert(list, entry)
+	table.sort(list, function(a, b)
+		return a.impactAt < b.impactAt
+	end)
+	Store.set({ incoming = list })
+end
+
+function Store.removeIncoming(id: string)
+	local list = {}
+	for _, entry in state.incoming do
+		if entry.id ~= id then
+			table.insert(list, entry)
+		end
+	end
+	if #list ~= #state.incoming then
+		Store.set({ incoming = list })
+	end
 end
 
 function Store.openWindow(id: WindowId)
