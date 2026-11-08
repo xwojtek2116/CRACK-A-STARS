@@ -31,7 +31,7 @@ Blockout mapy Lighting i niebo.
 - [x] Planeta-hub z klocków: hub, 8 działek, 4 strefy z tagiem StarLandingZone i atrybutem Theme
 - [x] Lighting: Future, Atmosphere, Bloom, ColorCorrection, skybox tymczasowy
 - [x] Granice mapy
-- [ ] Zapis place + .rbxm — `.rbxm` ✔, Ctrl+S miejsca ✘ (patrz Zaległe kroki)
+- [x] Zapis place + .rbxm — `.rbxm` ✔, zapis miejsca ✔ (w T04)
 
 ## Kryteria akceptacji
 - [x] Zrzut z góry i z perspektywy gracza wysłany na telefon
@@ -57,4 +57,4 @@ Blockout mapy Lighting i niebo.
 - Karta mówi „Lighting: Future” — w tej wersji Studio to `LightingStyle.Realistic`.
 
 ## Zaległe kroki
-- [ ] **Zapisać miejsce w Studio (Ctrl+S)** — `game/places/CrackAStars.rbxl` ma mapę i Lighting tylko w pamięci Studio. Jeśli Studio zostało zamknięte bez zapisu: wstaw `game/assets/map/blockout.rbxm` do Workspace (Map i Plots), dzieci `LightingPreset` z `lighting.rbxm` przenieś do Lighting, a właściwości Lighting ustaw wg [[2026-11-07 Blockout mapy]]. Powód: sterowanie komputerem odrzucone. (T04: ponowna próba — odrzucone, krok przeniesiony do Zaległych T04.)
+- [x] ✔ zrobione w T04 (8.11: zapisany `game/places/CrackAStars.rbxl` z mapą) — **Zapisać miejsce w Studio (Ctrl+S)** — `game/places/CrackAStars.rbxl` ma mapę i Lighting tylko w pamięci Studio. Jeśli Studio zostało zamknięte bez zapisu: wstaw `game/assets/map/blockout.rbxm` do Workspace (Map i Plots), dzieci `LightingPreset` z `lighting.rbxm` przenieś do Lighting, a właściwości Lighting ustaw wg [[2026-11-07 Blockout mapy]]. Powód: sterowanie komputerem odrzucone. (T04: ponowna próba — odrzucone, krok przeniesiony do Zaległych T04.)
