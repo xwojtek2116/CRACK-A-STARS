@@ -1,0 +1,54 @@
+--!strict
+-- SoundIds — własne dźwięki spadku gwiazdy (T38). Źródło: `python tools/sfx_gen.py` → art/audio/stars/<plik>.wav,
+-- upload przez Open Cloud (Assets API). Wszystkie mono, pik -1 dBFS; głośność i zasięg 3D ustawia się tutaj.
+-- rolloff = { min, max } w studs (InverseTapered); brak = dźwięk 2D (interfejs, cała mapa).
+
+export type SoundDef = {
+	id: string,
+	volume: number,
+	rolloff: { number }?,
+	looped: boolean?,
+	pitchVariance: number?, -- ± losowa zmiana PlaybackSpeed, żeby powtórki nie brzmiały identycznie
+}
+
+local SOUNDS: { [string]: SoundDef } = {
+	-- Ogłoszenie i odliczanie
+	announceSting = { id = "rbxassetid://96602880878912", volume = 0.55 }, -- announce_sting.wav (2D)
+	countdownTick = { id = "rbxassetid://100777689307095", volume = 0.5, rolloff = { 60, 500 } }, -- countdown_tick.wav
+	thunderFar = { id = "rbxassetid://70492911375618", volume = 0.6 }, -- thunder_far.wav (2D, cała mapa, od Large)
+	-- Wyrwa
+	riftOpen = { id = "rbxassetid://72732776031328", volume = 1.0, rolloff = { 250, 3200 }, pitchVariance = 0.06 }, -- rift_open.wav
+	riftLoop = { id = "rbxassetid://96344650148614", volume = 0.55, rolloff = { 150, 1800 }, looped = true }, -- rift_loop.wav
+	riftClose = { id = "rbxassetid://96271113220482", volume = 0.8, rolloff = { 200, 2600 } }, -- rift_close.wav
+	-- Lot
+	emergeRoar = { id = "rbxassetid://99268682064718", volume = 0.9, rolloff = { 200, 2400 }, pitchVariance = 0.08 }, -- emerge_roar.wav
+	fallLoop = { id = "rbxassetid://121895649274523", volume = 0.8, rolloff = { 60, 1400 }, looped = true }, -- fall_loop.wav
+	flyby = { id = "rbxassetid://126922429177736", volume = 0.9, rolloff = { 40, 500 }, pitchVariance = 0.1 }, -- flyby.wav
+	sonicBoom = { id = "rbxassetid://104044549133790", volume = 0.9, rolloff = { 200, 2500 }, pitchVariance = 0.08 }, -- sonic_boom.wav
+	-- Uderzenie (wariant wg rozmiaru)
+	impactSmall = { id = "rbxassetid://78142362817821", volume = 0.9, rolloff = { 40, 900 }, pitchVariance = 0.06 }, -- impact_s.wav
+	impactMedium = { id = "rbxassetid://80347070662937", volume = 1.0, rolloff = { 60, 1400 }, pitchVariance = 0.06 }, -- impact_m.wav
+	impactLarge = { id = "rbxassetid://73864226634941", volume = 1.0, rolloff = { 90, 2200 }, pitchVariance = 0.05 }, -- impact_l.wav
+	impactHuge = { id = "rbxassetid://99704051121925", volume = 1.0, rolloff = { 140, 3500 }, pitchVariance = 0.04 }, -- impact_xl.wav
+	shockwave = { id = "rbxassetid://89818166566332", volume = 0.8, rolloff = { 50, 900 } }, -- shockwave.wav
+	debrisRain = { id = "rbxassetid://127087514578677", volume = 0.7, rolloff = { 30, 400 }, pitchVariance = 0.08 }, -- debris_rain.wav
+	-- Leżąca gwiazda i koniec
+	starHum = { id = "rbxassetid://91026232978549", volume = 0.45, rolloff = { 12, 160 }, looped = true }, -- star_hum.wav
+	craterSizzle = { id = "rbxassetid://125347553197965", volume = 0.35, rolloff = { 10, 110 }, looped = true }, -- crater_sizzle.wav
+	starCrack = { id = "rbxassetid://119139469957662", volume = 1.0, rolloff = { 40, 700 } }, -- star_crack.wav
+	starFade = { id = "rbxassetid://133818079410745", volume = 0.8, rolloff = { 30, 400 } }, -- star_fade.wav
+}
+
+-- Dźwięk uderzenia dla rozmiaru gwiazdy.
+local IMPACT_BY_SIZE: { [string]: string } = {
+	Small = "impactSmall",
+	Medium = "impactMedium",
+	Large = "impactLarge",
+	Huge = "impactHuge",
+	Supernova = "impactHuge",
+}
+
+return table.freeze({
+	SOUNDS = table.freeze(SOUNDS),
+	IMPACT_BY_SIZE = table.freeze(IMPACT_BY_SIZE),
+})

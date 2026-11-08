@@ -6,7 +6,7 @@ dzien: 10
 data: 2026-11-16
 tor: B
 effort: high
-zalezy: [T05, T07]
+zalezy: [T05, T07, T38]
 tags: [task, tor/art]
 ---
 # T12 VFX i dźwięki spadku i rozbicia
@@ -31,10 +31,10 @@ Płynne cinematiki świata: wylot gwiazdy z nieba, uderzenie, rozbijanie, rozpad
 
 ## Do zrobienia
 - [ ] `CinematicController` + `AnimConfig` (kolejka, Skip, Reduce motion)
-- [ ] Wylot z nieba (rozbłysk, smuga, cień, kamera dla Large+), uderzenie (fala, pył, odłamki, wstrząs)
+- [ ] ~~Wylot z nieba, uderzenie~~ → przeniesione do [[T38 Cinematic spadku wyrwa VFX dźwięki|T38]] (8.11); tu tylko spójność z T38
 - [ ] Rozbijanie: odpryski, liczby obrażeń, slow-mo krytyka
 - [ ] Rozpad na płyty i lot łupu łukiem
-- [ ] Dźwięki rzadkości, muzyka
+- [ ] Dźwięki rzadkości, muzyka (dźwięki spadku/uderzenia/wyrwy są w T38 — `SoundController`, `tools/sfx_gen.py`)
 
 ## Kryteria akceptacji
 - [ ] Efekty nie spadają poniżej 60 FPS na telefonie

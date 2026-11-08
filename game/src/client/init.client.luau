@@ -16,6 +16,8 @@ type Controller = {
 -- Kolejność ładowania. Nowy kontroler dopisz we właściwym miejscu.
 local CONTROLLERS = {
 	"StateController",
+	"SoundController",
+	"CinematicController",
 	"StarFxController",
 }
 

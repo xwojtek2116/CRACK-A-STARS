@@ -416,6 +416,40 @@ local function makePart(name: string, size: Vector3, cframe: CFrame, color: Colo
 	return part
 end
 
+-- Odłamek wału: mesh skały z ReplicatedStorage.VfxAssets (T38), a gdy go brak — klocek.
+local function rimChunk(chunkSize: number, cframe: CFrame): BasePart
+	local assets = ReplicatedStorage:FindFirstChild("VfxAssets")
+	local rocks = {}
+	if assets then
+		for _, child in assets:GetChildren() do
+			if child:IsA("MeshPart") and string.sub(child.Name, 1, 5) == "Rock_" then
+				table.insert(rocks, child)
+			end
+		end
+	end
+	if #rocks == 0 then
+		return makePart(
+			"Rim",
+			Vector3.new(chunkSize * 1.1, chunkSize * 0.7, chunkSize),
+			cframe,
+			RIM_COLOR,
+			Enum.Material.Basalt
+		)
+	end
+	local template = rocks[rng:NextInteger(1, #rocks)]
+	local rock = template:Clone()
+	rock.Name = "Rim"
+	rock.Size = template.Size * (chunkSize / math.max(template.Size.X, template.Size.Y, template.Size.Z)) * 1.3
+	rock.CFrame = cframe
+	rock.Color = RIM_COLOR
+	rock.Material = Enum.Material.Basalt
+	rock.Anchored = true
+	rock.CanTouch = false
+	rock.CanQuery = false
+	rock.CastShadow = true
+	return rock
+end
+
 -- Wał z odłamków wokół krateru, żarzące się okruchy i dym. Części są statyczne; animacje robi klient (T12).
 local function buildDebris(scar: Scar, info: StarInfo, radius: number)
 	local class = CLASSES[info.size]
@@ -433,13 +467,7 @@ local function buildDebris(scar: Scar, info: StarInfo, radius: number)
 		local outward = flat(around - info.impactPos).Unit
 		local cframe = CFrame.lookAlong(ground.Position, outward)
 			* CFrame.Angles(math.rad(rng:NextNumber(-40, -20)), rng:NextNumber(-0.5, 0.5), rng:NextNumber(-0.4, 0.4))
-		local chunk = makePart(
-			"Rim",
-			Vector3.new(chunkSize * rng:NextNumber(0.8, 1.4), chunkSize * rng:NextNumber(0.5, 0.9), chunkSize),
-			cframe,
-			RIM_COLOR,
-			Enum.Material.Basalt
-		)
+		local chunk = rimChunk(chunkSize, cframe)
 		chunk.CanCollide = chunkSize > 2.5
 		chunk.Parent = scar.folder
 		-- co drugi odłamek ma żarzący się okruch
@@ -593,8 +621,9 @@ local function finish(star: Star, reason: "Cracked" | "Expired")
 	end
 	local model = star.model
 	if model then
-		model:SetAttribute("State", "Dying")
+		-- EndReason przed State: klient czyta powód w reakcji na zmianę State.
 		model:SetAttribute("EndReason", reason)
+		model:SetAttribute("State", "Dying")
 	end
 	log:info(`{StarConfig.displayName(info.size, info.type)} {info.id}: {reason}`)
 	Remotes.fireAllClients("StarEvent", "Gone", { id = info.id, reason = reason })
@@ -838,6 +867,10 @@ function StarService.Init()
 	local found = ServerStorage:FindFirstChild("Stars")
 	if found and found:IsA("Folder") then
 		templates = found
+		-- Kopia dla klientów: w locie (T38) klient pokazuje prawdziwy model gwiazdy.
+		local visuals = found:Clone()
+		visuals.Name = "StarVisuals"
+		visuals.Parent = ReplicatedStorage
 	else
 		log:error("Brak ServerStorage.Stars — gwiazdy nie będą spadać")
 	end

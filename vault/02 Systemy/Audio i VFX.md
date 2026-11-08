@@ -14,3 +14,5 @@ Scenariusz i czasy animacji: [[Animacje i cinematiki]].
 - **Rozpad**: eksplozja kryształów, przedmioty lecą łukiem do graczy, dźwięk wg rzadkości.
 - **Muzyka**: kosmiczny ambient w hubie, intensywny loop w Deszczu Gwiazd.
 - Dźwięki własne (`tools/sfx_gen.py` wzorem CarImportEmpire).
+
+**T38 (2026-11-08):** 20 własnych dźwięków spadku (`tools/sfx_gen.py` → `art/audio/stars/`, ID w `SoundIds.luau`, odtwarzanie `SoundController`) i 16 tekstur VFX (`tools/vfx_gen.py` → `art/vfx/textures/`, ID w `VfxIds.luau`). Meshe wyrwy, odłamków i skał: `art/vfx/build_vfx.py`.

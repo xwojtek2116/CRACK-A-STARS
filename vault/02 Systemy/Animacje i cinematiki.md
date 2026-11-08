@@ -31,3 +31,5 @@ tags: [system]
 - `CinematicController`: kolejka cinematik (nie nakładają się), Skip, wyłączenie przy „Reduce motion” w ustawieniach, limit na telefonie.
 - Kamera: `Camera.CameraType = Scriptable` tylko na czas ujęcia, zawsze powrót do `Custom`.
 - Wydajność: cząsteczki z pulą, max 1 duży cinematic naraz, na `lowGraphics` mniej cząsteczek. Cel 60 FPS.
+
+**Spadek gwiazdy (T38, 2026-11-08):** zrobione — wyrwa w niebie (RiftFx), lot (FallFx), uderzenie (ImpactFx), leżąca gwiazda (LandedFx), niebo (SkyFx), kamera (CinematicController). Liczby: `AnimConfig.luau`. Decyzje: [[2026-11-08 Wyrwa i cinematic spadku]]. ![[T38 wyrwa.jpg]]
