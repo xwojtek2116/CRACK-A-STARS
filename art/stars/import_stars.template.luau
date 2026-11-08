@@ -27,8 +27,8 @@ local LOOK: { [string]: { [string]: Look } } = {
 		Orbit = { material = Enum.Material.Basalt, color = "shell" },
 	},
 	Frost = {
-		Shell = { material = Enum.Material.Ice, color = "shell" },
-		Accent = { material = Enum.Material.Glass, color = "color", transparency = 0.35 },
+		Shell = { material = Enum.Material.Glass, color = "shell", transparency = 0.45 },
+		Accent = { material = Enum.Material.Glass, color = "color", transparency = 0.25 },
 		Orbit = { material = Enum.Material.Glass, color = "color", transparency = 0.2 },
 	},
 	Geode = {

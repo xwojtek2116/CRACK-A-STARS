@@ -17,7 +17,7 @@ tags: ["lup/frost", "rarity/legendary"]
 | --- | --- |
 | Dochód w bazie | **$420/s** (Shiny ×2, Golden ×5) |
 | Kształt | floating orb with rings |
-| Styl rodzaju | dense cluster of long ice spikes, snowy crust, cold mist |
+| Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
 | Model | `art/items/frost/frost_orb.blend` |
 

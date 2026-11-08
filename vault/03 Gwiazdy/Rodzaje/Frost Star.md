@@ -12,7 +12,7 @@ tags: ["gwiazda", "rodzaj"]
 
 ![[star_frost.png|320]]
 
-**Sylwetka:** dense cluster of long ice spikes, snowy crust, cold mist
+**Sylwetka:** snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist
 
 Mnożnik dochodu łupu **×1.4** · strefa `FrostCrater` · kolor `#7FD8FF` · poświata `#E6FBFF` · skorupa `#B9D4E6`
 

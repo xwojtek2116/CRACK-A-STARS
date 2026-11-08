@@ -353,28 +353,69 @@ def build_lava(coll, cfg, rng, seed):
     return parts
 
 
-def build_frost(coll, cfg, rng, seed):
-    """Frost Star: „jeżowiec” z długich lodowych kolców. Kolce półprzezroczyste (Glass), w każdym świecący
-    kryształ-rdzeń; lodowa skorupa popękana, przez pęknięcia bije zimne światło."""
-    d = cfg["d"]
-    bm = ico(0.74, cfg["sub"])
-    for v in bm.verts:
+def spiky_star(bm, radius, spike, sub=1):
+    """Świecąca gwiazda 3D: ikosfera, której 12 pierwotnych wierzchołków wyciągnięto w kolce."""
+    tmp = ico(radius, sub)
+    for v in tmp.verts:
         n = v.co.normalized()
-        v.co = n * 0.74 * rocky(n, seed, 0.5)
-    voronoi_plates(bm, [6, 9, 13, 18][d], 0.95, (0.99, 1.04), rng)
-    shell = mesh_obj("Shell", bm, coll)
-    solidify(shell, 0.08, rim_mat=True)
+        # 12 wierzchołków ikosaedru ma 5 sąsiadów, reszta 6 — to one stają się czubkami.
+        v.co = n * (spike if len(v.link_edges) == 5 else radius)
+    bm_add(bm, tmp)
 
-    core = ico(0.66, 3)
-    bm_add(core, split_rim(shell))
+
+def gem(rng, n_pts, radius, jitter, stretch=1.0):
+    """Fasetowana bryła (otoczka wypukła losowych punktów na sferze) — duże płaskie ścianki jak klejnot."""
+    bm = bmesh.new()
+    for d in fib_dirs(n_pts, rng, jitter):
+        r = radius * rng.uniform(0.9, 1.05)
+        bm.verts.new(Vector((d.x * r, d.y * r, d.z * r * stretch)))
+    bmesh.ops.convex_hull(bm, input=bm.verts)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return bm
+
+
+def snowflake_dirs(d):
+    """Ramiona płatka śniegu: 6 w płaszczyźnie pionowej XZ (co 60°, front = -Y) + 2 krótsze przód/tył
+    (z boku wygląda jak 4-ramienny błysk), od Large 8 ukośnych. Zwraca (kierunek, skala długości, główne?)."""
+    out = [(Vector((math.sin(k * math.tau / 6), 0.0, math.cos(k * math.tau / 6))), 1.0, True) for k in range(6)]
+    out += [(Vector((0, -1, 0)), 0.6, False), (Vector((0, 1, 0)), 0.6, False)]
+    if d >= 3:  # Huge: 6 krótszych ramion między głównymi (płatek „gwiaździsty”)
+        out += [(Vector((math.sin((k + 0.5) * math.tau / 6), 0.0, math.cos((k + 0.5) * math.tau / 6))), 0.5, False)
+                for k in range(6)]
+    if d >= 2:
+        for sx in (-1, 1):
+            for sy in (-1, 1):
+                for sz in (-1, 1):
+                    out.append((Vector((sx, sy * 0.9, sz)).normalized(), 0.42, False))
+    return out
+
+
+def build_frost(coll, cfg, rng, seed):
+    """Frost Star: zamrożona gwiazda — w środku świeci kolczasta gwiazda, zamknięta w fasetowanym,
+    półprzezroczystym klejnocie lodu; z bryły rosną grube kryształy lodu w układzie płatka śniegu
+    (każdy ze świecącym rdzeniem). Rozmiar = więcej ścianek, kępy kryształów, ukośne promienie."""
+    d = cfg["d"]
+    shell = mesh_obj("Shell", gem(rng, [24, 32, 44, 56][d], 0.82, 0.18, stretch=0.95), coll)
+
+    core = bmesh.new()
+    spiky_star(core, 0.2, 0.52)
     acc = bmesh.new()
-    for n in fib_dirs([10, 15, 22, 32][d], rng, 0.25):
-        length = rng.uniform(0.95, 1.6) * (0.65 if n.z < -0.4 else 1.0)
-        rad = rng.uniform(0.09, 0.14)
-        crystal(acc, n * 0.66, n, length, rad, rng, sides=6)
-        crystal(core, n * 0.66, n, length * 0.82, rad * 0.42, rng, sides=4)  # świecący rdzeń kolca
-    for n in fib_dirs([4, 6, 10, 14][d], rng, 0.5):  # krótkie świecące kryształki między kolcami
-        crystal(core, n * 0.72, n, rng.uniform(0.2, 0.34), 0.06, rng, sides=5)
+    for n, k, main in snowflake_dirs(d):
+        n = (n + rand_dir(rng) * 0.03).normalized()
+        length = (0.85 + 0.2 * d) * k * rng.uniform(0.95, 1.05)
+        rad = (0.17 + 0.02 * d) * (0.7 + 0.3 * k)
+        crystal(acc, n * 0.62, n, length, rad, rng, sides=6, sink=0.1)
+        crystal(core, n * 0.62, n, length * 0.82, rad * 0.32, rng, sides=4, sink=0.1)  # świecący rdzeń
+        if main and d >= 1:
+            # Odgałęzienia płatka: pod 60° w płaszczyźnie płatka, 1 para (Medium) / 2 pary (Large+).
+            side = n.cross(Vector((0, 1, 0))).normalized()
+            for j, t in enumerate([0.55, 0.85][: 1 if d == 1 else 2]):
+                base = n * (0.62 + length * 0.7 * t)
+                for sgn in (-1, 1):
+                    dirb = (n * 0.5 + side * sgn * 0.866).normalized()
+                    bl = length * (0.42 - 0.12 * j)
+                    crystal(acc, base, dirb, bl, rad * 0.45, rng, sides=6, sink=0.05)
+                    crystal(core, base, dirb, bl * 0.75, rad * 0.16, rng, sides=4, sink=0.05)
     return {"Shell": shell, "Core": mesh_obj("Core", core, coll), "Accent": mesh_obj("Accent", acc, coll)}
 
 
@@ -444,7 +485,13 @@ BUILDERS = {"Iron": build_iron, "Lava": build_lava, "Frost": build_frost, "Geode
 
 
 def orbit_maker(type_id, rng, seed):
-    if type_id in ("Frost", "Geode"):
+    if type_id == "Frost":
+        def shard(bm, c, k):
+            tan = Vector((-c.y, c.x, 0)).normalized()
+            crystal(bm, c - tan * 0.15, (tan + rand_dir(rng) * 0.2).normalized(), rng.uniform(0.3, 0.45), 0.07, rng, sides=6,
+                    sink=0.1)
+        return shard
+    if type_id == "Geode":
         return lambda bm, c, k: crystal(bm, c, rand_dir(rng), rng.uniform(0.25, 0.45), 0.08, rng, sides=5, sink=0.1)
     if type_id == "Iron":
         return lambda bm, c, k: cube_at(bm, c, rng.uniform(0.07, 0.12), rng)
@@ -505,9 +552,9 @@ def theme_materials(type_id):
         orbit = material("Lava_Orbit", shell, rough=0.9)
         sh = material("Lava_Shell", shell, rough=0.85)
     elif type_id == "Frost":
-        accent = material("Frost_Accent", color, alpha=0.45, rough=0.05, emission=0.6)
-        orbit = material("Frost_Orbit", color, alpha=0.55, rough=0.05, emission=1.5)
-        sh = material("Frost_Shell", shell, rough=0.4)
+        accent = material("Frost_Accent", color, alpha=0.5, rough=0.05, emission=0.5)
+        orbit = material("Frost_Orbit", color, alpha=0.6, rough=0.05, emission=1.2)
+        sh = material("Frost_Shell", shell, alpha=0.6, rough=0.03)
     else:
         accent = material(f"{type_id}_Accent", color, emission=1.5, neon=True)
         orbit = material(f"{type_id}_Orbit", color, emission=1.3, neon=True)

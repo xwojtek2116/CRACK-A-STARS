@@ -17,7 +17,7 @@ tags: ["lup/frost", "rarity/epic"]
 | --- | --- |
 | Dochód w bazie | **$84/s** (Shiny ×2, Golden ×5) |
 | Kształt | glowing core in cage |
-| Styl rodzaju | dense cluster of long ice spikes, snowy crust, cold mist |
+| Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
 | Model | `art/items/frost/frost_core.blend` |
 

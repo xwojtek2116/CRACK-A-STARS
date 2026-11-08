@@ -71,6 +71,17 @@ Generator gwiazd i rodzaje 1-4.
   - Wszystkie w budżecie.
 - Logika importu (części, materiały, skala, światło, cząsteczki) sprawdzona w Studio na atrapach i posprzątana. Upload FBX nadal blokowany przez MCP Permissions.
 
+**Frost od nowa (8.11, prośba użytkownika — kolce wyglądały dziwnie):**
+- Nowy pomysł to „zamrożona gwiazda”:
+  - świecąca kolczasta gwiazda (`spiky_star`) w środku fasetowanego, półprzezroczystego klejnotu lodu (`gem`, Glass 0.45);
+  - grube kryształy lodu w układzie płatka śniegu: 6 ramion w płaszczyźnie pionowej plus krótsze przód i tył, każdy z neonowym rdzeniem.
+- Rozmiary:
+  - Medium i większe mają odgałęzienia na ramionach: 1 para, a od Large 2 pary.
+  - Od Large dochodzi 8 ukośnych promieni i aureola odłamków ułożonych wzdłuż orbity.
+  - Huge ma dodatkowo 6 krótszych ramion między głównymi.
+- Z przodu widać płatek śniegu, z boku czteroramienny błysk gwiazdy (`star_frost_angles.png`).
+- Tris: 352 / 800 / 1670 / ~2.2k.
+
 **Użyte skille:** `task`, `anthropic-skills:computer-use` (dostęp odrzucony), Studio MCP (`execute_luau`, `open_cloud_invoke`), Blender CLI.
 
 **Problemy:**
