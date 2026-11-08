@@ -28,6 +28,7 @@ Modele narzędzi tier 1-8.
 
 ## Do zrobienia
 - [ ] 8 modeli wg `look` z Tools.json
+- [ ] 2 ekskluzywy za Robux: Comet Blade, Galaxy Hammer (`Monetization.json` → `exclusives`)
 - [ ] Uchwyt (Handle) i orientacja pod Tool
 - [ ] Render + FBX + import do ServerStorage.Tools
 

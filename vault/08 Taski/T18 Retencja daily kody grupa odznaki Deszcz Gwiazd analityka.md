@@ -29,7 +29,7 @@ Retencja daily kody grupa odznaki Deszcz Gwiazd analityka.
 
 ## Do zrobienia
 - [ ] Nagroda dzienna
-- [ ] Kody
+- [ ] Kody promocyjne: `CodesService` (walidacja, raz na gracza, limit prób, nagrody z `Codes.json`), live kody przez ConfigService, okno Codes w HUD + tablica w lobby, komunikaty „Code redeemed!”/„Invalid”/„Already used”
 - [ ] Bonus grupy
 - [ ] Odznaki
 - [ ] Deszcz Gwiazd co godzinę

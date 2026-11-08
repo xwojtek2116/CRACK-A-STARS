@@ -31,7 +31,9 @@ StarService harmonogram spadek krater HP.
 - [ ] Harmonogram wg Stars.json
 - [ ] Losowy punkt lądowania na całej planecie (`Stars.json` → `landing`: raycast, odrzucenie hubu/działek/stoków, odstępy, biom pod punktem → boost rodzaju)
 - [ ] Ogłoszenie + smuga + cień + uderzenie (klient) — wersja podstawowa, pełny cinematic w T12
-- [ ] Model, krater, HP, strefy, gaśnięcie po lifetime
+- [ ] Model wbity w grunt pod kątem toru lotu, krater (mesh + przypalenie, Large+ kopie Terrain), ślad przelotu, dym
+- [ ] Ślad zostaje 180 s po rozbiciu i blednie (`Stars.json` → `impact`, max 14 śladów, odtworzenie terenu)
+- [ ] HP, strefy, gaśnięcie po lifetime
 - [ ] Kompas do najbliższej gwiazdy
 
 ## Kryteria akceptacji

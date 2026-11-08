@@ -27,6 +27,8 @@ Modele pojazdów.
 
 ## Do zrobienia
 - [ ] Hoverboard, Moon Rover, Rocket Bike (+ Jet Pod, UFO)
+- [ ] Ekskluzyw za Robux: Comet Board
+- [ ] Kosmetyki: Star Trail, Nebula Aura (cząsteczki)
 - [ ] Koła/punkty mocowania pod constrainty
 
 ## Kryteria akceptacji

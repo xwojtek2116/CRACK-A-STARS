@@ -29,6 +29,7 @@ Monetyzacja gamepassy produkty Policy.
 ## Do zrobienia
 - [ ] ProcessReceipt idempotentny
 - [ ] Gamepassy i efekty
+- [ ] Exclusives: Comet Blade, Galaxy Hammer, Comet Board, Star Trail, Nebula Aura + rotacja ofert LIMITED TIME (`Monetization.json` → `exclusives`, `limitedOffers`)
 - [ ] Summon a Star z PolicyService
 - [ ] Okienka kontekstowe
 

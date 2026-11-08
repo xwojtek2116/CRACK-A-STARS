@@ -26,6 +26,7 @@ Creator Hub produkty ceny ikony.
 - game/src/shared/Config/Data/Monetization.json
 
 ## Do zrobienia
+- [ ] Gamepassy dla ekskluzywów (Comet Blade, Galaxy Hammer, Comet Board, Star Trail, Nebula Aura) z ikonami
 - [ ] Utworzenie gamepassów i produktów w Creator Hub (przeglądarka)
 - [ ] Ikony z renderów
 - [ ] assetId do JSON

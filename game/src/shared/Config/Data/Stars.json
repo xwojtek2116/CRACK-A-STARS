@@ -93,5 +93,16 @@
       "event": true
     }
   },
-  "notes": "Gwiazda = rodzaj (Themes.json, 12) × rozmiar (tu). Nazwa w grze: '<Rozmiar> <displayName rodzaju>', np. 'Huge Lava Star'. Waga rodzaju = weight × (1 + (rareTypeBoost − 1) × indeks/11) — większe gwiazdy częściej są rzadkimi rodzajami. zones = liczba stref rozbijania (duże gwiazdy bije wiele osób). minShare = minimalny udział w obrażeniach, żeby dostać łup. luck dzieli mianownik oneIn od Rare w górę. Supernova = event Deszcz Gwiazd, jedyne źródło Secret."
+  "notes": "Gwiazda = rodzaj (Themes.json, 12) × rozmiar (tu). Nazwa w grze: '<Rozmiar> <displayName rodzaju>', np. 'Huge Lava Star'. Waga rodzaju = weight × (1 + (rareTypeBoost − 1) × indeks/11) — większe gwiazdy częściej są rzadkimi rodzajami. zones = liczba stref rozbijania (duże gwiazdy bije wiele osób). minShare = minimalny udział w obrażeniach, żeby dostać łup. luck dzieli mianownik oneIn od Rare w górę. Supernova = event Deszcz Gwiazd, jedyne źródło Secret.",
+  "impact": {
+    "embedDepth": 0.35,
+    "craterRadiusMult": 1.6,
+    "digTerrainFromSize": "Large",
+    "trailLengthMult": 6,
+    "scarSeconds": 180,
+    "scarFadeSeconds": 20,
+    "maxScars": 14,
+    "smokeSeconds": 45,
+    "notes": "Gwiazda wbija się w grunt na 35% wysokości; krater = mesh + przypalenie (Large+ kopie też Terrain). Po rozbiciu/zgaśnięciu ślad (krater, przypalony pas wzdłuż toru lotu, dym, żarzące odłamki) zostaje 180 s i znika przez 20 s. Max 14 śladów naraz (najstarszy znika)."
+  }
 }

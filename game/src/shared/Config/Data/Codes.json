@@ -1,0 +1,46 @@
+{
+  "codes": [
+    {
+      "code": "LAUNCH",
+      "reward": {
+        "cash": 2500
+      },
+      "expires": "2026-12-21",
+      "notes": "premiera"
+    },
+    {
+      "code": "STARS",
+      "reward": {
+        "luckBoostMinutes": 10
+      },
+      "expires": null,
+      "notes": "stały, w opisie gry"
+    },
+    {
+      "code": "1KLIKES",
+      "reward": {
+        "cash": 5000
+      },
+      "expires": null,
+      "active": false,
+      "notes": "włączyć po 1000 polubień"
+    },
+    {
+      "code": "SUPERNOVA",
+      "reward": {
+        "cash": 10000,
+        "luckBoostMinutes": 15
+      },
+      "expires": null,
+      "active": false,
+      "notes": "na pierwszy duży cel/TikTok"
+    }
+  ],
+  "rules": {
+    "caseInsensitive": true,
+    "oncePerPlayer": true,
+    "attemptsPerMinute": 5,
+    "liveCodesVia": "ConfigService",
+    "notes": "Bazowe kody w JSON; nowe kody i włączanie/wyłączanie bez aktualizacji gry przez Experience Configs (ConfigService, klucz 'codes')."
+  }
+}
