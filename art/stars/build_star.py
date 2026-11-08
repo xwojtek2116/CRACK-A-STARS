@@ -71,16 +71,54 @@ def mesh_obj(name, bm, coll, smooth=False):
     return ob
 
 
-def solidify(ob, thickness):
+def solidify(ob, thickness, rim_mat=False):
+    """Pogrubia skorupę do środka. rim_mat=True: ściany boczne płyt (szwy) dostają material_index 1 → split_rim."""
+    if rim_mat:
+        ob.data.materials.append(bpy.data.materials.new("tmp0"))
+        ob.data.materials.append(bpy.data.materials.new("tmp1"))
     sol = ob.modifiers.new("Solidify", "SOLIDIFY")
     sol.thickness = thickness
     sol.offset = -1
+    if rim_mat:
+        sol.material_offset_rim = 1
     for o in bpy.context.view_layer.objects:
         o.select_set(False)
     bpy.context.view_layer.objects.active = ob
     ob.select_set(True)
     bpy.ops.object.modifier_apply(modifier="Solidify")
     ob.select_set(False)
+
+
+def split_rim(ob, drop_inner=True):
+    """Odcina ściany boczne płyt (material_index 1) od Shell i zwraca je jako bmesh → doklejane do Core.
+    Efekt: krawędzie każdej płyty świecą (rozżarzone szwy) bez poszerzania szczelin.
+    drop_inner: usuń wewnętrzne ściany skorupy (niewidoczne z zewnątrz) — oszczędza ~1/3 tris."""
+    me = ob.data
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    rim = bm.copy()
+    kill = [f for f in bm.faces if f.material_index == 1]
+    if drop_inner:
+        kill += [f for f in bm.faces if f.material_index == 0 and f.normal.dot(f.calc_center_median()) < 0]
+    bmesh.ops.delete(bm, geom=kill, context="FACES")
+    for f in bm.faces:
+        f.material_index = 0
+    bm.to_mesh(me)
+    bm.free()
+    me.materials.clear()
+    bmesh.ops.delete(rim, geom=[f for f in rim.faces if f.material_index != 1], context="FACES")
+    for f in rim.faces:
+        f.material_index = 0
+    return rim
+
+
+def bm_add(dst, src):
+    """Dokleja bmesh src do dst (src zostaje zwolniony)."""
+    me = bpy.data.meshes.new("tmp")
+    src.to_mesh(me)
+    src.free()
+    dst.from_mesh(me)
+    bpy.data.meshes.remove(me)
 
 
 def fib_dirs(n, rng, jitter=0.0, min_z=-1.0):
@@ -175,105 +213,180 @@ def orbit_ring(bm, n, rng, maker, rad=(1.9, 2.4)):
         maker(bm, c, k)
 
 
+def arc_tube(bm, a, b, radius, height, thick, rng, seg=10, sides=6):
+    """Rozbłysk (protuberancja): łuk rurki z punktu a do b nad powierzchnią, gruby u podstawy, cieńszy u góry."""
+    a, b = a.normalized(), b.normalized()
+    phase = rng.random() * 6
+    pts = []
+    for i in range(seg + 1):
+        t = i / seg
+        dd = a.slerp(b, t)
+        wob = 0.05 * math.sin(t * math.pi * 3 + phase)
+        pts.append(dd * (radius - 0.08 + height * math.sin(math.pi * t) + wob))
+    rings = []
+    for i, p in enumerate(pts):
+        t = i / seg
+        tan = (pts[min(i + 1, seg)] - pts[max(i - 1, 0)]).normalized()
+        nrm = p.normalized()
+        s1 = tan.cross(nrm).normalized()
+        s2 = tan.cross(s1).normalized()
+        r = thick * (1.0 - 0.45 * math.sin(math.pi * t))
+        rings.append([bm.verts.new(p + (s1 * math.cos(k * math.tau / sides) + s2 * math.sin(k * math.tau / sides)) * r)
+                      for k in range(sides)])
+    for i in range(seg):
+        for k in range(sides):
+            j = (k + 1) % sides
+            bm.faces.new((rings[i][k], rings[i][j], rings[i + 1][j], rings[i + 1][k]))
+
+
+def blob(bm, center, radius, seed, sub=2, amp=1.0):
+    """Gładki, lekko falujący bąbel (magma, stopiony metal)."""
+    tmp = ico(radius, sub)
+    for v in tmp.verts:
+        dd = v.co.normalized()
+        v.co = dd * radius * (1 + 0.12 * amp * noise.noise(dd * 2.2 + Vector((seed, 0, 0)))) + center
+    bm_add(bm, tmp)
+
+
+def rand_dir(rng):
+    return Vector(tuple(rng.uniform(-1, 1) for _ in range(3))).normalized()
+
+
+def cube_at(bm, center, half, rng):
+    cb = bmesh.new()
+    bmesh.ops.create_cube(cb, size=half * 2)
+    bmesh.ops.rotate(cb, verts=cb.verts, matrix=Matrix.Rotation(rng.uniform(0, math.tau), 3, rand_dir(rng)))
+    bmesh.ops.translate(cb, verts=cb.verts, vec=center)
+    bm_add(bm, cb)
+
+
+def cluster(bm, base, direction, rng, n, length, radius, spread=0.45, sides=6):
+    """Kępa kryształów z jednego punktu: główny długi + mniejsze rozchylone wokół."""
+    crystal(bm, base, direction, length, radius, rng, sides=sides)
+    for _ in range(n - 1):
+        jit = Vector(tuple(rng.uniform(-1, 1) for _ in range(3))) * spread
+        d2 = (direction + jit).normalized()
+        crystal(bm, base + jit * radius * 0.8, d2, length * rng.uniform(0.45, 0.75), radius * rng.uniform(0.5, 0.75),
+                rng, sides=sides)
+
+
 # ---------------------------------------------------------------- rodzaje
+# Każdy builder zwraca {"Shell", "Core", "Accent"}. Core = WSZYSTKO, co świeci kolorem `glow` (Neon w grze):
+# wnętrze, rozżarzone krawędzie płyt (split_rim), świecące rdzenie kolców itd.
 
 def build_iron(coll, cfg, rng, seed):
-    """Iron Meteorite: spłaszczony „ziemniak” z wgnieceniami (thumbprints), wąskie żarzące się szwy, guzy."""
+    """Iron Meteorite: rozżarzony żelazny meteoryt — wgniecenia (thumbprints), płyty z pomarańczowo
+    świecącymi krawędziami, stopiony metal w wgnieceniach, kępy kubicznych kryształów żelaza."""
     d = cfg["d"]
     squash = Vector((1.28, 1.0, 0.86))
+
+    def sq(v):
+        return Vector((v.x * squash.x, v.y * squash.y, v.z * squash.z))
+
     bm = ico(1.0, cfg["sub"])
-    dents = [(dd, rng.uniform(0.32, 0.5), rng.uniform(0.09, 0.15)) for dd in fib_dirs(5 + 4 * d, rng, 0.3)]
-    for v in bm.verts:
-        n = v.co.normalized()
+    dents = [(dd, rng.uniform(0.32, 0.5), rng.uniform(0.1, 0.17)) for dd in fib_dirs(5 + 4 * d, rng, 0.3)]
+
+    def surf(n):
         r = rocky(n, seed, 0.8)
         for c, ang, depth in dents:
             a = n.angle(c)
             if a < ang:
                 r -= depth * (1 - (a / ang) ** 2)
-        v.co = Vector((n.x * squash.x, n.y * squash.y, n.z * squash.z)) * r
-    voronoi_plates(bm, [6, 9, 13, 18][d], 0.955, (0.99, 1.03), rng)
-    shell = mesh_obj("Shell", bm, coll)
-    solidify(shell, 0.12)
+        return sq(n) * r
 
-    core = ico(0.86, 3)
+    for v in bm.verts:
+        v.co = surf(v.co.normalized())
+    voronoi_plates(bm, [7, 10, 14, 19][d], 0.968, (0.992, 1.025), rng)
+    shell = mesh_obj("Shell", bm, coll)
+    solidify(shell, 0.13, rim_mat=True)
+
+    core = ico(0.9, 3)
     for v in core.verts:
-        v.co = Vector((v.co.x * squash.x, v.co.y * squash.y, v.co.z * squash.z))
-    parts = {"Shell": shell, "Core": mesh_obj("Core", core, coll, smooth=True)}
+        v.co = sq(v.co) * rocky(v.co.normalized(), seed + 3, 0.4)
+    bm_add(core, split_rim(shell))
+    # Stopiony metal na dnie największych wgnieceń (świecące „kałuże”).
+    for c, ang, depth in sorted(dents, key=lambda x: -x[1])[: 2 + d]:
+        if c.z < -0.3:
+            continue
+        blob(core, surf(c) * 0.985, ang * 0.3, seed + 11, sub=1, amp=0.4)
+    parts = {"Shell": shell, "Core": mesh_obj("Core", core, coll)}
 
     acc = bmesh.new()
-    for i, n in enumerate(fib_dirs([2, 3, 5, 7][d], rng, 0.5, min_z=-0.2)):
-        p = Vector((n.x * squash.x, n.y * squash.y, n.z * squash.z)) * 0.95
-        chunk(acc, p, rng.uniform(0.18, 0.28), seed + i * 7, (1, 1, 0.8))
+    for n in fib_dirs([3, 4, 6, 9][d], rng, 0.5, min_z=-0.2):
+        base = surf(n) * 0.97
+        for k in range(rng.randint(3, 4)):
+            s = rng.uniform(0.13, 0.21) * (1.0 if k == 0 else 0.62)
+            cube_at(acc, base + n * s * 0.5 + rand_dir(rng) * 0.13 * k, s, rng)
     parts["Accent"] = mesh_obj("Accent", acc, coll)
     return parts
 
 
 def build_lava(coll, cfg, rng, seed):
-    """Lava Star: czarne płyty bazaltu unoszące się na kuli magmy (szerokie świecące szczeliny), kapiące krople."""
+    """Lava Star: czarne płyty bazaltu na kuli magmy — szerokie rzeki lawy, rozżarzone krawędzie płyt,
+    bąble magmy spod płyt, a od Medium łuki rozbłysków (protuberancje) nad powierzchnią."""
     d = cfg["d"]
     bm = ico(1.05, cfg["sub"])
     for v in bm.verts:
         n = v.co.normalized()
         v.co = n * 1.05 * rocky(n, seed, 0.6)
-    voronoi_plates(bm, [8, 12, 17, 24][d], 0.80, (1.0, 1.13), rng)
+    voronoi_plates(bm, [8, 12, 17, 24][d], 0.80, (1.0, 1.12), rng)
     shell = mesh_obj("Shell", bm, coll)
-    solidify(shell, 0.17)
+    solidify(shell, 0.17, rim_mat=True)
 
-    core = ico(0.97, 3 if d < 3 else 4)
+    core = ico(0.98, 3)
     for v in core.verts:
         n = v.co.normalized()
-        v.co = n * 0.97 * rocky(n, seed + 5, 0.5)
+        v.co = n * 0.98 * rocky(n, seed + 5, 0.5)
+    bm_add(core, split_rim(shell))
     parts = {"Shell": shell, "Core": mesh_obj("Core", core, coll, smooth=True)}
 
-    # Krople: łza = stożek w dół + kulka na końcu, z boków i spodu.
+    # Accent (Neon, kolor `color` — głęboki pomarańcz): bąble magmy + łuki rozbłysków.
     acc = bmesh.new()
-    n_drips = [3, 5, 7, 10][d]
-    for i in range(n_drips):
-        a = i / n_drips * math.tau + rng.uniform(-0.3, 0.3)
-        z = rng.uniform(-0.55, 0.35)
-        rr = math.sqrt(1 - z * z)
-        base = Vector((math.cos(a) * rr, math.sin(a) * rr, z)) * 0.98
-        length = rng.uniform(0.3, 0.55) * (1.0 + 0.12 * d)
-        rad = rng.uniform(0.13, 0.19)
-        down = (Vector((0, 0, -1)) * 0.6 + base * 0.6).normalized()
-        crystal(acc, base, down, length, rad, rng, sides=6, sink=0.1)
-        chunk(acc, base + down * length * 0.95, rad * 1.35, seed + i, sub=1)
+    for i, n in enumerate(fib_dirs([3, 5, 7, 10][d], rng, 0.35, min_z=-0.6)):
+        blob(acc, n * 1.02, rng.uniform(0.17, 0.27), seed + i * 13, sub=2)
+    n_arcs = [0, 1, 2, 3][d]
+    for a in (fib_dirs(n_arcs, rng, 0.3, min_z=0.0) if n_arcs else []):
+        side = a.cross(Vector((0.3, 0.2, 1.0))).normalized()
+        b = (a + side * rng.uniform(0.75, 1.0)).normalized()
+        arc_tube(acc, a, b, 1.0, rng.uniform(0.6, 0.85), rng.uniform(0.12, 0.16), rng, seg=12, sides=7)
     parts["Accent"] = mesh_obj("Accent", acc, coll, smooth=True)
     return parts
 
 
 def build_frost(coll, cfg, rng, seed):
-    """Frost Star: gęsty klaster długich kolców lodu na śnieżnej, gładkiej skorupie (sylwetka „jeżowca”)."""
+    """Frost Star: „jeżowiec” z długich lodowych kolców. Kolce półprzezroczyste (Glass), w każdym świecący
+    kryształ-rdzeń; lodowa skorupa popękana, przez pęknięcia bije zimne światło."""
     d = cfg["d"]
-    bm = ico(0.72, cfg["sub"])
+    bm = ico(0.74, cfg["sub"])
     for v in bm.verts:
         n = v.co.normalized()
-        v.co = n * 0.72 * rocky(n, seed, 0.5)
-    shell = mesh_obj("Shell", bm, coll, smooth=True)
+        v.co = n * 0.74 * rocky(n, seed, 0.5)
+    voronoi_plates(bm, [6, 9, 13, 18][d], 0.95, (0.99, 1.04), rng)
+    shell = mesh_obj("Shell", bm, coll)
+    solidify(shell, 0.08, rim_mat=True)
 
-    # Core = krótkie, świecące kryształki między kolcami (zimny blask).
-    core = bmesh.new()
-    for n in fib_dirs([6, 9, 14, 20][d], rng, 0.4):
-        crystal(core, n * 0.68, n, rng.uniform(0.22, 0.38), 0.06, rng, sides=5)
-    parts = {"Shell": shell, "Core": mesh_obj("Core", core, coll)}
-
+    core = ico(0.66, 3)
+    bm_add(core, split_rim(shell))
     acc = bmesh.new()
     for n in fib_dirs([10, 15, 22, 32][d], rng, 0.25):
-        length = rng.uniform(0.95, 1.55) * (0.65 if n.z < -0.4 else 1.0)
-        crystal(acc, n * 0.66, n, length, rng.uniform(0.085, 0.13), rng, sides=6)
-    parts["Accent"] = mesh_obj("Accent", acc, coll)
-    return parts
+        length = rng.uniform(0.95, 1.6) * (0.65 if n.z < -0.4 else 1.0)
+        rad = rng.uniform(0.09, 0.14)
+        crystal(acc, n * 0.66, n, length, rad, rng, sides=6)
+        crystal(core, n * 0.66, n, length * 0.82, rad * 0.42, rng, sides=4)  # świecący rdzeń kolca
+    for n in fib_dirs([4, 6, 10, 14][d], rng, 0.5):  # krótkie świecące kryształki między kolcami
+        crystal(core, n * 0.72, n, rng.uniform(0.2, 0.34), 0.06, rng, sides=5)
+    return {"Shell": shell, "Core": mesh_obj("Core", core, coll), "Accent": mesh_obj("Accent", acc, coll)}
 
 
 GEODE_OPEN = Vector((0.35, -1.0, 0.45)).normalized()
 
 
 def build_geode(coll, cfg, rng, seed):
-    """Geode Star: chropowate kamienne jajo pęknięte z jednej strony, w środku grota ametystów."""
+    """Geode Star: kamienne jajo rozłupane z jednej strony; świecąca grota pełna kęp ametystów,
+    krawędź otworu i pęknięcia skorupy świecą fioletem, od Large kryształy przebijają skorupę."""
     d = cfg["d"]
 
     def egg(n, r):
-        # jajo: wydłużone w Z, węższe u góry
         x, y, z = n.x * r, n.y * r, n.z * r * 1.3
         k = 1.0 - 0.12 * n.z
         return Vector((x * k, y * k, z))
@@ -282,48 +395,47 @@ def build_geode(coll, cfg, rng, seed):
     for v in bm.verts:
         n = v.co.normalized()
         v.co = egg(n, rocky(n, seed, 1.0))
-    # Otwór: usuń ściany w stożku wokół GEODE_OPEN, z poszarpaną krawędzią.
-    lim = math.cos(math.radians(48))
+    lim = math.cos(math.radians(50))
     kill = []
     for f in bm.faces:
         n = f.calc_center_median().normalized()
-        jag = 0.12 * noise.noise(n * 4.0 + Vector((seed, 0, 0)))
+        jag = 0.14 * noise.noise(n * 4.0 + Vector((seed, 0, 0)))
         if n.dot(GEODE_OPEN) > lim + jag:
             kill.append(f)
     bmesh.ops.delete(bm, geom=kill, context="FACES")
-    if d >= 2:  # większe: dodatkowe pęknięcie skorupy na płyty
-        voronoi_plates(bm, [0, 0, 10, 15][d], 0.985, (0.995, 1.02), rng)
+    voronoi_plates(bm, [6, 8, 11, 15][d], 0.965, (0.995, 1.025), rng)
     shell = mesh_obj("Shell", bm, coll)
-    solidify(shell, 0.24)
+    solidify(shell, 0.24, rim_mat=True)
 
     core = ico(1.0, 3)
     for v in core.verts:
-        n = v.co.normalized()
-        v.co = egg(n, 0.74)
+        v.co = egg(v.co.normalized(), 0.74)
+    bm_add(core, split_rim(shell, drop_inner=False))  # wnętrze groty widać przez otwór — zostaw
     parts = {"Shell": shell, "Core": mesh_obj("Core", core, coll, smooth=True)}
 
-    # Ametysty rosną ze ścianki groty do środka/na zewnątrz otworu.
     acc = bmesh.new()
-    n_cr = [7, 11, 16, 24][d]
-    placed = 0
-    tries = 0
-    while placed < n_cr and tries < 500:
+    n_cl = [4, 6, 9, 13][d]
+    placed = tries = 0
+    while placed < n_cl and tries < 500:
         tries += 1
-        n = Vector(tuple(rng.uniform(-1, 1) for _ in range(3))).normalized()
-        if n.dot(GEODE_OPEN) < 0.1:
+        n = rand_dir(rng)
+        if n.dot(GEODE_OPEN) < 0.15:
             continue
-        base = egg(n, 0.76)
-        dirn = (-n * 0.35 + GEODE_OPEN * 0.9 + Vector(tuple(rng.uniform(-.3, .3) for _ in range(3)))).normalized()
-        length = rng.uniform(0.35, 0.75) * (1.0 + 0.12 * d)
-        crystal(acc, base, dirn, length, rng.uniform(0.08, 0.14), rng)
+        dirn = (-n * 0.3 + GEODE_OPEN * 0.9 + Vector(tuple(rng.uniform(-.3, .3) for _ in range(3)))).normalized()
+        cluster(acc, egg(n, 0.76), dirn, rng, 3, rng.uniform(0.5, 0.85) * (1.0 + 0.1 * d), rng.uniform(0.1, 0.15))
         placed += 1
-    # Kilka kryształów wyrasta z krawędzi otworu na zewnątrz — sylwetka „korony”.
-    for i in range(2 + d):
-        a = i / (2 + d) * math.tau
-        side = GEODE_OPEN.cross(Vector((0, 0, 1))).normalized()
-        up = side.cross(GEODE_OPEN).normalized()
+    # Korona: duże kryształy z krawędzi otworu na zewnątrz.
+    side = GEODE_OPEN.cross(Vector((0, 0, 1))).normalized()
+    up = side.cross(GEODE_OPEN).normalized()
+    for i in range(3 + d):
+        a = i / (3 + d) * math.tau + rng.uniform(-0.2, 0.2)
         n = (GEODE_OPEN * lim + (side * math.cos(a) + up * math.sin(a)) * math.sqrt(1 - lim * lim)).normalized()
-        crystal(acc, egg(n, 0.95), (n + GEODE_OPEN * 0.6).normalized(), rng.uniform(0.4, 0.6), 0.1, rng)
+        cluster(acc, egg(n, 0.93), (n + GEODE_OPEN * 0.7).normalized(), rng, 2, rng.uniform(0.5, 0.75), 0.12)
+    # Od Large: kryształy przebijają skorupę z boków.
+    for n in (fib_dirs([0, 0, 3, 5][d], rng, 0.4) if d >= 2 else []):
+        if n.dot(GEODE_OPEN) > 0.3:
+            continue
+        cluster(acc, egg(n, 0.95), n, rng, 2, rng.uniform(0.35, 0.5), 0.1)
     parts["Accent"] = mesh_obj("Accent", acc, coll)
     return parts
 
@@ -333,58 +445,74 @@ BUILDERS = {"Iron": build_iron, "Lava": build_lava, "Frost": build_frost, "Geode
 
 def orbit_maker(type_id, rng, seed):
     if type_id in ("Frost", "Geode"):
-        return lambda bm, c, k: crystal(bm, c, Vector(tuple(rng.uniform(-1, 1) for _ in range(3))), rng.uniform(0.25, 0.45),
-                                        0.08, rng, sides=5, sink=0.1)
-    squash = (1, 1, 0.5) if type_id == "Lava" else (1, 1, 1)
-    return lambda bm, c, k: chunk(bm, c, rng.uniform(0.1, 0.17), seed + 31 * k, squash)
+        return lambda bm, c, k: crystal(bm, c, rand_dir(rng), rng.uniform(0.25, 0.45), 0.08, rng, sides=5, sink=0.1)
+    if type_id == "Iron":
+        return lambda bm, c, k: cube_at(bm, c, rng.uniform(0.07, 0.12), rng)
+    return lambda bm, c, k: chunk(bm, c, rng.uniform(0.1, 0.17), seed + 31 * k, (1, 1, 0.5))
 
 
 # ---------------------------------------------------------------- strefy, materiały, eksport
 
 def zones(parts, count, rng):
-    """Strefy rozbijania: punkty na powierzchni (Shell+Core), górna półkula — dół gwiazdy siedzi w kraterze.
-    Zwraca pozycje w układzie Blendera (Z w górę)."""
-    verts, polys, off = [], [], 0
-    for key in ("Shell", "Core"):
+    """Strefy rozbijania: punkty na widocznej powierzchni (Shell, a w szczelinie/otworze — Core),
+    górna półkula — dół gwiazdy siedzi w kraterze. Zwraca pozycje w układzie Blendera (Z w górę)."""
+    def tree(key):
         me = parts[key].data
-        verts += [v.co.copy() for v in me.vertices]
-        polys += [[i + off for i in p.vertices] for p in me.polygons]
-        off += len(me.vertices)
-    tree = BVHTree.FromPolygons(verts, polys)
+        return BVHTree.FromPolygons([v.co.copy() for v in me.vertices], [list(p.vertices) for p in me.polygons])
+
+    shell, core = tree("Shell"), tree("Core")
     out = []
     dirs = fib_dirs(count, rng, 0.0, min_z=-0.2) if count > 1 else [Vector((0.3, -0.6, 0.75)).normalized()]
     for n in dirs:
-        hit = tree.ray_cast(n * 5.0, -n)
-        p = hit[0] if hit[0] is not None else n
+        # Najbliższe trafienie z obu: promień przez szczelinę nie może trafić w drugą stronę skorupy.
+        hits = [h for h in (shell.ray_cast(n * 5.0, -n), core.ray_cast(n * 5.0, -n)) if h[0] is not None]
+        p = min(hits, key=lambda h: h[3])[0] if hits else n
         out.append(p + n * 0.04)
     return out
 
 
-def material(name, rgb, emission=0.0, rough=0.6, metal=0.0, alpha=1.0):
+def material(name, rgb, emission=0.0, rough=0.6, metal=0.0, alpha=1.0, emit_rgb=None, neon=False):
+    """neon=True: czysta emisja (czarna baza) jak Neon w Roblox — kolor nie wybiela się od świateł."""
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     b = m.node_tree.nodes["Principled BSDF"]
     lin = srgb_to_lin(rgb)
-    b.inputs["Base Color"].default_value = (*lin, 1)
+    b.inputs["Base Color"].default_value = (0, 0, 0, 1) if neon else (*lin, 1)
     b.inputs["Roughness"].default_value = rough
     b.inputs["Metallic"].default_value = metal
     if emission > 0:
-        b.inputs["Emission Color"].default_value = (*lin, 1)
+        b.inputs["Emission Color"].default_value = (*srgb_to_lin(emit_rgb or rgb), 1)
         b.inputs["Emission Strength"].default_value = emission
+    if alpha < 1:
+        b.inputs["Alpha"].default_value = alpha
+        b.inputs["Coat Weight"].default_value = 1.0
+        m.surface_render_method = "BLENDED"
+        m.use_backface_culling = False
     return m
 
 
+# Materiały podglądu = przybliżenie tego, co ustawia import w Studio (Neon świeci, Glass półprzezroczyste).
 def theme_materials(type_id):
     t = THEMES["themes"][type_id]
-    metal = 0.35 if type_id == "Iron" else 0.0
-    return {
-        "Shell": material(f"{type_id}_Shell", hex_rgb(t["shell"]), rough=0.75 if type_id != "Frost" else 0.5, metal=metal),
-        "Core": material(f"{type_id}_Core", hex_rgb(t["glow"]), emission=2.0),
-        "Accent": material(f"{type_id}_Accent", hex_rgb(t["color"]),
-                           emission=0.0 if type_id == "Iron" else 0.8, rough=0.25, metal=metal),
-        "Orbit": material(f"{type_id}_Orbit", hex_rgb(t["color"] if type_id in ("Frost", "Geode") else t["shell"]),
-                          emission=0.6 if type_id in ("Frost", "Geode") else 0.0, rough=0.5),
-    }
+    shell, glow, color = hex_rgb(t["shell"]), hex_rgb(t["glow"]), hex_rgb(t["color"])
+    core = material(f"{type_id}_Core", glow, emission=1.0 if type_id == "Geode" else 1.8, neon=True)
+    if type_id == "Iron":
+        accent = material("Iron_Accent", color, rough=0.18, metal=1.0)
+        orbit = material("Iron_Orbit", color, rough=0.25, metal=1.0)
+        sh = material("Iron_Shell", shell, rough=0.4, metal=0.85)
+    elif type_id == "Lava":
+        accent = material("Lava_Accent", color, emission=2.2, neon=True)
+        orbit = material("Lava_Orbit", shell, rough=0.9)
+        sh = material("Lava_Shell", shell, rough=0.85)
+    elif type_id == "Frost":
+        accent = material("Frost_Accent", color, alpha=0.45, rough=0.05, emission=0.6)
+        orbit = material("Frost_Orbit", color, alpha=0.55, rough=0.05, emission=1.5)
+        sh = material("Frost_Shell", shell, rough=0.4)
+    else:
+        accent = material(f"{type_id}_Accent", color, emission=1.5, neon=True)
+        orbit = material(f"{type_id}_Orbit", color, emission=1.3, neon=True)
+        sh = material(f"{type_id}_Shell", shell, rough=0.9)
+    return {"Shell": sh, "Core": core, "Accent": accent, "Orbit": orbit}
 
 
 def tris(ob):
@@ -434,22 +562,87 @@ def export_fbx(path):
 
 # ---------------------------------------------------------------- render
 
-def setup_render(w, h, bg=(0.012, 0.010, 0.03)):
+def space_world(bg):
+    """Tło: ciemny kosmos z mgławicą i gwiazdkami (tylko podgląd)."""
+    world = bpy.data.worlds.new("Space")
+    world.use_nodes = True
+    nt = world.node_tree
+    N = nt.nodes
+    L = nt.links
+    out_bg = N["Background"]
+    tc = N.new("ShaderNodeTexCoord")
+    vor = N.new("ShaderNodeTexVoronoi")
+    vor.inputs["Scale"].default_value = 140.0
+    L.new(tc.outputs["Generated"], vor.inputs["Vector"])
+    rng_ = N.new("ShaderNodeMapRange")
+    rng_.inputs["From Min"].default_value = 0.0
+    rng_.inputs["From Max"].default_value = 0.045
+    rng_.inputs["To Min"].default_value = 1.0
+    rng_.inputs["To Max"].default_value = 0.0
+    L.new(vor.outputs["Distance"], rng_.inputs["Value"])
+    pw = N.new("ShaderNodeMath")
+    pw.operation = "POWER"
+    pw.inputs[1].default_value = 3.0
+    L.new(rng_.outputs["Result"], pw.inputs[0])
+    nz = N.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = 1.6
+    nz.inputs["Detail"].default_value = 6.0
+    L.new(tc.outputs["Generated"], nz.inputs["Vector"])
+    ramp = N.new("ShaderNodeValToRGB")
+    ramp.color_ramp.elements[0].position = 0.45
+    ramp.color_ramp.elements[0].color = (*bg, 1)
+    ramp.color_ramp.elements[1].position = 0.75
+    ramp.color_ramp.elements[1].color = (0.06, 0.02, 0.10, 1)
+    L.new(nz.outputs["Fac"], ramp.inputs["Fac"])
+    add = N.new("ShaderNodeMix")
+    add.data_type = "RGBA"
+    add.blend_type = "ADD"
+    add.inputs["Factor"].default_value = 1.0
+    L.new(ramp.outputs["Color"], add.inputs["A"])
+    L.new(pw.outputs["Value"], add.inputs["B"])
+    L.new(add.outputs["Result"], out_bg.inputs["Color"])
+    return world
+
+
+def bloom(strength=1.6, size=8):
+    """Kompozytor Blendera 5.x: Render Layers → Glare (Bloom) → wyjście. Świecące części dostają poświatę."""
+    sc = bpy.context.scene
+    ng = bpy.data.node_groups.new("Comp", "CompositorNodeTree")
+    ng.interface.new_socket("Image", in_out="OUTPUT", socket_type="NodeSocketColor")
+    rl = ng.nodes.new("CompositorNodeRLayers")
+    gl = ng.nodes.new("CompositorNodeGlare")
+    out = ng.nodes.new("NodeGroupOutput")
+    for key, val in (("Type", "Bloom"), ("Threshold", 0.55), ("Strength", strength), ("Size", size), ("Quality", "High")):
+        try:
+            gl.inputs[key].default_value = val
+        except (TypeError, KeyError, AttributeError) as e:
+            print("GLARE skip", key, e)
+    ng.links.new(rl.outputs["Image"], gl.inputs["Image"])
+    ng.links.new(gl.outputs[0], out.inputs[0])
+    sc.compositing_node_group = ng
+
+
+def setup_render(w, h, bg=(0.008, 0.007, 0.022), space=True):
     sc = bpy.context.scene
     engines = {e.identifier for e in bpy.types.RenderSettings.bl_rna.properties["engine"].enum_items}
     sc.render.engine = "BLENDER_EEVEE_NEXT" if "BLENDER_EEVEE_NEXT" in engines else "BLENDER_EEVEE"
     sc.render.resolution_x, sc.render.resolution_y = w, h
+    # Standard (nie AgX): nasycone kolory poświaty jak Neon w Roblox; AgX wybiela mocną emisję.
+    sc.view_settings.view_transform = "Standard"
     try:
-        sc.view_settings.view_transform = "AgX"
-        sc.view_settings.look = "AgX - Punchy"
+        sc.view_settings.look = "Medium High Contrast"
     except TypeError:
         pass
-    world = bpy.data.worlds.new("Space")
-    world.use_nodes = True
-    node = world.node_tree.nodes["Background"]
-    node.inputs["Color"].default_value = (*bg, 1)
-    sc.world = world
-    for name, energy, loc, col in (("Key", 3000, (6, -12, 9), (1, 1, 1)), ("Fill", 900, (-10, -8, 2), (0.8, 0.85, 1.0)), ("Rim", 1500, (-6, 10, 5), (0.6, 0.5, 1.0))):
+    if space:
+        sc.world = space_world(bg)
+        bloom()
+    else:
+        world = bpy.data.worlds.new("Flat")
+        world.use_nodes = True
+        world.node_tree.nodes["Background"].inputs["Color"].default_value = (*bg, 1)
+        sc.world = world
+    for name, energy, loc, col in (("Key", 2200, (6, -12, 9), (1, 0.97, 0.92)), ("Fill", 500, (-10, -8, 2), (0.7, 0.75, 1.0)),
+                                   ("Rim", 2600, (-4, 12, 6), (0.55, 0.45, 1.0))):
         li = bpy.data.lights.new(name, "AREA")
         li.energy, li.size, li.color = energy, 10, col
         ob = bpy.data.objects.new(name, li)
@@ -499,11 +692,28 @@ def render_type(type_id, result):
     bpy.ops.render.render(write_still=True)
 
 
+def render_lineup(types):
+    """Huge wszystkich rodzajów obok siebie, w kolorze, z bloomem — główny podgląd do akceptacji."""
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    for i, t in enumerate(types):
+        res = build_type(t)
+        for size in SIZES:
+            for ob in res[size]["coll"].objects:
+                if size != "Huge":
+                    ob.hide_render = True
+                    continue
+                ob.location.x += (i % 2 - 0.5) * 5.4
+                ob.location.z += (0.5 - i // 2) * 4.6
+    setup_render(1600, 1500)
+    camera((0, -15.5, 2.0), (0, 0, 0), lens=42)
+    bpy.context.scene.render.filepath = str(IMG / "star_lineup.png")
+    bpy.ops.render.render(write_still=True)
+
+
 def render_silhouettes(types):
     """Sylwetki Huge wszystkich rodzajów: czarne na białym — test „rozpoznawalny bez koloru”."""
     bpy.ops.wm.read_factory_settings(use_empty=True)
     black = material("Black", (0, 0, 0), rough=1.0)
-    black.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0, 0, 0, 1)
     for i, t in enumerate(types):
         res = build_type(t)
         for size in SIZES:
@@ -515,7 +725,7 @@ def render_silhouettes(types):
                 if ob.type == "MESH":
                     ob.data.materials.clear()
                     ob.data.materials.append(black)
-    setup_render(1920, 560, bg=(1, 1, 1))
+    setup_render(1920, 560, bg=(1, 1, 1), space=False)
     bpy.context.scene.view_settings.view_transform = "Standard"
     camera((0, -30, 1.5), (0, 0, 0), lens=45)
     bpy.context.scene.render.filepath = str(IMG / "star_silhouettes.png")
@@ -529,108 +739,8 @@ def to_roblox(v):
     return [round(v.x, 4), round(v.z, 4), round(-v.y, 4)]
 
 
-IMPORT_TEMPLATE = """--!strict
--- WYGENEROWANE przez art/stars/build_star.py — nie edytuj ręcznie.
--- Uruchom w Studio (execute_luau, Edit) po wstawieniu modeli FBX (insert_asset) jako
--- ServerStorage.StarImport.<Rodzaj> (Model z MeshPartami `<Rozmiar>_<Część>`).
--- Wynik: ServerStorage.Stars/<Rodzaj>/<Rozmiar> (Model, PrimaryPart = Shell, Attachmenty Zone_N na Shell).
-local HttpService = game:GetService("HttpService")
-local ServerStorage = game:GetService("ServerStorage")
-
--- Dane wbudowane przy generowaniu (Stars.json → size, Themes.json → kolory), bo Config w Studio może być nieświeży.
-local ZONES = HttpService:JSONDecode([==[__ZONES__]==])
-local STAR_SIZE = HttpService:JSONDecode([==[__SIZES__]==])
-local THEMES = HttpService:JSONDecode([==[__THEMES__]==])
-local SIZES = { "Small", "Medium", "Large", "Huge" }
-
-local MATERIAL = {
-\tIron = Enum.Material.CorrodedMetal,
-\tLava = Enum.Material.Basalt,
-\tFrost = Enum.Material.Snow,
-\tGeode = Enum.Material.Rock,
-}
-local ACCENT_MATERIAL = {
-\tIron = Enum.Material.DiamondPlate,
-\tLava = Enum.Material.Neon,
-\tFrost = Enum.Material.Glass,
-\tGeode = Enum.Material.Neon,
-}
-
-local import = ServerStorage:FindFirstChild("StarImport")
-assert(import, "Brak ServerStorage.StarImport — najpierw insert_asset modeli FBX")
-local root = ServerStorage:FindFirstChild("Stars") or Instance.new("Folder")
-root.Name = "Stars"
-root.Parent = ServerStorage
-
-local report = {}
-for typeId, zonesBySize in ZONES do
-\tlocal src = import:FindFirstChild(typeId)
-\tif not src then
-\t\ttable.insert(report, typeId .. ": brak modelu")
-\t\tcontinue
-\tend
-\tlocal theme = THEMES[typeId]
-\tlocal folder = root:FindFirstChild(typeId) or Instance.new("Folder")
-\tfolder.Name = typeId
-\tfolder.Parent = root
-\tfor _, size in SIZES do
-\t\tlocal old = folder:FindFirstChild(size)
-\t\tif old then
-\t\t\told:Destroy()
-\t\tend
-\t\tlocal model = Instance.new("Model")
-\t\tmodel.Name = size
-\t\tfor _, part in src:GetDescendants() do
-\t\t\tif part:IsA("MeshPart") and string.sub(part.Name, 1, #size + 1) == size .. "_" then
-\t\t\t\tlocal role = string.sub(part.Name, #size + 2)
-\t\t\t\tlocal p = part:Clone()
-\t\t\t\tp.Name = role
-\t\t\t\tp.Anchored = true
-\t\t\t\tp.CanCollide = role == "Shell"
-\t\t\t\tp.CanQuery = role == "Shell" or role == "Core"
-\t\t\t\tp.CastShadow = role ~= "Core"
-\t\t\t\tif role == "Shell" then
-\t\t\t\t\tp.Material = MATERIAL[typeId]
-\t\t\t\t\tp.Color = Color3.fromHex(theme.shell)
-\t\t\t\telseif role == "Core" then
-\t\t\t\t\tp.Material = Enum.Material.Neon
-\t\t\t\t\tp.Color = Color3.fromHex(theme.glow)
-\t\t\t\telseif role == "Accent" then
-\t\t\t\t\tp.Material = ACCENT_MATERIAL[typeId]
-\t\t\t\t\tp.Color = Color3.fromHex(theme.color)
-\t\t\t\telse
-\t\t\t\t\tp.Material = ACCENT_MATERIAL[typeId]
-\t\t\t\t\tp.Color = Color3.fromHex(theme.color)
-\t\t\t\tend
-\t\t\t\tp.Parent = model
-\t\t\tend
-\t\tend
-\t\tlocal shell = model:FindFirstChild("Shell") :: MeshPart?
-\t\tif not shell then
-\t\t\ttable.insert(report, typeId .. "/" .. size .. ": brak Shell")
-\t\t\tmodel:Destroy()
-\t\t\tcontinue
-\t\tend
-\t\tmodel.PrimaryPart = shell
-\t\tlocal ext = shell.Size
-\t\tlocal target = STAR_SIZE[size]
-\t\tmodel:ScaleTo(model:GetScale() * target / math.max(ext.X, ext.Y, ext.Z))
-\t\tmodel:PivotTo(CFrame.new(shell.Position))
-\t\tlocal m = math.max(shell.Size.X, shell.Size.Y, shell.Size.Z)
-\t\tfor i, v in zonesBySize[size] do
-\t\t\tlocal a = Instance.new("Attachment")
-\t\t\ta.Name = "Zone_" .. i
-\t\t\ta.Parent = shell
-\t\t\ta.WorldPosition = shell.Position + Vector3.new(v[1], v[2], v[3]) * m
-\t\tend
-\t\tmodel:SetAttribute("Type", typeId)
-\t\tmodel:SetAttribute("Size", size)
-\t\tmodel.Parent = folder
-\t\ttable.insert(report, string.format("%s/%s: %d czesci, %d stref", typeId, size, #model:GetChildren(), #zonesBySize[size]))
-\tend
-end
-return report
-"""
+# Szablon skryptu importu do Studio (__ZONES__/__SIZES__/__THEMES__ podmieniane przy generowaniu).
+IMPORT_TEMPLATE = (OUT / "import_stars.template.luau").read_text(encoding="utf-8")
 
 
 def write_import_script(zones_all):
@@ -673,6 +783,7 @@ def main():
     write_import_script(zones_all)
     if render and len(types) > 1:
         render_silhouettes(types)
+        render_lineup(types)
     print("STAR_REPORT", json.dumps(report))
 
 

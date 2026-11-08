@@ -53,6 +53,24 @@ Generator gwiazd i rodzaje 1-4.
 - Rendery `vault/_img/star_{iron,lava,frost,geode}.png` + `star_silhouettes.png` wysłane na telefon. Notatki rodzajów: `model: gotowy`. Stare klasy (dust/bright/nova/giant/supernova) usunięte.
 - Skill `.claude/skills/blender-asset/SKILL.md` (pipeline skrypt → FBX → render → upload → import). Decyzja: [[2026-11-08 Pipeline modeli gwiazd]].
 
+**Poprawki wyglądu (8.11, prośba użytkownika „100x cooler, świecące”):**
+- Każda gwiazda świeci. `Core` to teraz wszystko, co świeci kolorem `glow` (Neon). Należą do niego ściany boczne płyt, odcięte od Shell (`split_rim`), więc każda krawędź płyty jest rozżarzonym szwem.
+- Zmiany per rodzaj:
+  - **Iron:** cienkie świecące szwy i stopiony metal w wgnieceniach. Zamiast guzów są kępy chromowanych kostek (Metal), na orbicie też kostki.
+  - **Lava:** zamiast „nóg” są bąble magmy i łuki rozbłysków (od Medium).
+  - **Frost:** popękana lodowa skorupa. Kolce są szklane (Glass 0.35), w każdym świecący rdzeń.
+  - **Geode:** kępy ametystów, korona z kryształów przy otworze, świecące pęknięcia. Od Large kryształy przebijają skorupę.
+- Import do Studio dodaje na `Core` PointLight `Glow` (kolor `glow`, zasięg zależny od rozmiaru) i ParticleEmitter `Aura` z wbudowanymi teksturami Roblox: Iron dym, Lava iskry, Frost i Geode iskierki. Pulsowanie zostaje w T12. Szablon importu przeniesiony do `art/stars/import_stars.template.luau`.
+- Poprawiony błąd stref: promień przez szczelinę trafiał w drugą stronę skorupy. Teraz liczy się najbliższe trafienie Shell/Core.
+- Render: tło z gwiazdami, bloom w kompozytorze Blendera 5, emisja jak Neon. Nowy podgląd `star_lineup.png` (Huge 4 rodzajów).
+- Tris (Small/Medium/Large/Huge):
+  - Iron: 1032 / 1180 / ~2.8k / ~3.1k
+  - Lava: 1180 / 1552 / 3872 / 4984
+  - Frost: 1344 / 1604 / 3464 / 4184
+  - Geode: 1500 / 1696 / 4102 / 4786
+  - Wszystkie w budżecie.
+- Logika importu (części, materiały, skala, światło, cząsteczki) sprawdzona w Studio na atrapach i posprzątana. Upload FBX nadal blokowany przez MCP Permissions.
+
 **Użyte skille:** `task`, `anthropic-skills:computer-use` (dostęp odrzucony), Studio MCP (`execute_luau`, `open_cloud_invoke`), Blender CLI.
 
 **Problemy:**
@@ -62,5 +80,5 @@ Generator gwiazd i rodzaje 1-4.
 - Render: Small–Huge pokazane w skali 0.55/0.75/1/1.3, nie w prawdziwej (6:12:24:45).
 
 ## Zaległe kroki
-- [ ] **Import gwiazd do Studio.** Warunek: w Studio Assistant Settings → MCP Permissions dodać `E:\CrackAStarsrt` do approved upload directories (albo zgoda na sterowanie ekranem). Potem: dla każdego rodzaju `open_cloud_invoke` POST `/assets/v1/assets` (assetType `Model`, displayName `CAS_Star_<Rodzaj>`, creator userId `11654521782`, plik `art/stars/<rodzaj>/star_<rodzaj>.fbx`), poll `/assets/v1/operations/{id}`, `insert_asset` (Model) do `ServerStorage.StarImport` z nazwą `<Rodzaj>`, potem `execute_luau` z treścią `art/stars/import_stars.luau`, usunąć `StarImport`, zapisać `ServerStorage.Stars` jako `game/assets/stars/stars_1-4.rbxm` (SerializationService) i Ctrl+S. Sprawdzić nazwy MeshPartów po imporcie (`<Rozmiar>_<Część>`).
+- [ ] **Import gwiazd do Studio.** Warunek: w Studio Assistant Settings → MCP Permissions dodać `E:\CrackAStars\art` do approved upload directories (albo zgoda na sterowanie ekranem). Potem: dla każdego rodzaju `open_cloud_invoke` POST `/assets/v1/assets` (assetType `Model`, displayName `CAS_Star_<Rodzaj>`, creator userId `11654521782`, plik `art/stars/<rodzaj>/star_<rodzaj>.fbx`), poll `/assets/v1/operations/{id}`, `insert_asset` (Model) do `ServerStorage.StarImport` z nazwą `<Rodzaj>`, potem `execute_luau` z treścią `art/stars/import_stars.luau`, usunąć `StarImport`, zapisać `ServerStorage.Stars` jako `game/assets/stars/stars_1-4.rbxm` (SerializationService) i Ctrl+S. Sprawdzić nazwy MeshPartów po imporcie (`<Rozmiar>_<Część>`).
 - [ ] Ctrl+S miejsca (z T03) — nadal wymaga sterowania ekranem.

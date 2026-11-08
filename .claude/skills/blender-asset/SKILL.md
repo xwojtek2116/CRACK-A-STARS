@@ -27,13 +27,14 @@ Uwaga: `bmesh.ops.create_icosphere(subdivisions=n)` ma 20·4^(n−1) ścian (2 �
 ## 4. Eksport i render
 - FBX: `axis_forward="-Z", axis_up="Y", apply_scale_options="FBX_SCALE_ALL", mesh_smooth_type="FACE"`, tylko meshe, jeden plik na rodzaj (wszystkie warianty w środku układu).
 - `.blend` obok FBX (Git LFS).
+- Świecące części = osobny mesh (Neon w grze); materiał podglądu czysto emisyjny (czarna baza), widok `Standard` + Glare/Bloom w kompozytorze (Blender 5: `scene.compositing_node_group`).
 - Render EEVEE do `vault/_img/<nazwa>.png` (kolorowy, ciemne tło) + test sylwetki: czarne bryły na białym tle (`star_silhouettes.png`) — rodzaje muszą być rozpoznawalne bez koloru.
 - Render wyślij użytkownikowi przez `SendUserFile` do akceptacji.
 
 ## 5. Import do Studio (bez klikania)
 1. Upload FBX jako Model przez Studio MCP `open_cloud_invoke` (`POST /assets/v1/assets`, `files: fileContent`, creator = `StudioService:GetUserId()`), potem `GET /assets/v1/operations/{id}` aż `done`.
    Folder pliku musi być zatwierdzony w Studio: **Assistant Settings → MCP Permissions → approved upload directories** (`E:\CrackAStars\art`).
-2. `insert_asset` (assetType `Model`) do `ServerStorage`, potem `execute_luau`: rozłóż części do `ServerStorage.<Kategoria>/<Rodzaj>/<Wariant>` (Model z `PrimaryPart = Shell`), ustaw materiał/kolor wg motywu, `ScaleTo` do rozmiaru z JSON, `Anchored`, `CanCollide` tylko na Shell, Attachmenty z JSON-a stref.
+2. `insert_asset` (assetType `Model`) do `ServerStorage`, potem `execute_luau` z wygenerowanym skryptem (szablon `art/stars/import_stars.template.luau`): rozłóż części do `ServerStorage.<Kategoria>/<Rodzaj>/<Wariant>` (Model z `PrimaryPart = Shell`), ustaw materiał/kolor wg motywu, `ScaleTo` do rozmiaru z JSON, `Anchored`, `CanCollide` tylko na Shell, Attachmenty z JSON-a stref.
 3. Zapis: `.rbxm` przez `SerializationService` → `game/assets/<kategoria>/`, i Ctrl+S miejsca (sterowanie komputerem). Gdy coś zablokowane → Raport → Zaległe kroki.
 
 ## 6. Vault

@@ -12,4 +12,6 @@ tags: [decyzja]
 - Strefy rozbijania liczone w Blenderze (raycast na Shell+Core, górna półkula) → `art/stars/zones.json`; Attachmenty `Zone_N` na Shell tworzy wygenerowany `art/stars/import_stars.luau`.
 - Import bez klikania: upload FBX przez Open Cloud (`open_cloud_invoke`) → `insert_asset` → `import_stars.luau`. Wymaga zatwierdzenia folderu `E:\CrackAStars\art` w Studio (Assistant Settings → MCP Permissions).
 
+- **Świecenie (poprawka 8.11):** `Core` = cała geometria świecąca (`glow`, Neon), w tym boczne ściany płyt odcięte od Shell (`split_rim`) — rozżarzone szwy. Frost: kolce Glass z neonowym rdzeniem. Import dodaje na Core PointLight `Glow` + ParticleEmitter `Aura` (tekstury `rbxasset://textures/particles/*`, bez uploadu); animacja/pulsowanie w T12.
+
 **Powód:** jeden skrypt na wszystkie 12 rodzajów (T33/T34 dopisują tylko moduły), kolory i rozmiary z JSON, zero ręcznej pracy w Studio.
