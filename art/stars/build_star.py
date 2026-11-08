@@ -782,8 +782,9 @@ def render_silhouettes(types):
 # ---------------------------------------------------------------- main
 
 def to_roblox(v):
-    # Eksport FBX: Blender (x, y, z) Z-up → Roblox (x, z, -y) Y-up.
-    return [round(v.x, 4), round(v.z, 4), round(-v.y, 4)]
+    # Eksport FBX (-Z forward, Y up) → po imporcie do Roblox: Blender (x, y, z) → Roblox (-x, z, y)
+    # (zmierzone w Studio na otworze Geode — obrót 180° wokół osi pionowej względem (x, z, -y)).
+    return [round(-v.x, 4), round(v.z, 4), round(v.y, 4)]
 
 
 # Szablon skryptu importu do Studio (__ZONES__/__SIZES__/__THEMES__ podmieniane przy generowaniu).

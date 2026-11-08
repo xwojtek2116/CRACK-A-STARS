@@ -47,6 +47,8 @@ local FX: { [string]: Fx } = {
 	Geode = { texture = "rbxasset://textures/particles/sparkles_main.dds", color = "color", rate = 6, life = NumberRange.new(1.5, 3), speed = NumberRange.new(0.3, 1), size = 0.1, accel = 0.4, transparency = 0, emission = 1 },
 }
 local SIZE_RATE = { Small = 1, Medium = 1.5, Large = 2.5, Huge = 4 }
+-- Rodzaje skalowane po całym ciele (bez orbity), a nie po samym Shell.
+local FIT_BODY: { [string]: boolean } = { Frost = true }
 
 local function addFx(core: BasePart, typeId: string, size: string, starSize: number, theme: { [string]: string })
 	local light = Instance.new("PointLight")
@@ -133,7 +135,20 @@ for typeId, zonesBySize in ZONES do
 			continue
 		end
 		model.PrimaryPart = shell
+		-- `size` z Stars.json = średnica bryły (Shell). Frost: bryła to mały klejnot, sylwetkę robią ramiona
+		-- płatka — skaluj po całym ciele bez orbity (Shell+Core+Accent).
 		local ext = shell.Size
+		if FIT_BODY[typeId] then
+			-- części z FBX są bez obrotu → prostopadłościany osiowe
+			local lo, hi = shell.Position, shell.Position
+			for _, p in model:GetChildren() do
+				if p:IsA("BasePart") and p.Name ~= "Orbit" then
+					lo = lo:Min(p.Position - p.Size / 2)
+					hi = hi:Max(p.Position + p.Size / 2)
+				end
+			end
+			ext = hi - lo
+		end
 		local target = STAR_SIZE[size]
 		model:ScaleTo(model:GetScale() * target / math.max(ext.X, ext.Y, ext.Z))
 		model:PivotTo(CFrame.new(shell.Position))

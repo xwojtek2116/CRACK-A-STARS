@@ -18,7 +18,7 @@ Wzorzec: `art/stars/build_star.py` (gwiazdy). Nowa kategoria = własny skrypt `a
 ## 2. Części = osobne meshe wg roli materiału
 Nazwy obiektów `<Wariant>_<Część>` (np. `Huge_Shell`). Gra koloruje części wg motywu, więc:
 `Shell` (bryła, kolor `shell`), `Core` (Neon, `glow`), `Accent` (detal, `color`), `Orbit` (odłamki, tylko duże warianty).
-Punkty specjalne (strefy, uchwyty) → empties w `.blend` + JSON obok (`art/stars/zones.json`) w układzie Roblox: Blender (x, y, z) → Roblox (x, z, −y).
+Punkty specjalne (strefy, uchwyty) → empties w `.blend` + JSON obok (`art/stars/zones.json`) w układzie Roblox: Blender (x, y, z) → Roblox (−x, z, y) (zmierzone w Studio po imporcie FBX; sprawdzaj na asymetrycznym modelu).
 
 ## 3. Budżet tris (Styl graficzny)
 Gwiazda Small ≤ 2k, Huge ≤ 8k · przedmiot ≤ 2k · narzędzie ≤ 3k · pojazd ≤ 10k. Skrypt wypisuje raport tris i flagę `ok` — przekroczenie = popraw podział/gęstość.

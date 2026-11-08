@@ -93,5 +93,12 @@ Generator gwiazd i rodzaje 1-4.
 - Render: Small–Huge pokazane w skali 0.55/0.75/1/1.3, nie w prawdziwej (6:12:24:45).
 
 ## Zaległe kroki
-- [ ] **Import gwiazd do Studio.** Warunek: w Studio Assistant Settings → MCP Permissions dodać `E:\CrackAStars\art` do approved upload directories (albo zgoda na sterowanie ekranem). Potem: dla każdego rodzaju `open_cloud_invoke` POST `/assets/v1/assets` (assetType `Model`, displayName `CAS_Star_<Rodzaj>`, creator userId `11654521782`, plik `art/stars/<rodzaj>/star_<rodzaj>.fbx`), poll `/assets/v1/operations/{id}`, `insert_asset` (Model) do `ServerStorage.StarImport` z nazwą `<Rodzaj>`, potem `execute_luau` z treścią `art/stars/import_stars.luau`, usunąć `StarImport`, zapisać `ServerStorage.Stars` jako `game/assets/stars/stars_1-4.rbxm` (SerializationService) i Ctrl+S. Sprawdzić nazwy MeshPartów po imporcie (`<Rozmiar>_<Część>`).
-- [ ] Ctrl+S miejsca (z T03) — nadal wymaga sterowania ekranem.
+- [x] **Import gwiazd do Studio.** ✔ zrobione 8.11:
+  - Upload FBX przez Open Cloud jako assety Model: Iron `98913719514275`, Lava `111779316629905`, Frost `90949978724284`, Geode `132377142638097`.
+  - `insert_asset`, potem `import_stars.luau`: 16 modeli w `ServerStorage.Stars/<Rodzaj>/<Rozmiar>` (Neon, PointLight `Glow`, ParticleEmitter `Aura`, strefy `Zone_N`). Podgląd na mapie: `T04 gwiazdy w Studio.jpg`.
+  - Miejsce: chmurowe `placeId 128852283478472`, universe `10775327732`, z mapą z T03.
+  - Poprawki przy imporcie:
+    - Frost skalowana po całym płatku (`FIT_BODY`), bo sam klejnot jest mały.
+    - Strefy były obrócone o 180°: FBX po imporcie daje Blender (x, y, z) → Roblox (−x, z, y), co zmierzyłem na otworze Geode. Poprawione w `to_roblox`, `zones.json` i Attachmentach w Studio. Błąd strefy względem powierzchni wynosi teraz 0,5–0,9 studa.
+- [ ] Kopia `game/assets/stars/stars_1-4.rbxm` nie jest zrobiona. `SerializationService` działa (ok. 400 KB), ale wysłanie pliku na dysk przez `HttpService` na `127.0.0.1:8765` blokuje Assistant HTTP allowlist. Następna próba po dodaniu `127.0.0.1` do allowlisty, albo ponowny import z assetów powyżej.
+- [ ] Ctrl+S miejsca (place 128852283478472), żeby zachować `ServerStorage.Stars` i mapę. Sterowanie ekranem odrzucone (8.11, 4. raz), więc zapis musi zrobić użytkownik albo następny task.

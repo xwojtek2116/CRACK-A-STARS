@@ -14,4 +14,7 @@ tags: [decyzja]
 
 - **Świecenie (poprawka 8.11):** `Core` = cała geometria świecąca (`glow`, Neon), w tym boczne ściany płyt odcięte od Shell (`split_rim`) — rozżarzone szwy. Frost: kolce Glass z neonowym rdzeniem. Import dodaje na Core PointLight `Glow` + ParticleEmitter `Aura` (tekstury `rbxasset://textures/particles/*`, bez uploadu); animacja/pulsowanie w T12.
 
+- **Osie po imporcie FBX (zmierzone 8.11):** Blender (x, y, z) → Roblox (−x, z, y). Strefy w `zones.json` w tym układzie. Frost skalowana po całym ciele (`FIT_BODY`), pozostałe po Shell.
+- Assety modeli (8.11): Iron 98913719514275, Lava 111779316629905, Frost 90949978724284, Geode 132377142638097.
+
 **Powód:** jeden skrypt na wszystkie 12 rodzajów (T33/T34 dopisują tylko moduły), kolory i rozmiary z JSON, zero ręcznej pracy w Studio.
