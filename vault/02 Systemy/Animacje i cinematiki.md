@@ -33,3 +33,5 @@ tags: [system]
 - Wydajność: cząsteczki z pulą, max 1 duży cinematic naraz, na `lowGraphics` mniej cząsteczek. Cel 60 FPS.
 
 **Spadek gwiazdy (T38, 2026-11-08):** zrobione — wyrwa w niebie (RiftFx), lot (FallFx), uderzenie (ImpactFx), leżąca gwiazda (LandedFx), niebo (SkyFx), kamera (CinematicController). Liczby: `AnimConfig.luau`. Decyzje: [[2026-11-08 Wyrwa i cinematic spadku]]. ![[T38 wyrwa.jpg]]
+
+**v2 (T39, 2026-11-08):** dynamiczny Bloom, głębia wyrwy, pęknięcia nieba, snopy światła, ogon plazmy, hit-stop i etapy uderzenia, słup światła nad gwiazdą, kino od Large (pasy, karta tytułowa), muzyka. Decyzje: [[2026-11-08 Cinematic spadku v2]]. ![[T39 uderzenie.jpg]]

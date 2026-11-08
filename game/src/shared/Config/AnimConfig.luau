@@ -45,6 +45,17 @@ return table.freeze({
 		flareSize = 1.2, -- × szerokość wyrwy (billboard)
 		flarePixels = 60, -- minimalny rozmiar poświaty na ekranie
 		pulseSpeed = 2.2,
+		-- T39: głębia, pęknięcia nieba, snopy światła, aura
+		crackCount = bySize(3, 4, 5, 6),
+		crackLength = table.freeze({ 0.45, 0.9 }), -- × szerokość wyrwy
+		crackGrowSeconds = 0.7,
+		crackThickness = 0.5, -- spłaszczenie rys (mniej grube na niebie)
+		shaftCount = bySize(2, 3, 4, 5),
+		shaftWidth = table.freeze({ 0.18, 0.55 }), -- × szerokość wyrwy (przy wyrwie / przy ziemi)
+		shaftSpread = 2.5, -- × promień krateru: rozrzut końców snopów na ziemi
+		nebulaDisc = 1.6, -- × wysokość wyrwy (najgłębsza warstwa mgławicy)
+		auraRate = 22,
+		particleBrightness = 3, -- HDR cząsteczek i beamów (z Bloom „palą się”)
 	}),
 
 	SKY = table.freeze({
@@ -70,6 +81,16 @@ return table.freeze({
 		tickSeconds = 3, -- ostatnie sekundy: tyk licznika
 		groundGlowRange = 60,
 		warnSpin = 0.25, -- obroty pierścienia ostrzegawczego na sekundę
+		-- T39: ogon plazmy, stożek żaru, odpadające kawałki, pierścienie, Doppler
+		plasmaLength = 12, -- × rozmiar gwiazdy (przy pełnej prędkości)
+		plasmaWidth = 1.5, -- × rozmiar gwiazdy (przy gwieździe)
+		plasmaSpeed = 2.5, -- przesuw tekstury plazmy
+		bowCone = 1.7, -- × rozmiar gwiazdy
+		chunkInterval = 0.3,
+		chunkScale = table.freeze({ 0.06, 0.14 }), -- × rozmiar gwiazdy
+		chunkLifetime = 3,
+		ringsAt = table.freeze({ 0.2, 0.45, 0.72 }), -- postęp lotu: pierścienie przyspieszenia (środkowy = sonic boom)
+		doppler = table.freeze({ 0.8, 1.35 }), -- PlaybackSpeed pętli lotu: start → uderzenie
 	}),
 
 	IMPACT = table.freeze({
@@ -93,6 +114,18 @@ return table.freeze({
 		shakeMax = 3,
 		lightBrightness = 12,
 		lightSeconds = 1.6,
+		-- T39: etapy uderzenia
+		torusMult = 2.8, -- × promień odrzutu: końcowy promień fali-torusa
+		torusSeconds = 1.1,
+		ringDustCount = bySize(16, 26, 40, 60),
+		mushroomDelay = 0.55,
+		mushroomCount = bySize(6, 10, 16, 24),
+		splashCount = bySize(4, 6, 10, 14),
+		splashScale = table.freeze({ 0.05, 0.1 }), -- × rozmiar gwiazdy
+		splashSpeed = table.freeze({ 1.4, 2.6 }), -- × rozmiar gwiazdy (studs/s)
+		emberSeconds = 7, -- unoszący się żar nad kraterem
+		emberRate = 14,
+		coolDelay = 3, -- s: dźwięk stygnięcia krateru
 	}),
 
 	LANDED = table.freeze({
@@ -102,6 +135,37 @@ return table.freeze({
 		cracksMult = 2.8, -- × promień krateru (Decal pęknięć)
 		highlightFill = table.freeze({ 0.92, 0.75 }), -- przezroczystość wypełnienia Highlight (min/max pulsu)
 		shardBurst = bySize(6, 10, 16, 24),
+		-- T39: słup światła, orbitujące iskry, fale energii
+		beaconHeight = 650,
+		beaconWidth = 0.9, -- × rozmiar gwiazdy (min. beaconMinWidth)
+		beaconMinWidth = 8,
+		beaconPulse = 0.6,
+		orbitCount = bySize(4, 6, 8, 12),
+		orbitRadius = 0.95, -- × rozmiar gwiazdy
+		orbitSpeed = 0.35, -- obroty na sekundę
+		waveInterval = 2.2,
+		waveSeconds = 1.6,
+		waveMult = 3, -- × promień krateru
+	}),
+
+	-- T39: dynamiczny Bloom (mocniej tylko w trakcie spadku i uderzenia)
+	BLOOM = table.freeze({
+		intensity = 1.7,
+		size = 40,
+		threshold = 0.85,
+		flashIntensity = 3.5, -- skok przy uderzeniu (zanika z flashem)
+		approach = 2.5,
+	}),
+
+	HITSTOP = table.freeze({ seconds = 0.12, fromSize = "Medium" }),
+
+	CINEMA = table.freeze({
+		fromSize = "Large", -- pasy kinowe, karta tytułowa, muzyka
+		barHeight = 0.085, -- część wysokości ekranu (góra i dół)
+		titleSeconds = 2.6,
+		barsAfterEmerge = 1.8, -- s po wylocie gwiazdy pasy się chowają
+		musicFadeIn = 1.5,
+		musicFadeOut = 0.5,
 	}),
 
 	CAMERA = table.freeze({

@@ -377,6 +377,131 @@ def star_fade(rng: np.random.Generator) -> np.ndarray:
     return tone + crumble + hiss
 
 
+# ------------------------------------------------------------- T39 (warstwy + muzyka)
+
+
+def sky_crack(rng: np.random.Generator) -> np.ndarray:
+    """Pękanie nieba: rozchodzące się szkliste trzaski (gęstnieją), dzwonienie odłamków, niski pomruk."""
+    dur = 2.8
+    t = tt(dur)
+    n = len(t)
+    out = np.zeros(n)
+    for i in range(140):
+        start = dur * 0.85 * (i / 140) ** 0.6 + rng.uniform(0, 0.03)
+        d = rng.uniform(0.005, 0.04)
+        f0 = rng.uniform(2500, 11000)
+        click = fft_filter(rng.standard_normal(int(d * SR)), lo=f0 * 0.6, hi=f0 * 1.4) * decay(d, d / 4, 0.0002)
+        mix_at(out, click, start, rng.uniform(0.3, 1.0))
+    for _ in range(18):
+        mix_at(out, bell(rng.uniform(2200, 7000), 0.7, rng.uniform(0.05, 0.25)), rng.uniform(0.1, 2.0), 0.08)
+    rumble = fft_filter(rng.standard_normal(n), hi=120, order=3) * np.minimum(1, t / 0.4) * np.exp(-t / 1.2) * 4
+    return out + rumble * 0.5
+
+
+def impact_tail(rng: np.random.Generator) -> np.ndarray:
+    """Ogon po uderzeniu: długie toczące się dudnienie (jak pogłos w dolinie) i dalekie echa gruzu."""
+    dur = 6.5
+    t = tt(dur)
+    n = len(t)
+    roll = fft_filter(rng.standard_normal(n), hi=160, order=3) * (0.6 + 0.4 * smooth_noise(rng, n, 3)) * np.exp(-t / 2.2) * 6
+    echoes = np.zeros(n)
+    for k in range(5):
+        mix_at(echoes, rubble(rng, 1.2, 40, 0.3), 0.4 + k * rng.uniform(0.6, 1.0), 0.5 / (k + 1))
+    return roll + fft_filter(echoes, hi=1800) * 0.8
+
+
+def crater_cool(rng: np.random.Generator) -> np.ndarray:
+    """Stygnięcie krateru: syk opadający i metaliczne tykanie stygnącej skały."""
+    dur = 4.5
+    t = tt(dur)
+    n = len(t)
+    hiss = sweep_lowpass(rng.standard_normal(n), 1500 + 6000 * np.exp(-t / 1.0)) * np.exp(-t / 1.6) * 0.8
+    out = hiss.copy()
+    for _ in range(40):
+        start = rng.uniform(0.2, dur - 0.2) ** 1.1
+        mix_at(out, bell(rng.uniform(1800, 4200), 0.25, 0.03), start, rng.uniform(0.05, 0.2) * np.exp(-start / 2))
+    return out
+
+
+def beacon_hum(rng: np.random.Generator) -> np.ndarray:
+    """Pętla słupa światła: eteryczny „chór” (sinusy z vibrato) i powietrzny szum."""
+    dur = 6.0 + LOOP_XFADE
+    t = tt(dur)
+    n = len(t)
+    voice = np.zeros(n)
+    for f in (220.0, 329.6, 440.0, 554.4, 659.3):
+        vib = 1 + 0.004 * np.sin(2 * np.pi * rng.uniform(4.5, 5.5) * t + rng.uniform(0, 6))
+        voice += np.sin(osc_phase(f * vib, n)) * (0.6 + 0.4 * np.sin(2 * np.pi * rng.uniform(0.1, 0.3) * t + rng.uniform(0, 6)))
+    air = fft_filter(rng.standard_normal(n), lo=2500, hi=8000) * (0.5 + 0.5 * smooth_noise(rng, n, 1)) * 0.25
+    return make_loop(voice / 5 + air)
+
+
+def _drum(rng: np.random.Generator, dur: float, f_hi: float, f_lo: float, tau: float) -> np.ndarray:
+    t = tt(dur)
+    body = np.sin(osc_phase(f_lo + (f_hi - f_lo) * np.exp(-t / 0.05), len(t))) * decay(dur, tau, 0.001)
+    skin = fft_filter(rng.standard_normal(len(t)), lo=200, hi=2500) * decay(dur, 0.03, 0.0005) * 0.5
+    return body + skin
+
+
+def _chord_pad(freqs: list[float], dur: float, rng: np.random.Generator, cutoff: np.ndarray) -> np.ndarray:
+    n = int(dur * SR)
+    pad = np.zeros(n)
+    for f in freqs:
+        for det in (-0.006, 0.0, 0.006):
+            pad += saw(f * (1 + det), n, 10)
+    return sweep_lowpass(pad / (len(freqs) * 3), cutoff)
+
+
+def music_tension(rng: np.random.Generator) -> np.ndarray:
+    """Motyw napięcia (pętla 16 s, 120 BPM, a-moll): bębny taiko, ostinato basu, narastające smyczki, tremolo."""
+    bpm = 120
+    beat = 60 / bpm
+    dur = 16.0 + LOOP_XFADE
+    n = int(dur * SR)
+    t = tt(dur)
+    out = np.zeros(n)
+    roots = [55.0, 43.65, 49.0, 41.2]  # A, F, G, E (po 2 takty)
+    chords = [[220.0, 261.6, 329.6], [174.6, 220.0, 261.6], [196.0, 246.9, 293.7], [164.8, 207.7, 246.9]]
+    bar = beat * 4
+    for b in range(8):
+        start = b * bar
+        root = roots[(b // 2) % 4]
+        for step in range(8):  # ósemki basu
+            note = root * (2 if step % 4 == 2 else 1)
+            d = beat / 2
+            tone = fft_filter(saw(note, int(d * SR), 8), hi=420) * decay(d, d * 0.8, 0.003)
+            mix_at(out, tone, start + step * d, 0.5)
+        for hit, gain in ((0.0, 1.0), (1.5, 0.7), (2.0, 0.8), (3.0, 0.6), (3.5, 0.5)):
+            mix_at(out, _drum(rng, 0.9, 140, 48, 0.35), start + hit * beat, gain)
+        if b % 2 == 1:
+            mix_at(out, _drum(rng, 0.4, 260, 120, 0.12), start + 3.75 * beat, 0.5)
+    # smyczki: akordy z otwierającym się filtrem przez całe 16 s
+    for b in range(4):
+        seg = bar * 2
+        cutoff = 500 + 2500 * (np.arange(int(seg * SR)) / SR + b * seg) / 16
+        pad = _chord_pad(chords[b], seg, rng, cutoff)
+        env = np.minimum(1, tt(seg) / 0.4) * np.minimum(1, (seg - tt(seg)) / 0.2)
+        mix_at(out, pad * env, b * seg, 0.55)
+    trem = sum(np.sin(2 * np.pi * f * t) for f in (880.0, 1046.5, 1318.5)) * (0.5 + 0.5 * np.sin(2 * np.pi * 8 * t)) * (t / dur) ** 2
+    out += trem * 0.06
+    return make_loop(soft_clip(out, 1.3))
+
+
+def music_impact(rng: np.random.Generator) -> np.ndarray:
+    """Stinger uderzenia: potężny akord „blachy”, wielki bęben, talerz, sub-uderzenie, długi wybrzmiewający pad."""
+    dur = 5.0
+    t = tt(dur)
+    n = len(t)
+    freqs = [110.0, 164.8, 220.0, 261.6, 329.6, 440.0]
+    cutoff = 300 + 4500 * np.exp(-t / 0.6)
+    brass = _chord_pad(freqs, dur, rng, cutoff) * np.minimum(1, t / 0.02) * np.exp(-t / 2.2)
+    drum = np.zeros(n)
+    mix_at(drum, _drum(rng, 2.0, 120, 38, 0.8), 0.0, 1.4)
+    cymbal = fft_filter(rng.standard_normal(n), lo=5000) * decay(dur, 1.6, 0.002) * 0.35
+    sub = np.sin(osc_phase(32 + 40 * np.exp(-t / 0.15), n)) * decay(dur, 1.2, 0.002)
+    return soft_clip(brass * 1.3 + drum + cymbal + sub, 1.6)
+
+
 SOUNDS: list[tuple[str, Callable[[np.random.Generator], np.ndarray]]] = [
     ("announce_sting", announce_sting),
     ("countdown_tick", countdown_tick),
@@ -398,6 +523,13 @@ SOUNDS: list[tuple[str, Callable[[np.random.Generator], np.ndarray]]] = [
     ("crater_sizzle", crater_sizzle),
     ("star_crack", star_crack),
     ("star_fade", star_fade),
+    # T39
+    ("sky_crack", sky_crack),
+    ("impact_tail", impact_tail),
+    ("crater_cool", crater_cool),
+    ("beacon_hum", beacon_hum),
+    ("music_tension", music_tension),
+    ("music_impact", music_impact),
 ]
 
 
@@ -411,9 +543,16 @@ def write_wav(path: Path, x: np.ndarray) -> None:
 
 
 def main() -> None:
+    import sys
+
+    only = None
+    if "--only" in sys.argv:
+        only = set(sys.argv[sys.argv.index("--only") + 1].split(","))
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     print(f"{'plik':<22}{'czas s':>8}{'pik dBFS':>10}{'RMS dBFS':>10}")
     for idx, (name, fn) in enumerate(SOUNDS):
+        if only and name not in only:
+            continue
         rng = np.random.default_rng([SEED, idx])
         x = fn(rng).astype(float)
         x = x - np.mean(x)

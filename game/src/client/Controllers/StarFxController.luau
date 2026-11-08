@@ -43,6 +43,7 @@ local CAMERA = AnimConfig.CAMERA
 local QUALITY = AnimConfig.QUALITY
 local AUTO_QUALITY = AnimConfig.AUTO_QUALITY
 local LABEL_UPDATE_SECONDS = 0.2
+local CINEMA = AnimConfig.CINEMA
 
 local log = Logger.new("StarFxController")
 
@@ -51,6 +52,8 @@ local landed: { [Model]: LandedFx.Landed } = {}
 local labelClock = 0
 local fpsFrames = 0
 local fpsClock = 0
+local tension: Sound? = nil
+local tensionHolders: { [string]: boolean } = {}
 
 local StarFxController = {}
 
@@ -100,8 +103,18 @@ local function addStar(info: StarInfo)
 	if not ok then
 		log:error(`Efekty spadku {info.id}: {err}`)
 	end
-	StarHud.showBanner(info)
 	SoundController.play2D("announceSting")
+	if FxUtil.atLeast(info.size, CINEMA.fromSize) then
+		-- Kino: pasy do chwili po wylocie, karta tytułowa, motyw napięcia do uderzenia.
+		StarHud.holdBars(info.id, info.launchedAt + RIFT.emergeAt + CINEMA.barsAfterEmerge)
+		StarHud.showTitle(info)
+		tensionHolders[info.id] = true
+		if not tension then
+			tension = SoundController.playMusic("musicTension", CINEMA.musicFadeIn)
+		end
+	else
+		StarHud.showBanner(info)
+	end
 	-- Rzut kamery na wyrwę tuż przed wylotem gwiazdy (Large+).
 	if FxUtil.atLeast(info.size, CAMERA.fromSize) then
 		local delay = math.max(0, info.launchedAt + RIFT.emergeAt - 0.3 - now())
@@ -125,6 +138,13 @@ local function removeStar(id: string)
 		star.rift.close()
 	end
 	StarHud.hideBanner(id)
+	if tensionHolders[id] then
+		tensionHolders[id] = nil
+		if next(tensionHolders) == nil and tension then
+			SoundController.fadeOut(tension, CINEMA.musicFadeOut)
+			tension = nil
+		end
+	end
 	known[id] = nil
 end
 
@@ -234,6 +254,14 @@ local function onRender(dt: number)
 			if star.fall then
 				star.fall.finish()
 				star.fall = nil
+			end
+			if tensionHolders[info.id] then
+				tensionHolders[info.id] = nil
+				SoundController.playMusic("musicImpact", 0)
+				if next(tensionHolders) == nil and tension then
+					SoundController.fadeOut(tension, CINEMA.musicFadeOut)
+					tension = nil
+				end
 			end
 			local ok, err = pcall(ImpactFx.play, info, star.full)
 			if not ok then

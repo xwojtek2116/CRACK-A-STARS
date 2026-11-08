@@ -117,7 +117,22 @@ function FallFx.create(info: StarInfo, full: boolean): Fall
 	local emitters: { ParticleEmitter } = {}
 	local fireLoop: Sound? = nil
 	local spin = 0
-	local boomDone = false
+	local ringsDone = 0
+	-- T39: ogon plazmy, stożek żaru, odpadające kawałki
+	local tail: Attachment? = nil
+	local plasmaBeams: { Beam } = {}
+	local bowParts: { BasePart } = {}
+	local chunkClock = 0
+	local rng = Random.new()
+	local rocks: { MeshPart } = {}
+	local vfxAssets = ReplicatedStorage:FindFirstChild("VfxAssets")
+	if vfxAssets then
+		for _, child in vfxAssets:GetChildren() do
+			if child:IsA("MeshPart") and string.sub(child.Name, 1, 5) == "Rock_" then
+				table.insert(rocks, child)
+			end
+		end
+	end
 	local flybyDone = false
 	local lastTick = math.huge
 	local finished = false
@@ -193,6 +208,7 @@ function FallFx.create(info: StarInfo, full: boolean): Fall
 				Size = FxUtil.numberSeq(class.size * 0.95, class.size * 0.25),
 				Color = FxUtil.colorSeq(FxUtil.lighten(glow, 0.5), glow, color),
 				LightEmission = 1,
+				Brightness = 2.5,
 				Transparency = FxUtil.numberSeq(0.1, 0.4, 1),
 				Rotation = NumberRange.new(0, 360),
 				RotSpeed = NumberRange.new(-90, 90),
@@ -252,18 +268,124 @@ function FallFx.create(info: StarInfo, full: boolean): Fall
 		flareGui.Parent = holder
 		holder.Parent = folder
 
+		-- T39: ogon plazmy (3 warstwy Beamów od gwiazdy do punktu za nią).
+		local head = FxUtil.attachment(holder, Vector3.zero)
+		local tailAttachment = Instance.new("Attachment")
+		tailAttachment.Name = `FallTail_{info.id}`
+		tailAttachment.WorldPosition = info.startPos
+		tailAttachment.Parent = Workspace.Terrain
+		tail = tailAttachment
+		local size = class.size
+		local layers = {
+			{
+				width = size * FALL.plasmaWidth * 1.7,
+				color = FxUtil.colorSeq(FxUtil.darken(color, 0.3), Color3.fromRGB(60, 50, 60)),
+				transparency = FxUtil.numberSeq(0.55, 1),
+				brightness = 1,
+				emission = 0.3,
+			},
+			{
+				width = size * FALL.plasmaWidth,
+				color = FxUtil.colorSeq(FxUtil.lighten(glow, 0.3), color),
+				transparency = FxUtil.numberSeq(0.05, 1),
+				brightness = 3,
+				emission = 1,
+			},
+			{
+				width = size * 0.45,
+				color = FxUtil.colorSeq(Color3.new(1, 1, 1), FxUtil.lighten(glow, 0.4)),
+				transparency = FxUtil.numberSeq(0, 1),
+				brightness = 4,
+				emission = 1,
+			},
+		}
+		for _, layer in layers do
+			table.insert(
+				plasmaBeams,
+				FxUtil.beam(holder, head, tailAttachment, {
+					Texture = VfxIds.PLASMA,
+					TextureMode = Enum.TextureMode.Wrap,
+					TextureLength = size * 4,
+					TextureSpeed = FALL.plasmaSpeed,
+					Color = layer.color,
+					Transparency = layer.transparency,
+					Width0 = layer.width,
+					Width1 = layer.width * 0.15,
+					LightEmission = layer.emission,
+					Brightness = layer.brightness,
+					FaceCamera = true,
+					Segments = 1,
+				})
+			)
+		end
+		-- T39: stożek żaru przed gwiazdą (ForceField + półprzezroczysty Neon).
+		local cone = vfxAssets and vfxAssets:FindFirstChild("BowCone") :: MeshPart?
+		if cone then
+			for index, look in
+				{ { Enum.Material.ForceField, glow, 0 }, { Enum.Material.Neon, FxUtil.lighten(glow, 0.3), 0.78 } }
+			do
+				local part = cone:Clone()
+				local scale = size * FALL.bowCone / cone.Size.X * (if index == 1 then 1 else 0.85)
+				part.Size = cone.Size * scale
+				part.Material = look[1]
+				part.Color = look[2]
+				part.Transparency = look[3]
+				part.Parent = folder
+				table.insert(bowParts, part)
+			end
+		end
+
 		SoundController.playAt("emergeRoar", info.startPos)
 		fireLoop = SoundController.attach("fallLoop", holder, 0.5)
 	end
 
-	local function sonicBoom(position: Vector3)
-		boomDone = true
+	-- T39: płonący kawałek odrywający się od gwiazdy.
+	local function shedChunk(position: Vector3, speed: number)
+		if #rocks == 0 then
+			return
+		end
+		local template = rocks[rng:NextInteger(1, #rocks)]
+		local rock = template:Clone()
+		rock.Size = template.Size * class.size * rng:NextNumber(FALL.chunkScale[1], FALL.chunkScale[2])
+		rock.Material = Enum.Material.Basalt
+		rock.Color = Color3.fromRGB(40, 34, 32)
+		rock.Anchored = false
+		rock.CanCollide = false
+		rock.CFrame = CFrame.new(
+			position
+				+ Vector3.new(rng:NextNumber(-1, 1), rng:NextNumber(-1, 1), rng:NextNumber(-1, 1))
+					* class.size
+					* 0.5
+		)
+		rock.AssemblyLinearVelocity = direction * speed * rng:NextNumber(0.35, 0.6)
+			+ Vector3.new(rng:NextNumber(-1, 1), rng:NextNumber(-0.5, 1), rng:NextNumber(-1, 1)) * class.size
+		rock.AssemblyAngularVelocity = Vector3.new(rng:NextNumber(-6, 6), rng:NextNumber(-6, 6), rng:NextNumber(-6, 6))
+		local a0 = FxUtil.attachment(rock, Vector3.new(0, rock.Size.Y * 0.3, 0))
+		local a1 = FxUtil.attachment(rock, Vector3.new(0, -rock.Size.Y * 0.3, 0))
+		local trail = Instance.new("Trail")
+		trail.Attachment0 = a0
+		trail.Attachment1 = a1
+		trail.Texture = VfxIds.FIRE_TRAIL
+		trail.Lifetime = 0.5
+		trail.Color = FxUtil.colorSeq(FxUtil.lighten(glow, 0.5), glow)
+		trail.Transparency = FxUtil.numberSeq(0, 1)
+		trail.LightEmission = 1
+		trail.Brightness = 3
+		trail.FaceCamera = true
+		trail.Parent = rock
+		rock.Parent = folder
+		task.delay(FALL.chunkLifetime, function()
+			rock:Destroy()
+		end)
+	end
+
+	local function ringBurst(position: Vector3, texture: string, loud: boolean)
 		local ring = FxUtil.anchor(Vector3.new(class.size, class.size, 0.2), CFrame.lookAlong(position, direction))
 		local decals = {}
 		for _, face in { Enum.NormalId.Front, Enum.NormalId.Back } do
 			local decal = Instance.new("Decal")
 			decal.Face = face
-			decal.Texture = VfxIds.SHOCK_RING
+			decal.Texture = texture
 			decal.Color3 = FxUtil.lighten(glow, 0.5)
 			decal.Parent = ring
 			table.insert(decals, decal)
@@ -277,7 +399,9 @@ function FallFx.create(info: StarInfo, full: boolean): Fall
 		task.delay(0.8, function()
 			ring:Destroy()
 		end)
-		SoundController.playAt("sonicBoom", position)
+		if loud then
+			SoundController.playAt("sonicBoom", position)
+		end
 	end
 
 	local fall = {} :: Fall
@@ -327,9 +451,34 @@ function FallFx.create(info: StarInfo, full: boolean): Fall
 			end
 			if fireLoop then
 				fireLoop.Volume = FALL_LOOP_VOLUME * (0.5 + 0.7 * eased)
+				fireLoop.PlaybackSpeed = FALL.doppler[1] + (FALL.doppler[2] - FALL.doppler[1]) * eased
 			end
-			if not boomDone and eased >= FALL.sonicBoomAt then
-				sonicBoom(position)
+			-- Pierścienie przyspieszenia; środkowy = sonic boom z dźwiękiem.
+			local nextRing = FALL.ringsAt[ringsDone + 1]
+			if nextRing and eased >= nextRing then
+				ringsDone += 1
+				local loud = ringsDone == 2
+				ringBurst(position, if loud then VfxIds.SHOCK_RING else VfxIds.HEAT_RING, loud)
+			end
+			-- Ogon plazmy: długość rośnie z prędkością.
+			local speedK = math.clamp(alpha ^ (StarConfig.FALL.accelPower - 1), 0.15, 1)
+			local tailAttachment = tail
+			if tailAttachment then
+				tailAttachment.WorldPosition = position - direction * class.size * FALL.plasmaLength * speedK
+			end
+			for index, part in bowParts do
+				local flicker = 1 + 0.06 * math.sin(os.clock() * 25 + index)
+				part.CFrame = cf * CFrame.new(0, 0, -class.size * 0.3) * CFrame.Angles(0, 0, os.clock() * 3)
+				if index == 2 then
+					part.Transparency = 0.72 + 0.1 * flicker - 0.3 * speedK
+				end
+			end
+			-- Odpadające płonące kawałki.
+			chunkClock += dt
+			if full and chunkClock >= FALL.chunkInterval / math.max(FxUtil.quality(), 0.3) and alpha > 0.1 then
+				chunkClock = 0
+				local speed = (info.impactPos - info.startPos).Magnitude * StarConfig.FALL.accelPower * speedK / total
+				shedChunk(position, speed)
 			end
 			local camera = Workspace.CurrentCamera
 			if not flybyDone and camera and (camera.CFrame.Position - position).Magnitude < FALL.flybyDistance then
@@ -350,6 +499,15 @@ function FallFx.create(info: StarInfo, full: boolean): Fall
 			starModel:Destroy()
 		end
 		SoundController.fadeOut(fireLoop, 0.25)
+		for _, beam in plasmaBeams do
+			beam:Destroy()
+		end
+		if tail then
+			tail:Destroy()
+		end
+		for _, part in bowParts do
+			part:Destroy()
+		end
 		local holder = shell
 		if holder then
 			holder.Transparency = 1

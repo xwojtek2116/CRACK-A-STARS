@@ -21,6 +21,7 @@ local SkyFx = require(script.Parent.SkyFx)
 type StarInfo = Types.StarInfo
 
 local IMPACT = FxUtil.CONFIG.IMPACT
+local HITSTOP = FxUtil.CONFIG.HITSTOP
 local STAR_IMPACT = StarConfig.IMPACT
 
 local rng = Random.new()
@@ -121,7 +122,165 @@ local function debris(info: StarInfo, glow: Color3, folder: Folder)
 	end
 end
 
-function ImpactFx.play(info: StarInfo, full: boolean)
+-- T39: kolejne etapy uderzenia — fala-torus ze ścianą pyłu, grzyb, rozbryzgi, unoszący się żar, stygnięcie.
+local function stages(info: StarInfo, full: boolean, glow: Color3, color: Color3, folder: Folder)
+	local size = StarConfig.CLASSES[info.size].size
+	local knockRadius = StarConfig.knockbackRadius(info.size)
+	local pos = info.impactPos
+	local assets = ReplicatedStorage:FindFirstChild("VfxAssets")
+
+	-- Fala-torus pędząca po ziemi.
+	local torusTemplate = assets and assets:FindFirstChild("ShockTorus") :: MeshPart?
+	if torusTemplate then
+		local torus = torusTemplate:Clone()
+		local start = size / torusTemplate.Size.X
+		local finish = knockRadius * IMPACT.torusMult * 2 / torusTemplate.Size.X
+		torus.Size = torusTemplate.Size * start * Vector3.new(1, 6, 1)
+		torus.CFrame = CFrame.new(pos + info.normal * 1.5)
+		torus.Material = Enum.Material.Neon
+		torus.Color = FxUtil.lighten(glow, 0.4)
+		torus.Transparency = 0.15
+		torus.Parent = folder
+		FxUtil.tween(
+			torus,
+			IMPACT.torusSeconds,
+			{ Size = torusTemplate.Size * finish * Vector3.new(1, 3, 1), Transparency = 1 }
+		)
+		task.delay(IMPACT.torusSeconds + 0.1, function()
+			torus:Destroy()
+		end)
+	end
+
+	-- Ściana pyłu: spłaszczona elipsoida, cząstki uciekają poziomo i hamują.
+	local ringAnchor = FxUtil.anchor(Vector3.new(size * 2, 0.6, size * 2), CFrame.new(pos + info.normal * 2))
+	local ringDust = FxUtil.emitter(ringAnchor, {
+		Texture = VfxIds.SMOKE_SHEET,
+		FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
+		FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+		Enabled = false,
+		Shape = Enum.ParticleEmitterShape.Sphere,
+		ShapeInOut = Enum.ParticleEmitterShapeInOut.Outward,
+		ShapeStyle = Enum.ParticleEmitterShapeStyle.Surface,
+		Lifetime = NumberRange.new(1.8, 3),
+		Speed = NumberRange.new(size * 3.5, size * 5),
+		Drag = 3,
+		Size = FxUtil.numberSeq(size * 0.6, size * 1.8),
+		Color = FxUtil.colorSeq(Color3.fromRGB(210, 195, 180), Color3.fromRGB(130, 120, 115)),
+		LightInfluence = 0.4,
+		Transparency = FxUtil.numberSeq(0.15, 1),
+		Rotation = NumberRange.new(0, 360),
+		RotSpeed = NumberRange.new(-50, 50),
+	})
+	ringAnchor.Parent = folder
+	ringDust:Emit(FxUtil.count(FxUtil.bySize(IMPACT.ringDustCount, info.size)))
+
+	-- Grzyb: kapelusz z ciemnych kłębów nad słupem ognia (z opóźnieniem).
+	task.delay(IMPACT.mushroomDelay, function()
+		local capHeight = size * IMPACT.pillarMult * 0.7
+		local cap =
+			FxUtil.anchor(Vector3.new(size * 1.5, size * 0.6, size * 1.5), CFrame.new(pos + Vector3.yAxis * capHeight))
+		local capSmoke = FxUtil.emitter(cap, {
+			Texture = VfxIds.SMOKE_SHEET,
+			FlipbookLayout = Enum.ParticleFlipbookLayout.Grid4x4,
+			FlipbookMode = Enum.ParticleFlipbookMode.OneShot,
+			Enabled = false,
+			Shape = Enum.ParticleEmitterShape.Sphere,
+			ShapeInOut = Enum.ParticleEmitterShapeInOut.Outward,
+			ShapeStyle = Enum.ParticleEmitterShapeStyle.Surface,
+			Lifetime = NumberRange.new(3.5, 5.5),
+			Speed = NumberRange.new(size * 0.5, size * 1.1),
+			Drag = 0.9,
+			Acceleration = Vector3.new(0, size * 0.15, 0),
+			Size = FxUtil.numberSeq(size * 1.2, size * 3.4),
+			Color = FxUtil.colorSeq(FxUtil.lighten(glow, 0.1), FxUtil.darken(color, 0.5), Color3.fromRGB(50, 46, 52)),
+			LightEmission = 0.25,
+			LightInfluence = 0.6,
+			Transparency = FxUtil.numberSeq(0.15, 0.4, 1),
+			Rotation = NumberRange.new(0, 360),
+			RotSpeed = NumberRange.new(-25, 25),
+		})
+		cap.Parent = folder
+		capSmoke:Emit(FxUtil.count(FxUtil.bySize(IMPACT.mushroomCount, info.size)))
+		task.delay(6, function()
+			cap:Destroy()
+		end)
+	end)
+
+	-- Roztopione rozbryzgi: krople Neon z ognistą smugą lecące łukiem.
+	local blobs = {}
+	if assets then
+		for _, child in assets:GetChildren() do
+			if child:IsA("MeshPart") and string.sub(child.Name, 1, 9) == "LavaBlob_" then
+				table.insert(blobs, child)
+			end
+		end
+	end
+	if full and #blobs > 0 then
+		for _ = 1, FxUtil.count(FxUtil.bySize(IMPACT.splashCount, info.size)) do
+			local template = blobs[rng:NextInteger(1, #blobs)]
+			local blob = template:Clone()
+			blob.Size = template.Size * size * rng:NextNumber(IMPACT.splashScale[1], IMPACT.splashScale[2])
+			blob.Material = Enum.Material.Neon
+			blob.Color = FxUtil.lighten(glow, rng:NextNumber(0, 0.3))
+			blob.Anchored = false
+			blob.CanCollide = false
+			local angle = rng:NextNumber(0, 2 * math.pi)
+			local outward = Vector3.new(math.cos(angle), 0, math.sin(angle))
+			local speed = size * rng:NextNumber(IMPACT.splashSpeed[1], IMPACT.splashSpeed[2])
+			local velocity = outward * speed + Vector3.yAxis * speed * rng:NextNumber(0.9, 1.5)
+			blob.CFrame = CFrame.lookAlong(pos + Vector3.yAxis * size * 0.3, -velocity.Unit)
+			blob.AssemblyLinearVelocity = velocity
+			local a0 = FxUtil.attachment(blob, Vector3.new(blob.Size.X * 0.3, 0, 0))
+			local a1 = FxUtil.attachment(blob, Vector3.new(-blob.Size.X * 0.3, 0, 0))
+			local trail = Instance.new("Trail")
+			trail.Attachment0 = a0
+			trail.Attachment1 = a1
+			trail.Texture = VfxIds.FIRE_TRAIL
+			trail.Lifetime = 0.45
+			trail.Color = FxUtil.colorSeq(Color3.new(1, 1, 1), glow)
+			trail.Transparency = FxUtil.numberSeq(0, 1)
+			trail.LightEmission = 1
+			trail.Brightness = 3
+			trail.FaceCamera = true
+			trail.Parent = blob
+			blob.Parent = folder
+			task.delay(rng:NextNumber(1.8, 2.6), function()
+				FxUtil.tween(blob, 0.4, { Size = blob.Size * 0.2, Transparency = 1 })
+				task.delay(0.45, function()
+					blob:Destroy()
+				end)
+			end)
+		end
+	end
+
+	-- Unoszący się żar nad kraterem przez kilka sekund.
+	local emberAnchor = FxUtil.anchor(Vector3.new(size * 1.6, 1, size * 1.6), CFrame.new(pos + Vector3.yAxis * 2))
+	local floating = FxUtil.emitter(emberAnchor, {
+		Texture = VfxIds.EMBER,
+		Shape = Enum.ParticleEmitterShape.Box,
+		EmissionDirection = Enum.NormalId.Top,
+		Rate = IMPACT.emberRate * FxUtil.quality(),
+		Lifetime = NumberRange.new(2.5, 4.5),
+		Speed = NumberRange.new(size * 0.15, size * 0.45),
+		SpreadAngle = Vector2.new(30, 30),
+		Acceleration = Vector3.new(0, size * 0.05, 0),
+		Size = FxUtil.numberSeq(math.max(0.4, size * 0.05), 0),
+		Color = FxUtil.colorSeq(Color3.new(1, 1, 1), glow, color),
+		LightEmission = 1,
+		Brightness = 2.5,
+	})
+	emberAnchor.Parent = folder
+	task.delay(IMPACT.emberSeconds, function()
+		floating.Enabled = false
+		task.delay(5, function()
+			emberAnchor:Destroy()
+			ringAnchor:Destroy()
+		end)
+	end)
+	SoundController.playAt("craterCool", pos, nil, IMPACT.coolDelay)
+end
+
+local function explode(info: StarInfo, full: boolean)
 	local class = StarConfig.CLASSES[info.size]
 	local size = class.size
 	local glow = StarConfig.glow(info.type)
@@ -131,16 +290,8 @@ function ImpactFx.play(info: StarInfo, full: boolean)
 	local knockRadius = StarConfig.knockbackRadius(info.size)
 	local pos = info.impactPos
 
-	-- Dźwięk
-	SoundController.playAt(SoundIds.IMPACT_BY_SIZE[info.size] or "impactMedium", pos)
-	SoundController.playAt("shockwave", pos, nil, 0.05)
-	SoundController.playAt("debrisRain", pos, nil, 0.35)
-
-	-- Flash ekranu wg odległości
 	local camera = Workspace.CurrentCamera
 	local distance = if camera then (camera.CFrame.Position - pos).Magnitude else math.huge
-	local reach = FxUtil.bySize(IMPACT.flashReach, info.size)
-	SkyFx.flash(FxUtil.bySize(IMPACT.flashStrength, info.size) * math.clamp(1 - distance / reach, 0, 1), 0.5)
 
 	-- Kula ognia: biały rdzeń + kolorowa otoczka
 	local fireball = FxUtil.part(Enum.PartType.Ball, Vector3.one * size, CFrame.new(pos), glow, Enum.Material.Neon)
@@ -233,6 +384,7 @@ function ImpactFx.play(info: StarInfo, full: boolean)
 		Size = FxUtil.numberSeq(math.max(0.8, size * 0.12), 0),
 		Color = FxUtil.colorSeq(Color3.new(1, 1, 1), glow, color),
 		LightEmission = 1,
+		Brightness = 3,
 	})
 	local sparks = FxUtil.emitter(holder, {
 		Texture = VfxIds.SPARK,
@@ -284,6 +436,7 @@ function ImpactFx.play(info: StarInfo, full: boolean)
 		)
 	end
 	knockback(info)
+	stages(info, full, glow, color, folder)
 
 	task.delay(5, function()
 		pillar:Destroy()
@@ -292,6 +445,48 @@ function ImpactFx.play(info: StarInfo, full: boolean)
 		bubble:Destroy()
 		wavePart:Destroy()
 		holder:Destroy()
+	end)
+end
+
+-- Uderzenie: dźwięk i flash od razu, potem hit-stop (zamrożony biały rdzeń), potem eksplozja etapami.
+function ImpactFx.play(info: StarInfo, full: boolean)
+	local pos = info.impactPos
+	local size = StarConfig.CLASSES[info.size].size
+	local glow = StarConfig.glow(info.type)
+	SoundController.playAt(SoundIds.IMPACT_BY_SIZE[info.size] or "impactMedium", pos)
+	SoundController.playAt("shockwave", pos, nil, 0.05)
+	SoundController.playAt("debrisRain", pos, nil, 0.35)
+	if FxUtil.atLeast(info.size, "Large") then
+		SoundController.playAt("impactTail", pos, nil, 0.6)
+	end
+
+	local camera = Workspace.CurrentCamera
+	local distance = if camera then (camera.CFrame.Position - pos).Magnitude else math.huge
+	local reach = FxUtil.bySize(IMPACT.flashReach, info.size)
+	SkyFx.flash(FxUtil.bySize(IMPACT.flashStrength, info.size) * math.clamp(1 - distance / reach, 0, 1), 0.6)
+
+	local hold = if FxUtil.atLeast(info.size, HITSTOP.fromSize) then HITSTOP.seconds else 0
+	if hold <= 0 then
+		explode(info, full)
+		return
+	end
+	-- Hit-stop: biały rdzeń „zamrożony” na moment, zanim wszystko eksploduje.
+	local freeze = FxUtil.part(
+		Enum.PartType.Ball,
+		Vector3.one * size * 1.3,
+		CFrame.new(pos),
+		Color3.new(1, 1, 1),
+		Enum.Material.Neon
+	)
+	freeze.Parent = FxUtil.folder()
+	local freezeLight = Instance.new("PointLight")
+	freezeLight.Color = FxUtil.lighten(glow, 0.6)
+	freezeLight.Range = 60
+	freezeLight.Brightness = IMPACT.lightBrightness * 1.5
+	freezeLight.Parent = freeze
+	task.delay(hold, function()
+		freeze:Destroy()
+		explode(info, full)
 	end)
 end
 

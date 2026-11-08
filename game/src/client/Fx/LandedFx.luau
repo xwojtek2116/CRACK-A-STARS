@@ -118,7 +118,95 @@ function LandedFx.attach(model: Model): Landed?
 	})
 	cracks.Parent = folder
 
+	-- T39: słup światła do nieba (widoczny z całej mapy) z błyskiem na szczycie.
+	local beaconWidth = math.max(LANDED.beaconMinWidth, size * LANDED.beaconWidth)
+	local base = FxUtil.attachment(cracks, Vector3.new(0, 0.5, 0))
+	local top = Instance.new("Attachment")
+	top.Name = `Beacon_{model.Name}`
+	top.WorldPosition = groundPos + Vector3.yAxis * LANDED.beaconHeight
+	top.Parent = Workspace.Terrain
+	local beams: { Beam } = {}
+	for _, layer in { { beaconWidth, glow, 0.35, 1.5 }, { beaconWidth * 0.35, Color3.new(1, 1, 1), 0.2, 2.5 } } do
+		table.insert(
+			beams,
+			FxUtil.beam(cracks, base, top, {
+				Texture = VfxIds.LIGHT_SHAFT,
+				TextureMode = Enum.TextureMode.Stretch,
+				Color = FxUtil.colorSeq(FxUtil.lighten(layer[2] :: Color3, 0.3), layer[2] :: Color3),
+				LightEmission = 1,
+				Brightness = layer[4] :: number,
+				Width0 = layer[1] :: number,
+				Width1 = (layer[1] :: number) * 1.6,
+				FaceCamera = true,
+				Segments = 1,
+				Transparency = NumberSequence.new(layer[3] :: number),
+			})
+		)
+	end
+	local topGui = Instance.new("BillboardGui")
+	topGui.Size = UDim2.new(beaconWidth * 4, 40, beaconWidth * 4, 40)
+	topGui.LightInfluence = 0
+	topGui.MaxDistance = 6000
+	local topImage = Instance.new("ImageLabel")
+	topImage.BackgroundTransparency = 1
+	topImage.Image = VfxIds.GLINT
+	topImage.ImageColor3 = FxUtil.lighten(glow, 0.3)
+	topImage.Size = UDim2.fromScale(1, 1)
+	topImage.Parent = topGui
+	local topAnchor = FxUtil.anchor(Vector3.one, CFrame.new(top.WorldPosition))
+	topGui.Adornee = topAnchor
+	topGui.Parent = topAnchor
+	topAnchor.Parent = folder
+
+	-- T39: orbitujące iskry-komety wokół gwiazdy.
+	type Orbiter = { part: Part, phase: number, radius: number, height: number, speed: number }
+	local orbiters: { Orbiter } = {}
+	local orbitTotal = FxUtil.count(FxUtil.bySize(LANDED.orbitCount, sizeId))
+	for index = 1, orbitTotal do
+		local orb = FxUtil.part(
+			Enum.PartType.Ball,
+			Vector3.one * math.max(0.6, size * 0.05),
+			pivot,
+			FxUtil.lighten(glow, 0.4),
+			Enum.Material.Neon
+		)
+		local a0 = FxUtil.attachment(orb, Vector3.new(0, orb.Size.Y * 0.5, 0))
+		local a1 = FxUtil.attachment(orb, Vector3.new(0, -orb.Size.Y * 0.5, 0))
+		local trail = Instance.new("Trail")
+		trail.Attachment0 = a0
+		trail.Attachment1 = a1
+		trail.Lifetime = 0.5
+		trail.Color = FxUtil.colorSeq(Color3.new(1, 1, 1), glow)
+		trail.Transparency = FxUtil.numberSeq(0, 1)
+		trail.LightEmission = 1
+		trail.FaceCamera = true
+		trail.WidthScale = FxUtil.numberSeq(1, 0)
+		trail.Parent = orb
+		orb.Parent = folder
+		table.insert(orbiters, {
+			part = orb,
+			phase = index / orbitTotal * 2 * math.pi + rng:NextNumber(0, 1),
+			radius = size * LANDED.orbitRadius * rng:NextNumber(0.85, 1.25),
+			height = size * rng:NextNumber(-0.15, 0.45),
+			speed = LANDED.orbitSpeed * rng:NextNumber(0.7, 1.3) * (if index % 2 == 0 then -1 else 1),
+		})
+	end
+	local waveClock = 0
+	local craterRadius = StarConfig.craterRadius(sizeId)
+	local function energyWave()
+		local wave, decal = FxUtil.groundDecal(groundPos + normal * 0.7, normal, size, VfxIds.ENERGY_WAVE, glow)
+		decal.Transparency = 0.15
+		wave.Parent = folder
+		local final = craterRadius * LANDED.waveMult * 2
+		FxUtil.tween(wave, LANDED.waveSeconds, { Size = Vector3.new(final, 0.2, final) })
+		FxUtil.tween(decal, LANDED.waveSeconds, { Transparency = 1 }, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+		task.delay(LANDED.waveSeconds + 0.1, function()
+			wave:Destroy()
+		end)
+	end
+
 	local hum = SoundController.attach("starHum", primary)
+	local beaconHum = SoundController.attach("beaconHum", cracks)
 	local sizzle = SoundController.attach("craterSizzle", cracks)
 	local glowLight = model:FindFirstChild("Glow", true)
 	local baseBrightness = if glowLight and glowLight:IsA("PointLight") then glowLight.Brightness else 0
@@ -137,6 +225,24 @@ function LandedFx.attach(model: Model): Landed?
 			+ (LANDED.highlightFill[2] - LANDED.highlightFill[1]) * pulse
 		cracksDecal.Transparency = 0.05 + 0.35 * (1 - pulse)
 		groundLight.Brightness = 1.5 + 2 * pulse
+		local beaconPulse = 0.5 + 0.5 * math.sin(clock * LANDED.beaconPulse * 2 * math.pi)
+		beams[1].Transparency = NumberSequence.new(0.25 + 0.25 * (1 - beaconPulse))
+		topImage.ImageTransparency = 0.1 + 0.3 * (1 - beaconPulse)
+		local center = model:GetPivot().Position
+		for _, orbiter in orbiters do
+			local angle = orbiter.phase + clock * orbiter.speed * 2 * math.pi
+			orbiter.part.Position = center
+				+ Vector3.new(
+					math.cos(angle) * orbiter.radius,
+					orbiter.height + math.sin(angle * 2) * size * 0.08,
+					math.sin(angle) * orbiter.radius
+				)
+		end
+		waveClock += dt
+		if waveClock >= LANDED.waveInterval then
+			waveClock = 0
+			energyWave()
+		end
 		if glowLight and glowLight:IsA("PointLight") then
 			glowLight.Brightness = baseBrightness * (0.7 + 0.8 * pulse)
 		end
@@ -153,6 +259,20 @@ function LandedFx.attach(model: Model): Landed?
 			sparks:Destroy()
 		end)
 		SoundController.fadeOut(hum, 0.4)
+		SoundController.fadeOut(beaconHum, 0.8)
+		for _, orbiter in orbiters do
+			orbiter.part:Destroy()
+		end
+		table.clear(orbiters)
+		-- Słup światła gaśnie: zwęża się i blednie.
+		for _, beam in beams do
+			FxUtil.tween(beam, 1.2, { Width0 = 0, Width1 = 0 })
+		end
+		FxUtil.tween(topImage, 1.2, { ImageTransparency = 1 })
+		task.delay(1.3, function()
+			top:Destroy()
+			topAnchor:Destroy()
+		end)
 		SoundController.fadeOut(sizzle, 1.5)
 		FxUtil.tween(cracksDecal, 2, { Transparency = 1 })
 		FxUtil.tween(groundLight, 2, { Brightness = 0 })

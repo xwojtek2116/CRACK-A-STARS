@@ -5,6 +5,7 @@
 -- Meshe: ReplicatedStorage.VfxAssets (Rift_Edge, Rift_Core, Shard_N) z art/vfx/build_vfx.py; front = LookVector.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local StarConfig = require(Shared.Config.StarConfig)
@@ -102,13 +103,14 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 		depthMult: number,
 		speed: number,
 		swirlColor: Color3,
-		transparency: number
+		transparency: number,
+		texture: string?
 	)
 		local size = height * sizeMult
 		local part = FxUtil.anchor(Vector3.new(size, size, 0.2), cframe * CFrame.new(0, 0, height * depthMult))
 		local decal = Instance.new("Decal")
 		decal.Face = Enum.NormalId.Front
-		decal.Texture = VfxIds.SWIRL
+		decal.Texture = texture or VfxIds.SWIRL
 		decal.Color3 = swirlColor
 		decal.Transparency = transparency
 		decal.Parent = part
@@ -117,6 +119,9 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 	end
 	addSwirl(1.25, 0.55, RIFT.swirlSpeed, color, 0.35)
 	addSwirl(0.8, 0.35, -RIFT.swirlSpeed * 1.6, FxUtil.lighten(glow, 0.3), 0.1)
+	-- T39: najgłębsza warstwa mgławicy (wolna) i jasny rdzeń — paralaksa przy patrzeniu z boku.
+	addSwirl(RIFT.nebulaDisc, 0.85, RIFT.swirlSpeed * 0.2, FxUtil.lighten(color, 0.15), 0.2, VfxIds.NEBULA)
+	addSwirl(0.45, 0.2, RIFT.swirlSpeed * 2.4, Color3.new(1, 1, 1), 0.05)
 
 	-- Mgławica: dwa Beamy od środka do czubków (romb wypełniający oko), tekstura płynie.
 	local center = FxUtil.attachment(holder, Vector3.new(0, 0, height * 0.15))
@@ -149,16 +154,17 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 	local bolts: { Bolt } = {}
 	local emitters: { ParticleEmitter } = {}
 	if full then
-		for _ = 1, FxUtil.count(FxUtil.bySize(RIFT.lightningCount, info.size)) do
+		for _ = 1, FxUtil.count(FxUtil.bySize(RIFT.lightningCount, info.size) * 1.5) do
 			local beam = FxUtil.beam(holder, outline[1], outline[2], {
 				Texture = VfxIds.LIGHTNING[1],
 				TextureMode = Enum.TextureMode.Stretch,
 				Color = FxUtil.colorSeq(Color3.new(1, 1, 1), FxUtil.lighten(glow, 0.3)),
 				LightEmission = 1,
-				Width0 = width * RIFT.lightningWidth,
-				Width1 = width * RIFT.lightningWidth,
+				Width0 = width * RIFT.lightningWidth * 1.5,
+				Width1 = width * RIFT.lightningWidth * 0.8,
 				FaceCamera = true,
 				Segments = 12,
+				Brightness = RIFT.particleBrightness,
 				Transparency = NumberSequence.new(1),
 			})
 			table.insert(bolts, { beam = beam, nextAt = 0 })
@@ -180,6 +186,27 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 				Color = FxUtil.colorSeq(Color3.new(1, 1, 1), glow),
 				LightEmission = 1,
 				Transparency = FxUtil.numberSeq(0.2, 0, 1),
+				Orientation = Enum.ParticleOrientation.VelocityParallel,
+				Squash = NumberSequence.new(1.5),
+				Brightness = RIFT.particleBrightness,
+			})
+		)
+		-- T39: aura błysków na krawędzi.
+		table.insert(
+			emitters,
+			FxUtil.emitter(wispAnchor, {
+				Texture = VfxIds.GLINT,
+				Shape = Enum.ParticleEmitterShape.Sphere,
+				ShapeInOut = Enum.ParticleEmitterShapeInOut.Outward,
+				ShapeStyle = Enum.ParticleEmitterShapeStyle.Surface,
+				Rate = RIFT.auraRate * FxUtil.quality(),
+				Lifetime = NumberRange.new(0.5, 1.1),
+				Speed = NumberRange.new(width * 0.02, width * 0.06),
+				Size = FxUtil.numberSeq(0, width * 0.05, 0),
+				Rotation = NumberRange.new(0, 90),
+				Color = FxUtil.colorSeq(Color3.new(1, 1, 1), FxUtil.lighten(glow, 0.3)),
+				LightEmission = 1,
+				Brightness = RIFT.particleBrightness,
 			})
 		)
 		-- Burzowe chmury wokół rozdarcia.
@@ -222,12 +249,91 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 	light.Brightness = 4
 	light.Parent = holder
 
+	-- T39: pęknięcia nieba rozchodzące się od krawędzi (rosną po rysie).
+	type Crack = { part: MeshPart, edge: Vector3, dir: Vector3, length: number, target: Vector3 }
+	local cracks: { Crack } = {}
+	local crackPool = {}
+	for _, child in templates:GetChildren() do
+		if child:IsA("MeshPart") and string.sub(child.Name, 1, 9) == "SkyCrack_" then
+			table.insert(crackPool, child)
+		end
+	end
+	if #crackPool > 0 then
+		for _ = 1, FxUtil.bySize(RIFT.crackCount, info.size) do
+			local template = crackPool[rng:NextInteger(1, #crackPool)]
+			local edge = outlinePoint(rng:NextNumber(0, 2 * math.pi), width * 0.5)
+			local flatEdge = Vector3.new(edge.X, edge.Y, 0)
+			local dir = if flatEdge.Magnitude > 1e-3 then flatEdge.Unit else Vector3.xAxis
+			local length = width * rng:NextNumber(RIFT.crackLength[1], RIFT.crackLength[2])
+			local target = template.Size * (length / template.Size.X)
+			local part = template:Clone()
+			part.Material = Enum.Material.Neon
+			part.Color = glow
+			part.Transparency = 0.1
+			part.Size = Vector3.new(0.05, 0.05, 0.05)
+			part.CFrame = cframe
+			part.Parent = holder
+			table.insert(cracks, {
+				part = part,
+				edge = edge,
+				dir = dir,
+				length = length,
+				target = Vector3.new(target.X, target.Y * RIFT.crackThickness, math.max(target.Z, 0.15)),
+			})
+		end
+	end
+	local function placeCrack(crack: Crack, k: number)
+		local len = crack.length * k
+		local crackCenter = crack.edge + crack.dir * len * 0.5
+		local vX = -crack.dir
+		local vZ = Vector3.zAxis
+		local vY = vZ:Cross(vX)
+		crack.part.Size =
+			Vector3.new(math.max(crack.target.X * k, 0.05), math.max(crack.target.Y * k, 0.05), crack.target.Z)
+		crack.part.CFrame = cframe * CFrame.fromMatrix(crackCenter, vX, vY, vZ)
+	end
+
+	-- T39: snopy światła z wyrwy w stronę miejsca uderzenia.
+	local shafts: { Beam } = {}
+	local shaftEnds: { Attachment } = {}
+	local shaftStart = FxUtil.attachment(holder, Vector3.new(0, 0, -height * 0.1))
+	local crater = StarConfig.craterRadius(info.size)
+	for _ = 1, FxUtil.bySize(RIFT.shaftCount, info.size) do
+		local angle = rng:NextNumber(0, 2 * math.pi)
+		local offset = Vector3.new(math.cos(angle), 0, math.sin(angle))
+			* crater
+			* RIFT.shaftSpread
+			* rng:NextNumber(0.2, 1)
+		local finish = Instance.new("Attachment")
+		finish.Name = `RiftShaft_{info.id}`
+		finish.WorldPosition = info.impactPos + offset
+		finish.Parent = Workspace.Terrain
+		table.insert(shaftEnds, finish)
+		table.insert(
+			shafts,
+			FxUtil.beam(holder, shaftStart, finish, {
+				Texture = VfxIds.LIGHT_SHAFT,
+				TextureMode = Enum.TextureMode.Stretch,
+				Color = FxUtil.colorSeq(FxUtil.lighten(glow, 0.45), color),
+				LightEmission = 1,
+				Brightness = 1.5,
+				Width0 = width * RIFT.shaftWidth[1],
+				Width1 = width * RIFT.shaftWidth[2],
+				FaceCamera = true,
+				Segments = 1,
+				Transparency = NumberSequence.new(1),
+			})
+		)
+	end
+
 	holder.Parent = folder
 
 	-- Dźwięk i niebo.
 	SoundController.playAt("riftOpen", info.startPos)
+	SoundController.playAt("skyCrack", info.startPos, nil, RIFT.lineSeconds)
 	local loop = SoundController.attach("riftLoop", holder)
 	local skyActive = FxUtil.atLeast(info.size, SKY.fromSize)
+	SkyFx.boost(info.id, if skyActive then 1 else 0.55)
 	if skyActive then
 		SoundController.play2D("thunderFar")
 		SkyFx.tint(
@@ -313,8 +419,12 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 		destroyed = true
 		closedFlag = true
 		SkyFx.release(info.id)
+		SkyFx.unboost(info.id)
 		SoundController.fadeOut(loop, 0.3)
 		holder:Destroy()
+		for _, finish in shaftEnds do
+			finish:Destroy()
+		end
 		for _, shard in shards do
 			shard.part:Destroy()
 		end
@@ -331,6 +441,10 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 		SoundController.fadeOut(loop, RIFT.closeSeconds)
 		loop = nil
 		SkyFx.release(info.id)
+		SkyFx.unboost(info.id)
+		for _, crack in cracks do
+			FxUtil.tween(crack.part, RIFT.closeSeconds, { Transparency = 1 })
+		end
 	end
 
 	function rift.update(now: number, dt: number)
@@ -360,6 +474,13 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 			end
 		end
 		setOpen(sx, sy)
+		local grow = math.clamp((age - RIFT.lineSeconds) / RIFT.crackGrowSeconds, 0, 1)
+		if grow > 0 and age - RIFT.lineSeconds <= RIFT.crackGrowSeconds + 0.2 then
+			for _, crack in cracks do
+				placeCrack(crack, FxUtil.easeOutBack(grow))
+			end
+		end
+		local shaftAlpha = math.clamp(sy, 0, 1) * (if closing then 0.3 else 1)
 
 		-- Puls: krawędź i światło.
 		local pulse = 0.5 + 0.5 * math.sin(os.clock() * RIFT.pulseSpeed * 2 * math.pi)
@@ -367,6 +488,11 @@ function RiftFx.create(info: StarInfo, full: boolean): Rift
 			edgePart.Color = FxUtil.lighten(glow, 0.15 + 0.35 * pulse)
 		end
 		light.Brightness = 3 + 3 * pulse
+		for index, shaft in shafts do
+			local wobble = 0.5 + 0.5 * math.sin(os.clock() * 1.7 + index * 1.3)
+			local transparency = 1 - shaftAlpha * (0.25 + 0.2 * wobble)
+			shaft.Transparency = FxUtil.numberSeq(transparency, math.min(1, transparency + 0.15))
+		end
 		flare.ImageTransparency = 0.25 + 0.25 * (1 - pulse) + (if closing then 0.5 else 0)
 
 		spinAngle += dt

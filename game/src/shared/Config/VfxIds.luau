@@ -21,4 +21,10 @@ return table.freeze({
 	FIRE_TRAIL = "rbxassetid://133225013917694", -- fire_trail.png (Trail)
 	ENERGY = "rbxassetid://78781932683130", -- energy.png (Beam z TextureSpeed)
 	CRACKS = "rbxassetid://116222846724955", -- cracks.png (Decal krateru)
+	-- T39
+	LIGHT_SHAFT = "rbxassetid://95481741372385", -- light_shaft.png: snop/słup światła (Beam)
+	PLASMA = "rbxassetid://136463784511671", -- plasma.png: ogon plazmy (Beam z TextureSpeed)
+	HEAT_RING = "rbxassetid://78691950068423", -- heat_ring.png: pierścień przyspieszenia
+	ENERGY_WAVE = "rbxassetid://107174927114880", -- energy_wave.png: fala energii na ziemi
+	GLINT = "rbxassetid://121860539319055", -- glint.png: błysk-gwiazdka
 })

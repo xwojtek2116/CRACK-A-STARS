@@ -86,6 +86,7 @@ local nextDropAt: { [string]: number } = {}
 local crackedCallbacks: { CrackedCallback } = {}
 local rejectMaterials: { [string]: boolean } = {}
 local idCounter = 0
+local devPaused = false -- tryb dev: pauza harmonogramu (testy wydajności i wycieków)
 
 local StarService = {}
 
@@ -811,7 +812,7 @@ end
 local function tick()
 	local clock = os.clock()
 	for sizeId, dueAt in nextDropAt do
-		if clock < dueAt then
+		if devPaused or clock < dueAt then
 			continue
 		end
 		local class = CLASSES[sizeId]
@@ -836,7 +837,7 @@ local function tick()
 end
 
 -- Tryb dev (tylko Studio): ServerStorage.DevStar:Invoke(akcja, ...) — "drop"(rozmiar, rodzaj?, Vector3?),
--- "damage"(id, ile), "expire"(id), "list"(), "scars"().
+-- "damage"(id, ile), "expire"(id), "list"(), "scars"(), "pause"(bool).
 local function setupDev()
 	local bindable = Instance.new("BindableFunction")
 	bindable.Name = "DevStar"
@@ -852,6 +853,9 @@ local function setupDev()
 			return listActive()
 		elseif action == "scars" then
 			return #scars
+		elseif action == "pause" then
+			devPaused = a == true
+			return devPaused
 		end
 		return nil
 	end

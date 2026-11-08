@@ -325,5 +325,102 @@ def main() -> None:
     cracks(rng)
 
 
+# ---------------------------------------------------------------- T39
+
+
+def anisotropic_noise(rng: np.random.Generator, h: int, w: int, beta: float, stretch: float) -> np.ndarray:
+    """Szum fraktalny rozciągnięty wzdłuż X (smugi, włókna plazmy); bezszwowy."""
+    fy = np.fft.fftfreq(h)[:, None]
+    fx = np.fft.fftfreq(w)[None, :] * stretch
+    f = np.sqrt(fx * fx + fy * fy)
+    f[0, 0] = 1.0
+    amp = 1.0 / f**beta
+    amp[0, 0] = 0.0
+    phase = rng.uniform(0, 2 * np.pi, (h, w))
+    field = np.real(np.fft.ifft2(amp * np.exp(1j * phase)))
+    field -= field.min()
+    return field / field.max()
+
+
+def light_shaft(rng: np.random.Generator) -> None:
+    """Snop światła (Beam z wyrwy / słup nad gwiazdą): U = długość, jasny początek, smugi wzdłuż, miękkie brzegi."""
+    h, w = 128, 512
+    x, y = grid(h, w)
+    u = (x + 1) / 2
+    streaks = anisotropic_noise(rng, h, w, 1.6, 8.0)
+    across = np.exp(-(y**2) / (2 * 0.38**2))
+    core = np.exp(-(y**2) / (2 * 0.1**2))
+    along = (1 - u) ** 0.7 * smoothstep(0.0, 0.04, u)
+    a = np.clip((across * (0.45 + 0.75 * streaks) + core * 0.6) * along, 0, 1)
+    save("light_shaft", np.clip(0.8 + core * 0.3, 0, 1), a)
+
+
+def plasma(rng: np.random.Generator) -> None:
+    """Ogon plazmy (Beam z TextureSpeed): poziomo bezszwowe włókna, gorący rdzeń w środku szerokości."""
+    h, w = 128, 512
+    _, y = grid(h, w)
+    fil = anisotropic_noise(rng, h, w, 1.5, 6.0)
+    ridge = 1 - np.abs(2 * anisotropic_noise(rng, h, w, 1.7, 5.0) - 1)
+    body = np.exp(-(y**2) / (2 * 0.33**2))
+    core = np.exp(-(y**2) / (2 * 0.09**2))
+    a = np.clip(body * (0.35 + 0.8 * fil) + ridge**4 * body * 0.8 + core * 0.7, 0, 1)
+    save("plasma", np.clip(0.75 + core * 0.4 + ridge**6 * 0.3, 0, 1), a)
+
+
+def heat_ring(rng: np.random.Generator) -> None:
+    """Pierścień przyspieszenia / fala energii: podwójna obwódka z przerwami i poświatą."""
+    n = 512
+    x, y = grid(n, n)
+    r = np.sqrt(x * x + y * y)
+    theta = np.arctan2(y, x)
+    breaks = 0.6 + 0.4 * np.cos(theta * 7 + 1.3) * np.cos(theta * 3)
+    ring1 = np.exp(-((r - 0.86) ** 2) / (2 * 0.018**2)) * breaks
+    ring2 = np.exp(-((r - 0.74) ** 2) / (2 * 0.01**2)) * (1 - breaks * 0.5)
+    glow = np.exp(-((r - 0.82) ** 2) / (2 * 0.08**2)) * 0.35
+    a = np.clip(ring1 + ring2 * 0.7 + glow, 0, 1) * (1 - smoothstep(0.95, 1.0, r))
+    save("heat_ring", np.clip(0.85 + ring1 * 0.3, 0, 1), a)
+
+
+def energy_wave(rng: np.random.Generator) -> None:
+    """Fala energii po ziemi wokół leżącej gwiazdy: cienki pierścień, promieniste smugi, delikatne zmarszczki."""
+    n = 512
+    x, y = grid(n, n)
+    r = np.sqrt(x * x + y * y)
+    theta = np.arctan2(y, x)
+    ring = np.exp(-((r - 0.9) ** 2) / (2 * 0.012**2))
+    rays = (np.abs(np.sin(theta * 18)) ** 30) * smoothstep(0.55, 0.88, r) * (r < 0.9) * 0.6
+    ripple = (0.5 + 0.5 * np.cos(r * 60)) * smoothstep(0.4, 0.88, r) * (r < 0.9) * 0.15
+    a = np.clip(ring + rays + ripple, 0, 1) * (1 - smoothstep(0.93, 0.97, r))
+    save("energy_wave", np.ones_like(a), a)
+
+
+def glint() -> None:
+    """Błysk: 4 ostre promienie, długa smuga pozioma, pierścień dyfrakcyjny."""
+    n = 256
+    x, y = grid(n, n)
+    r = np.sqrt(x * x + y * y)
+    rays = np.exp(-np.abs(x) / 0.012) * np.exp(-np.abs(y) / 0.45) + np.exp(-np.abs(y) / 0.012) * np.exp(-np.abs(x) / 0.45)
+    streak = np.exp(-np.abs(y) / 0.008) * np.exp(-np.abs(x) / 0.9) * 0.7
+    core = np.exp(-(r**2) / (2 * 0.06**2))
+    ring = np.exp(-((r - 0.35) ** 2) / (2 * 0.01**2)) * 0.25
+    a = np.clip(rays + streak + core + ring, 0, 1) * (1 - smoothstep(0.92, 1.0, r))
+    save("glint", np.ones_like(a), a)
+
+
+def main_t39() -> None:
+    rng = np.random.default_rng(SEED + 1)
+    light_shaft(rng)
+    plasma(rng)
+    heat_ring(rng)
+    energy_wave(rng)
+    glint()
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+
+    if "--t39" in sys.argv:
+        main_t39()
+    else:
+        main()
+        main_t39()

@@ -273,4 +273,115 @@ def main():
     print("VFX_REPORT", report)
 
 
-main()
+# ---------------------------------------------------------------- T39
+
+def build_sky_crack(coll, rng, index):
+    """Pęknięcie nieba: poszarpana wstęga wzdłuż X (0..1) z 2–3 odgałęzieniami, zwężająca się; front = −Y."""
+    bm = bmesh.new()
+
+    def ribbon(points, w0, w1):
+        n = len(points)
+        left, right = [], []
+        for i, (x, z) in enumerate(points):
+            a = points[max(i - 1, 0)]
+            b = points[min(i + 1, n - 1)]
+            tx, tz = b[0] - a[0], b[1] - a[1]
+            length = math.hypot(tx, tz) or 1
+            nx, nz = -tz / length, tx / length
+            w = (w0 + (w1 - w0) * i / (n - 1)) / 2
+            left.append(bm.verts.new((x + nx * w, 0.0, z + nz * w)))
+            right.append(bm.verts.new((x - nx * w, 0.0, z - nz * w)))
+        for i in range(n - 1):
+            bm.faces.new((left[i], left[i + 1], right[i + 1], right[i]))
+
+    def jagged(start, angle, length, steps, rough):
+        pts = [start]
+        x, z = start
+        for i in range(1, steps + 1):
+            a = angle + rng.uniform(-rough, rough)
+            x += math.cos(a) * length / steps
+            z += math.sin(a) * length / steps
+            pts.append((x, z))
+        return pts
+
+    main = jagged((0.0, 0.0), 0.0, 1.0, 14, 0.55)
+    ribbon(main, 0.07, 0.008)
+    for _ in range(rng.randint(2, 3)):
+        k = rng.randint(3, 9)
+        branch = jagged(main[k], rng.choice([-1, 1]) * rng.uniform(0.5, 1.0), rng.uniform(0.25, 0.45), 6, 0.6)
+        ribbon(branch, 0.035, 0.005)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    for f in bm.faces:
+        if f.normal.y > 0:
+            f.normal_flip()
+    return mesh_obj(f"SkyCrack_{index}", bm, coll)
+
+
+def build_shock_torus(coll):
+    """Pierścień fali uderzeniowej: torus (R=1, r=0.12), spłaszczony w pionie; leży poziomo."""
+    bm = bmesh.new()
+    seg, ring = 48, 10
+    verts = []
+    for i in range(seg):
+        a = i / seg * 2 * math.pi
+        row = []
+        for j in range(ring):
+            b = j / ring * 2 * math.pi
+            r = 1 + 0.12 * math.cos(b)
+            row.append(bm.verts.new((math.cos(a) * r, math.sin(a) * r, 0.05 * math.sin(b))))
+        verts.append(row)
+    for i in range(seg):
+        for j in range(ring):
+            bm.faces.new((verts[i][j], verts[(i + 1) % seg][j], verts[(i + 1) % seg][(j + 1) % ring], verts[i][(j + 1) % ring]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return mesh_obj("ShockTorus", bm, coll, smooth=True)
+
+
+def build_bow_cone(coll):
+    """Stożek żaru przed gwiazdą: wierzchołek z przodu (−Y), otwarty z tyłu, paraboliczny profil."""
+    bm = bmesh.new()
+    seg, rings, length = 24, 8, 1.6
+    tip = bm.verts.new((0.0, -length * 0.5, 0.0))
+    rows = []
+    for k in range(1, rings + 1):
+        t = k / rings
+        radius = math.sqrt(t)
+        y = -length * 0.5 + length * t
+        rows.append([bm.verts.new((math.cos(i / seg * 2 * math.pi) * radius, y, math.sin(i / seg * 2 * math.pi) * radius)) for i in range(seg)])
+    for i in range(seg):
+        bm.faces.new((tip, rows[0][(i + 1) % seg], rows[0][i]))
+        for k in range(rings - 1):
+            bm.faces.new((rows[k][i], rows[k][(i + 1) % seg], rows[k + 1][(i + 1) % seg], rows[k + 1][i]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return mesh_obj("BowCone", bm, coll, smooth=True)
+
+
+def build_lava_blob(coll, rng, index):
+    """Kropla roztopionej materii: wydłużona łza z guzami (do rozbryzgów przy uderzeniu)."""
+    bm = bmesh.new()
+    bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0)
+    for v in bm.verts:
+        d = v.co.normalized()
+        tail = max(0.0, -d.y) ** 2 * rng.uniform(0.8, 1.4)
+        v.co = Vector((d.x * (1 - tail * 0.6), d.y * (1 + tail), d.z * (1 - tail * 0.6))) * (1 + rng.uniform(-0.12, 0.12))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return mesh_obj(f"LavaBlob_{index}", bm, coll, smooth=True)
+
+
+def main_t39():
+    rng = random.Random(SEED + 1)
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    coll = bpy.context.scene.collection
+    objects = [build_sky_crack(coll, rng, i) for i in range(1, 4)]
+    objects += [build_shock_torus(coll), build_bow_cone(coll)]
+    objects += [build_lava_blob(coll, rng, i) for i in range(1, 3)]
+    OUT.mkdir(parents=True, exist_ok=True)
+    export_fbx(OUT / "vfx_meshes_t39.fbx")
+    bpy.ops.wm.save_as_mainfile(filepath=str(OUT / "vfx_meshes_t39.blend"))
+    print("VFX_T39_REPORT", {ob.name: tris(ob) for ob in objects})
+
+
+if "--t39" in sys.argv:
+    main_t39()
+else:
+    main()

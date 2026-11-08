@@ -37,6 +37,13 @@ local SOUNDS: { [string]: SoundDef } = {
 	craterSizzle = { id = "rbxassetid://125347553197965", volume = 0.35, rolloff = { 10, 110 }, looped = true }, -- crater_sizzle.wav
 	starCrack = { id = "rbxassetid://119139469957662", volume = 1.0, rolloff = { 40, 700 } }, -- star_crack.wav
 	starFade = { id = "rbxassetid://133818079410745", volume = 0.8, rolloff = { 30, 400 } }, -- star_fade.wav
+	-- T39: warstwy i muzyka
+	skyCrack = { id = "rbxassetid://121621480644788", volume = 0.9, rolloff = { 250, 3200 }, pitchVariance = 0.06 }, -- sky_crack.wav
+	impactTail = { id = "rbxassetid://117390235909618", volume = 0.8, rolloff = { 120, 3000 } }, -- impact_tail.wav
+	craterCool = { id = "rbxassetid://107753704892417", volume = 0.5, rolloff = { 15, 160 } }, -- crater_cool.wav
+	beaconHum = { id = "rbxassetid://129191615321540", volume = 0.35, rolloff = { 20, 260 }, looped = true }, -- beacon_hum.wav
+	musicTension = { id = "rbxassetid://90038145810674", volume = 0.4, looped = true }, -- music_tension.wav (2D, pętla 16 s)
+	musicImpact = { id = "rbxassetid://74551511793377", volume = 0.6 }, -- music_impact.wav (2D stinger)
 }
 
 -- Dźwięk uderzenia dla rozmiaru gwiazdy.

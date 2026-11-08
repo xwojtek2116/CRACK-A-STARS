@@ -19,6 +19,7 @@ local DEFAULT_TAIL = 8 -- s zapasu na usunięcie jednorazowego dźwięku, gdy d�
 local log = Logger.new("SoundController")
 local rng = Random.new()
 local group: SoundGroup
+local musicGroup: SoundGroup
 
 local SoundController = {}
 
@@ -42,6 +43,25 @@ local function build(name: string, volumeMult: number?): Sound?
 		sound.RollOffMode = Enum.RollOffMode.InverseTapered
 		sound.RollOffMinDistance = rolloff[1]
 		sound.RollOffMaxDistance = rolloff[2]
+	end
+	return sound
+end
+
+-- Muzyka 2D w grupie Music (ustawienie `music`), z narastaniem głośności. Zwraca Sound do stopMusic.
+function SoundController.playMusic(name: string, fadeIn: number): Sound?
+	local sound = build(name)
+	if not sound then
+		return nil
+	end
+	local target = sound.Volume
+	sound.SoundGroup = musicGroup
+	sound.Volume = 0
+	sound.Parent = SoundService
+	sound:Play()
+	TweenService:Create(sound, TweenInfo.new(math.max(fadeIn, 0.01), Enum.EasingStyle.Linear), { Volume = target })
+		:Play()
+	if not sound.Looped then
+		Debris:AddItem(sound, (if sound.TimeLength > 0 then sound.TimeLength else DEFAULT_TAIL) + 1)
 	end
 	return sound
 end
@@ -111,6 +131,8 @@ local function applySettings()
 	local settings = state and (state :: any).settings
 	local enabled = not (typeof(settings) == "table" and settings.sfx == false)
 	group.Volume = if enabled then 1 else 0
+	local music = not (typeof(settings) == "table" and settings.music == false)
+	musicGroup.Volume = if music then 1 else 0
 end
 
 function SoundController.Init()
@@ -118,6 +140,10 @@ function SoundController.Init()
 	group.Name = "SFX"
 	group.Volume = 1
 	group.Parent = SoundService
+	musicGroup = Instance.new("SoundGroup")
+	musicGroup.Name = "Music"
+	musicGroup.Volume = 1
+	musicGroup.Parent = SoundService
 end
 
 function SoundController.Start()

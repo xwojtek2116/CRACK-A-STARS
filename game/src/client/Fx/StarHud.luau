@@ -9,6 +9,7 @@ local Workspace = game:GetService("Workspace")
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local StarConfig = require(Shared.Config.StarConfig)
 local Types = require(Shared.Types)
+local VfxIds = require(Shared.Config.VfxIds)
 
 local FxUtil = require(script.Parent.FxUtil)
 
@@ -466,6 +467,111 @@ function StarHud.updateLabels(serverNow: number)
 	updateLabels(serverNow)
 end
 
+-- ===== Kino (Large+): pasy i karta tytułowa =====
+
+local cinemaGui: ScreenGui
+local barTop: Frame
+local barBottom: Frame
+local cinemaHolds: { [string]: boolean } = {}
+local CINEMA = FxUtil.CONFIG.CINEMA
+
+local function setBars(visible: boolean)
+	local height = if visible then CINEMA.barHeight else 0
+	FxUtil.tween(barTop, 0.5, { Size = UDim2.fromScale(1, height) }, Enum.EasingStyle.Quint)
+	FxUtil.tween(barBottom, 0.5, { Size = UDim2.fromScale(1, height) }, Enum.EasingStyle.Quint)
+end
+
+-- Pasy trzymane przez źródło `id` do czasu `untilServer` (GetServerTimeNow).
+function StarHud.holdBars(id: string, untilServer: number)
+	cinemaHolds[id] = true
+	setBars(true)
+	task.delay(math.max(0, untilServer - Workspace:GetServerTimeNow()), function()
+		cinemaHolds[id] = nil
+		if next(cinemaHolds) == nil then
+			setBars(false)
+		end
+	end)
+end
+
+-- Karta tytułowa na środku ekranu; po zniknięciu w rogu zostaje mały baner.
+function StarHud.showTitle(info: StarInfo)
+	local color = StarConfig.color(info.type)
+	local glow = StarConfig.glow(info.type)
+	local card = Instance.new("Frame")
+	card.Name = `Title_{info.id}`
+	card.BackgroundTransparency = 1
+	card.AnchorPoint = Vector2.new(0.5, 0.5)
+	card.Position = UDim2.fromScale(0.5, 0.36)
+	card.Size = UDim2.fromScale(0.86, 0.22)
+	local scale = Instance.new("UIScale")
+	scale.Scale = 1.6
+	scale.Parent = card
+	local flare = Instance.new("ImageLabel")
+	flare.BackgroundTransparency = 1
+	flare.Image = VfxIds.FLARE
+	flare.ImageColor3 = glow
+	flare.AnchorPoint = Vector2.new(0.5, 0.5)
+	flare.Position = UDim2.fromScale(0.5, 0.45)
+	flare.Size = UDim2.fromScale(1.2, 2.2)
+	flare.ImageTransparency = 0.2
+	flare.Parent = card
+	local title = Instance.new("TextLabel")
+	title.BackgroundTransparency = 1
+	title.Font = FONT
+	title.TextScaled = true
+	title.Text = StarConfig.displayName(info.size, info.type):upper()
+	title.TextColor3 = Color3.new(1, 1, 1)
+	title.Size = UDim2.fromScale(1, 0.62)
+	title.TextTransparency = 1
+	local gradient = Instance.new("UIGradient")
+	gradient.Color = FxUtil.colorSeq(FxUtil.lighten(glow, 0.5), color, FxUtil.lighten(glow, 0.5))
+	gradient.Rotation = 90
+	gradient.Parent = title
+	local stroke = Instance.new("UIStroke")
+	stroke.Thickness = 4
+	stroke.Color = Color3.new(0, 0, 0)
+	stroke.Transparency = 1
+	stroke.Parent = title
+	title.Parent = card
+	local sub = Instance.new("TextLabel")
+	sub.BackgroundTransparency = 1
+	sub.Font = FONT
+	sub.TextScaled = true
+	sub.Text = "IS TEARING THROUGH THE SKY!"
+	sub.TextColor3 = Color3.new(1, 1, 1)
+	sub.Position = UDim2.fromScale(0.15, 0.64)
+	sub.Size = UDim2.fromScale(0.7, 0.26)
+	sub.TextTransparency = 1
+	local subStroke = stroke:Clone()
+	subStroke.Thickness = 3
+	subStroke.Parent = sub
+	sub.Parent = card
+	card.Parent = cinemaGui
+
+	FxUtil.tween(scale, 0.45, { Scale = 1 }, Enum.EasingStyle.Back)
+	FxUtil.tween(title, 0.25, { TextTransparency = 0 })
+	FxUtil.tween(stroke, 0.25, { Transparency = 0 })
+	FxUtil.tween(flare, 1.2, { Size = UDim2.fromScale(2, 0.6), ImageTransparency = 1 })
+	task.delay(0.25, function()
+		FxUtil.tween(sub, 0.3, { TextTransparency = 0 })
+		FxUtil.tween(subStroke, 0.3, { Transparency = 0 })
+	end)
+	task.delay(CINEMA.titleSeconds, function()
+		FxUtil.tween(scale, 0.35, { Scale = 0.6 }, Enum.EasingStyle.Back, Enum.EasingDirection.In)
+		for _, item in { title, sub } do
+			FxUtil.tween(item, 0.3, { TextTransparency = 1 })
+		end
+		FxUtil.tween(stroke, 0.3, { Transparency = 1 })
+		FxUtil.tween(subStroke, 0.3, { Transparency = 1 })
+		task.delay(0.4, function()
+			card:Destroy()
+			if Workspace:GetServerTimeNow() < info.impactAt then
+				StarHud.showBanner(info)
+			end
+		end)
+	end)
+end
+
 function StarHud.build()
 	local playerGui = player:WaitForChild("PlayerGui")
 
@@ -542,6 +648,24 @@ function StarHud.build()
 	compassMarkerLabel.Visible = false
 
 	compassGui.Parent = playerGui
+
+	-- Kino: pasy i karta tytułowa nad wszystkim.
+	cinemaGui = Instance.new("ScreenGui")
+	cinemaGui.Name = "StarCinema"
+	cinemaGui.ResetOnSpawn = false
+	cinemaGui.IgnoreGuiInset = true
+	cinemaGui.ScreenInsets = Enum.ScreenInsets.None
+	cinemaGui.DisplayOrder = 8
+	barTop = Instance.new("Frame")
+	barTop.BackgroundColor3 = Color3.new(0, 0, 0)
+	barTop.BorderSizePixel = 0
+	barTop.Size = UDim2.fromScale(1, 0)
+	barTop.Parent = cinemaGui
+	barBottom = barTop:Clone()
+	barBottom.AnchorPoint = Vector2.new(0, 1)
+	barBottom.Position = UDim2.fromScale(0, 1)
+	barBottom.Parent = cinemaGui
+	cinemaGui.Parent = playerGui
 end
 
 return StarHud

@@ -2,12 +2,14 @@
 -- SkyFx — reakcja całego świata na duże spadki (od SKY.fromSize): niebo ciemnieje i barwi się kolorem gwiazdy,
 -- wyładowania wyrwy rozświetlają teren (OutdoorAmbient), uderzenie daje biały flash. Wszystko lokalnie
 -- (ColorCorrection klienta), stan bazowy Lighting zawsze wraca, gdy nie ma aktywnych źródeł.
+-- T39: dynamiczny Bloom — w trakcie spadku i uderzenia mocniejszy (Neon i cząsteczki HDR „palą się”), potem baza.
 
 local Lighting = game:GetService("Lighting")
 
 local FxUtil = require(script.Parent.FxUtil)
 
 local SKY = FxUtil.CONFIG.SKY
+local BLOOM = FxUtil.CONFIG.BLOOM
 
 type Tint = { color: Color3, strength: number, darken: number }
 
@@ -19,6 +21,13 @@ local flash = 0
 local flashDecay = 2
 local lightning = 0
 local lightningColor = Color3.new(1, 1, 1)
+
+type BloomBase = { intensity: number, size: number, threshold: number }
+local boosts: { [string]: number } = {}
+local bloom: BloomEffect? = nil
+local bloomOwned = false
+local bloomBase: BloomBase? = nil
+local bloomLevel = 0
 
 local SkyFx = {}
 
@@ -47,6 +56,70 @@ function SkyFx.release(id: string)
 	tints[id] = nil
 end
 
+-- Wzmocnienie Bloom (0..1) dla źródła `id`; działa najsilniejsze aktywne.
+function SkyFx.boost(id: string, amount: number)
+	boosts[id] = math.clamp(amount, 0, 1)
+end
+
+function SkyFx.unboost(id: string)
+	boosts[id] = nil
+end
+
+local function bloomEffect(): (BloomEffect, BloomBase)
+	if bloom and bloom.Parent and bloomBase then
+		return bloom, bloomBase
+	end
+	local existing = Lighting:FindFirstChildOfClass("BloomEffect")
+	local effectInstance: BloomEffect
+	if existing then
+		effectInstance = existing
+		bloomOwned = false
+	else
+		effectInstance = Instance.new("BloomEffect")
+		effectInstance.Name = "StarBloom"
+		effectInstance.Intensity = 0
+		effectInstance.Size = 24
+		effectInstance.Threshold = 2
+		effectInstance.Parent = Lighting
+		bloomOwned = true
+	end
+	local base =
+		{ intensity = effectInstance.Intensity, size = effectInstance.Size, threshold = effectInstance.Threshold }
+	bloom = effectInstance
+	bloomBase = base
+	return effectInstance, base
+end
+
+local function updateBloom(dt: number)
+	local target = 0
+	for _, amount in boosts do
+		target = math.max(target, amount)
+	end
+	bloomLevel += (target - bloomLevel) * (1 - math.exp(-BLOOM.approach * dt))
+	if bloomLevel > 0.002 or flash > 0 then
+		local effectInstance, base = bloomEffect()
+		effectInstance.Intensity = base.intensity
+			+ (BLOOM.intensity - base.intensity) * bloomLevel
+			+ flash * BLOOM.flashIntensity
+		effectInstance.Size = base.size + (BLOOM.size - base.size) * bloomLevel
+		effectInstance.Threshold = base.threshold
+			+ (BLOOM.threshold - base.threshold) * math.max(bloomLevel, math.min(flash * 2, 1))
+	elseif bloom then
+		-- Powrót do bazy z Lighting (albo usunięcie naszego efektu).
+		local base = bloomBase
+		if bloomOwned then
+			bloom:Destroy()
+		elseif base then
+			bloom.Intensity = base.intensity
+			bloom.Size = base.size
+			bloom.Threshold = base.threshold
+		end
+		bloom = nil
+		bloomBase = nil
+		bloomLevel = 0
+	end
+end
+
 -- Biały flash (0..1) zanikający w `seconds`.
 function SkyFx.flash(amount: number, seconds: number)
 	if amount <= 0 then
@@ -69,7 +142,9 @@ function SkyFx.lightning(color: Color3, amount: number)
 end
 
 function SkyFx.update(dt: number)
+	updateBloom(dt)
 	if not correction then
+		flash = math.max(0, flash - flashDecay * dt)
 		return
 	end
 	-- Cel: średni kolor aktywnych źródeł ważony siłą.
