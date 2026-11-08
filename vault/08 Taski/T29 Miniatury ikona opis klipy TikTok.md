@@ -28,7 +28,7 @@ Miniatury ikona opis klipy TikTok.
 ## Do zrobienia
 - [ ] Ikona 512, 3 miniatury 1920×1080
 - [ ] Opis gry EN
-- [ ] 5 klipów 9:16
+- [ ] 5 klipów 9:16 + trailer 30 s (narzędzia i styl z [[T37 Nagrania cinematic na social media|T37]])
 
 ## Kryteria akceptacji
 - [ ] Pliki wysłane na telefon do akceptacji

@@ -33,6 +33,8 @@ Mapa finalna strefy propsy niebo.
 - [ ] Budynki hubu (sklep, garaż, portal)
 - [ ] Teren między biomami grywalny i ładny (gwiazdy spadają losowo po całej planecie — [[2026-11-08 UI spadanie i animacje]])
 
+- [ ] Po skończeniu: ujęcia beauty shots do [[T37 Nagrania cinematic na social media|T37]]
+
 ## Kryteria akceptacji
 - [ ] Zrzuty każdej strefy na telefon
 - [ ] Pamięć klienta < 1 GB na telefonie

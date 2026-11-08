@@ -22,12 +22,15 @@ Tory pracują równolegle (do 3 sesji): **A** kod · **B** art (Blender) · **C*
 | 10 | pn 16.11 | [[T18 Retencja daily kody grupa odznaki Deszcz Gwiazd analityka\|T18]] | [[T12 VFX i dźwięki spadku i rozbicia\|T12]] cinematiki | [[T20 Tutorial i onboarding\|T20]] | **BETA** |
 | 11 | wt 17.11 | [[T26 Wydajność i mobile\|T26]] | [[T35 Animacje dropu nagród i UI\|T35]] + poprawki modeli | [[T27 Balans ekonomii\|T27]] | 60 FPS na telefonie |
 | 12 | śr 18.11 | [[T28 Feature freeze przegląd bezpieczeństwa bug bash\|T28]] | [[T29 Miniatury ikona opis klipy TikTok\|T29]] | marketing | **FEATURE FREEZE** |
-| 13 | cz 19.11 | poprawki | klipy | [[T30 Test obciążenia i prywatny test\|T30]] | test ze znajomymi |
+| 13 | cz 19.11 | poprawki | [[T37 Nagrania cinematic na social media\|T37]] klipy | [[T30 Test obciążenia i prywatny test\|T30]] | test ze znajomymi |
 | 14 | pt 20.11 | poprawki RC | — | [[T31 RC publish prywatny Maturity checklista\|T31]] | **RC** |
 | 15 | sob 21.11 | [[T32 Premiera i monitoring\|T32]] | — | kod LAUNCH | **PREMIERA** |
 
 ## Gwiazdy i łup (tor B)
 12 rodzajów × 4 rozmiary: [[T04 Generator gwiazd i rodzaje 1-4|T04]] (1–4) → [[T33 Modele gwiazd rodzaje 5-8|T33]] (5–8) → [[T34 Modele gwiazd rodzaje 9-12 i Supernowa|T34]] (9–12). Łup 75: T21 → T22 → T23. Rezerwa: rodzaje 11–12 mogą wejść w update po premierze.
+
+## Nagrania na social media
+Filmiki cinematic nagrywamy na bieżąco, gdy coś ładnie wygląda: devlog po T36/T05, beauty shots po T15, cinematic gwiazd po T12/T35, trailer w T29 — [[T37 Nagrania cinematic na social media|T37]].
 
 ## Zasady tempa
 - Codziennie rano: plan dnia na telefon. Wieczorem: [[Szablon raportu dnia|raport dnia]] ze zrzutami.

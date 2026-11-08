@@ -6,6 +6,9 @@ tags: [marketing]
 
 **Cel 1. tygodnia:** 1 000 CCU w szczycie, D1 ≥ 25%, ≥ 70% polubień.
 
+## Filmiki cinematic (od dnia 4)
+- Styl: hak tekstem → logo → płynne ujęcia świata (ref. https://vm.tiktok.com/ZN8fttus5/). Nagrywamy na bieżąco — szczegóły [[T37 Nagrania cinematic na social media|T37]].
+
 ## Przed premierą (dni 10–14)
 - **TikTok** (konto gry): 1 klip dziennie od dnia 10 — spadająca gwiazda + reakcja, Legendary drop, porównanie narzędzi 1 vs 8. Format 9:16, 10–20 s, hak w 1. sekundzie.
 - **Miniatury**: wielka świecąca gwiazda w kraterze + postać z Laser Sword + napis „CRACK A STAR!”. 3 warianty do A/B (Thumbnail Personalization).
