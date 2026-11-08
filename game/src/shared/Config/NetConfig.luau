@@ -16,6 +16,7 @@ local DEFAULT_BUCKET: Bucket = {
 local BUCKETS: { [string]: Bucket } = {
 	RequestState = { capacity = 3, refillPerSecond = 0.5 },
 	SetSetting = { capacity = 5, refillPerSecond = 1 },
+	RequestStars = { capacity = 3, refillPerSecond = 0.5 },
 }
 
 return {

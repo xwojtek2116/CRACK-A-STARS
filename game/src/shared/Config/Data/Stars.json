@@ -7,7 +7,25 @@
     "maxSlopeDeg": 35,
     "maxTries": 20,
     "biomeTypeBoost": 2.0,
-    "notes": "Losowy punkt na całej planecie poza lobby i działkami. Mapa: lobby r<=180, działki r=320, granica r=2000 (decyzja 2026-11-08)."
+    "notes": "Losowy punkt na całej planecie poza lobby i działkami. Mapa: lobby r<=180, działki r=320, granica r=2000 (decyzja 2026-11-08). rejectMaterials = materiały terenu, na które gwiazda nie spada (CrackedLava to podłoże biomu Lava, więc dozwolone).",
+    "rejectMaterials": [
+      "Water"
+    ]
+  },
+  "schedule": {
+    "maxActive": 6,
+    "firstDropSize": "Small",
+    "firstDropDelay": 15,
+    "retryDelay": 5,
+    "dyingSeconds": 2.5,
+    "notes": "maxActive = ile gwiazd naraz (spadające + leżące, bez Supernowej); przy komplecie zegar rozmiaru czeka retryDelay. Pierwsza Small po firstDropDelay s od startu serwera, reszta zegarów od losowego czasu z przedziału. dyingSeconds = czas animacji rozpadu/zgaśnięcia przed usunięciem modelu (decyzja 2026-11-08)."
+  },
+  "fall": {
+    "startHeight": 520,
+    "angleMinDeg": 25,
+    "angleMaxDeg": 50,
+    "accelPower": 2.2,
+    "notes": "Tor lotu: start startHeight nad punktem, odchylony od pionu o kąt angleMin–angleMax z losowego kierunku. Postęp = (t/warning)^accelPower — gwiazda widoczna cały czas, sunie powoli i przyspiesza (decyzja 2026-11-08)."
   },
   "order": [
     "Small",
@@ -98,11 +116,27 @@
     "embedDepth": 0.35,
     "craterRadiusMult": 1.6,
     "digTerrainFromSize": "Large",
+    "digBowlDepth": 0.3,
     "trailLengthMult": 6,
     "scarSeconds": 180,
     "scarFadeSeconds": 20,
     "maxScars": 14,
     "smokeSeconds": 45,
-    "notes": "Gwiazda wbija się w grunt na 35% wysokości; krater = mesh + przypalenie (Large+ kopie też Terrain). Po rozbiciu/zgaśnięciu ślad (krater, przypalony pas wzdłuż toru lotu, dym, żarzące odłamki) zostaje 180 s i znika przez 20 s. Max 14 śladów naraz (najstarszy znika)."
+    "notes": "Gwiazda wbija się w grunt na 35% wysokości; krater = mesh + przypalenie (Large+ kopie też Terrain). Promień krateru = size/2 × craterRadiusMult. Po rozbiciu/zgaśnięciu ślad (krater, przypalony pas wzdłuż toru lotu, dym, żarzące odłamki) zostaje 180 s i znika przez 20 s. Max 14 śladów naraz (najstarszy znika). Fala uderzeniowa odrzuca graczy w promieniu krateru × knockbackRadiusMult, bez obrażeń (decyzja 2026-11-08).",
+    "knockbackRadiusMult": 2.2,
+    "knockbackSpeed": 85,
+    "knockbackUp": 60,
+    "knockbackRagdollSeconds": 1.2,
+    "rimChunks": {
+      "Small": 6,
+      "Medium": 9,
+      "Large": 14,
+      "Huge": 20,
+      "Supernova": 26
+    }
+  },
+  "dev": {
+    "studioTimeScale": 0.1,
+    "notes": "Tylko w Studio: interwały spadków i czas śladów × studioTimeScale; ServerStorage.DevStar (BindableFunction) zrzuca gwiazdę na żądanie. Na serwerach Roblox wyłączone."
   }
 }

@@ -22,7 +22,14 @@ type Definition = {
 }
 
 -- Nazwy remotów. Dodając remote, dopisz go tu, w DEFINITIONS i limit w Config/NetConfig.
-export type RemoteName = "PlayerState" | "StateDelta" | "RequestState" | "SetSetting" | "Announcement"
+export type RemoteName =
+	"PlayerState"
+	| "StateDelta"
+	| "RequestState"
+	| "SetSetting"
+	| "Announcement"
+	| "StarEvent"
+	| "RequestStars"
 
 local DEFINITIONS: { [RemoteName]: Definition } = {
 	-- Stan gracza: pełny stan po wczytaniu, potem delty { [klucz] = nowa wartość }.
@@ -38,6 +45,10 @@ local DEFINITIONS: { [RemoteName]: Definition } = {
 	},
 	-- Ogłoszenia dla wszystkich (rzadki łup, spadająca gwiazda): { kind, text, color? }.
 	Announcement = { kind = "Event", direction = "ToClient" },
+	-- Gwiazdy (StarService → StarFxController): StarEvent(kind, payload), kind = "Incoming" | "Landed" | "Gone".
+	StarEvent = { kind = "Event", direction = "ToClient" },
+	-- Klient po wejściu prosi o listę aktywnych gwiazd (spadające i leżące). Zwraca { StarInfo }.
+	RequestStars = { kind = "Function", direction = "ToServer", args = {} },
 }
 
 local FOLDER_NAME = "Remotes"

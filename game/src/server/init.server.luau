@@ -17,6 +17,7 @@ type Service = {
 -- Kolejność ładowania. Nowy serwis dopisz we właściwym miejscu.
 local SERVICES = {
 	"DataService",
+	"StarService",
 }
 
 local log = Logger.new("Boot")

@@ -34,4 +34,21 @@ export type PlayerData = {
 	lastOnline: number,
 }
 
+-- Gwiazda (StarService → klienci). Czasy = workspace:GetServerTimeNow().
+export type StarState = "Falling" | "Landed" | "Dying"
+export type StarInfo = {
+	id: string,
+	size: string, -- klucz z Stars.json → classes
+	type: string, -- klucz z Themes.json → themes
+	state: StarState,
+	startPos: Vector3, -- początek toru lotu (niebo)
+	impactPos: Vector3, -- punkt uderzenia na ziemi
+	normal: Vector3, -- normalna terenu w punkcie uderzenia
+	launchedAt: number,
+	impactAt: number,
+	expiresAt: number?, -- po wylądowaniu: koniec lifetime
+	hp: number,
+	maxHp: number,
+}
+
 return nil

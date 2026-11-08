@@ -16,6 +16,7 @@ type Controller = {
 -- Kolejność ładowania. Nowy kontroler dopisz we właściwym miejscu.
 local CONTROLLERS = {
 	"StateController",
+	"StarFxController",
 }
 
 local log = Logger.new("Boot")
