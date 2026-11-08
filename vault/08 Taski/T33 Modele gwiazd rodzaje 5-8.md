@@ -30,7 +30,6 @@ Modele gwiazd rodzaje 5-8.
 - art/stars/{comet,toxic,electric,nebula}/*
 
 ## Do zrobienia
-- [ ] Na starcie poprosić użytkownika o zdjęcia referencyjne tych rodzajów (`vault/_img/ref/gwiazdy/`), modelować według nich, ten sam styl co zaakceptowany T04
 - [ ] Moduły generatora: Comet (jądro + ogon), Toxic (maź + zarodniki), Storm (klatka prętów + łuki), Nebula (gaz w szklanej skorupie)
 - [ ] 4 rozmiary każdy, FBX, rendery, import
 
