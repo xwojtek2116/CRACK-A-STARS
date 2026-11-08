@@ -23,5 +23,10 @@
   "publish": false,
   "slides": false,
   "random-note": false,
-  "workspaces": false
+  "workspaces": false,
+  "footnotes": false,
+  "slash-command": false,
+  "zk-prefixer": false,
+  "audio-recorder": false,
+  "webviewer": false
 }
