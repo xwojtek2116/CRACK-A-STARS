@@ -1,7 +1,7 @@
 ---
 id: T04
 tytul: "Generator gwiazd i rodzaje 1-4"
-status: done
+status: todo
 dzien: 1
 data: 2026-11-07
 tor: B
@@ -30,7 +30,16 @@ Generator gwiazd i rodzaje 1-4.
 ## Pliki
 - art/stars/*, .claude/skills/blender-asset/SKILL.md
 
-## Do zrobienia
+## Poprawka 2 (2026-11-08) — według zdjęć referencyjnych
+Użytkownikowi **nie podoba się wygląd** z 8.11. Gwiazdy robimy od nowa **według zdjęć referencyjnych** od użytkownika (`vault/_img/ref/gwiazdy/`).
+- [ ] Zebrać referencje: na starcie czatu poprosić użytkownika o zdjęcia (ogólny styl + rodzaje 1–4), zapisać w `vault/_img/ref/gwiazdy/`
+- [ ] Rozpisać, co bierzemy z każdej referencji (kształt, materiał, kolor, poświata, detale) i potwierdzić z użytkownikiem jednym pytaniem
+- [ ] Najpierw **1 rodzaj w rozmiarze Medium** → render porównany obok referencji → akceptacja z telefonu; dopiero potem reszta rodzajów i rozmiarów
+- [ ] Jeśli proceduralny generator nie daje jakości z referencji: modelowanie ręczne w Blenderze (sculpt/modyfikatory) + skrypt tylko do rozmiarów i stref
+- [ ] Rendery obok referencji w notatkach rodzajów, `model: gotowy` dopiero po akceptacji
+- [ ] Import do Studio (po włączeniu MCP Permissions przez użytkownika)
+
+## Do zrobienia (wersja 1, odrzucona)
 - [x] Generator `art/stars/build_star.py` z modułem na rodzaj (sylwetka z `shape` w Themes.json) i parametrem rozmiaru (skala + gęstość detali + liczba stref)
 - [x] Rodzaje: Iron Meteorite, Lava Star, Frost Star, Geode Star × 4 rozmiary
 - [ ] Akceptacja wyglądu przez użytkownika (render na telefon) przed T33/T34 — rendery wysłane 8.11, czeka na odpowiedź

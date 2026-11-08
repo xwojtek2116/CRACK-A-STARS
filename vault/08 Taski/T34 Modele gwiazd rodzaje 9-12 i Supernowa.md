@@ -31,6 +31,7 @@ Modele gwiazd rodzaje 9-12 i Supernowa.
 - art/stars/{diamond,ringed,solar,void,supernova}/*
 
 ## Do zrobienia
+- [ ] Na starcie poprosić użytkownika o zdjęcia referencyjne tych rodzajów (`vault/_img/ref/gwiazdy/`), modelować według nich, ten sam styl co zaakceptowany T04
 - [ ] Moduły: Diamond (ośmiościan + klejnoty), Ringed (planeta + pierścienie), Solar (złote słońce + protuberancje), Void (czarna kula + dysk)
 - [ ] Supernowa: wariant każdego rodzaju z koroną i pierścieniem odłamków
 - [ ] FBX, rendery, import
