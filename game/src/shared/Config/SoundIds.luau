@@ -49,6 +49,15 @@ local SOUNDS: { [string]: SoundDef } = {
 	uiPop = { id = "rbxassetid://75915657998732", volume = 0.5 }, -- ui_pop.wav (otwarcie okna)
 	uiClose = { id = "rbxassetid://85310015334687", volume = 0.45 }, -- ui_close.wav
 	uiCoin = { id = "rbxassetid://90231723581600", volume = 0.45, pitchVariance = 0.06 }, -- ui_coin.wav
+	-- Minigra rozbijania (T06 v2, tools/crack_sfx_gen.py → art/audio/crack/), 2D — tylko u gracza, który rozbija
+	crackSpawn = { id = "rbxassetid://105993902744220", volume = 0.3, pitchVariance = 0.08 }, -- crack_spawn.wav
+	hitPerfect = { id = "rbxassetid://111670019299420", volume = 0.6 }, -- hit_perfect.wav (wysokość rośnie z serią)
+	hitGood = { id = "rbxassetid://123923203042598", volume = 0.55, pitchVariance = 0.06 }, -- hit_good.wav
+	hitMiss = { id = "rbxassetid://116122785777867", volume = 0.5, pitchVariance = 0.06 }, -- hit_miss.wav
+	hitWeak = { id = "rbxassetid://88460091463079", volume = 0.6 }, -- hit_weak.wav
+	hitCrit = { id = "rbxassetid://76102274344653", volume = 0.8, rolloff = { 20, 260 } }, -- hit_crit.wav (3D, słyszą inni)
+	roundPerfect = { id = "rbxassetid://72160258473855", volume = 0.5 }, -- round_perfect.wav
+	roundEnd = { id = "rbxassetid://130704310366274", volume = 0.3 }, -- round_end.wav
 }
 
 -- Dźwięk uderzenia dla rozmiaru gwiazdy.

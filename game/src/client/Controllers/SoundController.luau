@@ -71,11 +71,14 @@ local function cleanupAfter(sound: Sound, holder: Instance?)
 	Debris:AddItem(holder or sound, length + 0.5)
 end
 
--- Dźwięk bez położenia (interfejs, grzmot na całą mapę).
-function SoundController.play2D(name: string, volumeMult: number?)
+-- Dźwięk bez położenia (interfejs, grzmot na całą mapę). `speed` nadpisuje PlaybackSpeed (np. rosnąca seria).
+function SoundController.play2D(name: string, volumeMult: number?, speed: number?)
 	local sound = build(name, volumeMult)
 	if not sound then
 		return
+	end
+	if speed then
+		sound.PlaybackSpeed = speed
 	end
 	sound.Parent = SoundService
 	sound:Play()

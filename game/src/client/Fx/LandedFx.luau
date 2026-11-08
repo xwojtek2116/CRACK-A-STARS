@@ -11,6 +11,7 @@ local StarConfig = require(Shared.Config.StarConfig)
 local VfxIds = require(Shared.Config.VfxIds)
 
 local SoundController = require(script.Parent.Parent.Controllers.SoundController)
+local CrackFx = require(script.Parent.CrackFx)
 local FxUtil = require(script.Parent.FxUtil)
 
 local LANDED = FxUtil.CONFIG.LANDED
@@ -205,6 +206,20 @@ function LandedFx.attach(model: Model): Landed?
 		end)
 	end
 
+	-- T06 v2: świecące pęknięcia rosną z utratą HP i błyskają przy każdym trafieniu (u wszystkich).
+	local cracksNet = CrackFx.cracks(model, sizeId, size / 2, glow)
+	local function refreshCracks()
+		local hp, maxHp = model:GetAttribute("Hp"), model:GetAttribute("MaxHp")
+		if typeof(hp) == "number" and typeof(maxHp) == "number" and maxHp > 0 then
+			cracksNet:setDamage(1 - hp / maxHp)
+		end
+	end
+	refreshCracks()
+	local hpConnection = model:GetAttributeChangedSignal("Hp"):Connect(function()
+		refreshCracks()
+		cracksNet:flash()
+	end)
+
 	local hum = SoundController.attach("starHum", primary)
 	local beaconHum = SoundController.attach("beaconHum", cracks)
 	local sizzle = SoundController.attach("craterSizzle", cracks)
@@ -253,6 +268,8 @@ function LandedFx.attach(model: Model): Landed?
 			return
 		end
 		destroyed = true
+		hpConnection:Disconnect()
+		cracksNet:destroy()
 		highlight:Destroy()
 		sparks.Rate = 0
 		task.delay(1.5, function()
@@ -284,6 +301,10 @@ function LandedFx.attach(model: Model): Landed?
 	function handle.dying(reason: string)
 		local seconds = StarConfig.SCHEDULE.dyingSeconds * 0.9
 		local center = model:GetPivot().Position
+		hpConnection:Disconnect()
+		task.delay(0.3, function()
+			cracksNet:destroy()
+		end)
 		if reason == "Cracked" then
 			SoundController.playAt("starCrack", center)
 			local burst =

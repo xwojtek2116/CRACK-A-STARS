@@ -65,3 +65,19 @@ Minigra rozbijania klient i serwer.
 - `tools/balance_check.py` nie istnieje — skill balance-check nie do uruchomienia.
 - Ustawienie `cameraShake` dodane do `SETTING_KEYS`; przełącznik w oknie ustawień robi T13.
 - W Studio jest drugie, nienazwane okno (prawdopodobnie sesji T13) — nie zamykałem.
+
+### v2 — imersja i efekty (8.11, prośba użytkownika „1000× lepiej”)
+Plan zaakceptowany w czacie (6 punktów, combo = same efekty). Logika serwera i balans bez zmian.
+- **Punkty:** kryształ (`TARGET_CORE`) z poświatą, złoty pas Perfect, pierścień (`TARGET_RING`) z obracającym się gradientem: biały → złoty w oknie Perfect → czerwony po czasie. Pop-in, słaby punkt z wirującym błyskiem. Punkty siedzą na prawdziwej powierzchni modelu (raycast).
+- **3D (`client/Fx/CrackFx.luau`):** snop światła z każdego punktu. Trafienie daje iskry, żar, rozbłysk, światło i odłamki (parabola liczona lokalnie, bez fizyki). Miss daje szary pył. Trafienia innych graczy mają skromniejszy wybuch.
+- **Pęknięcia gwiazdy (u wszystkich):** świecące ścieżki na powierzchni, odsłaniane wraz z utratą HP (seed z id gwiazdy). Światło z wnętrza rośnie z obrażeniami, błyska przy każdym trafieniu. Podpięte w `LandedFx`.
+- **Odczucie (`UI/Minigame/Feel.luau`):** DepthOfField na gwieździe (wyłączone przy lowGraphics), winieta w kolorze gwiazdy, błysk przy Perfect i krytyku, uderzenie FOV. Kamera zza ramienia (`Humanoid.CameraOffset`), postać obraca się do gwiazdy. Zamach narzędziem (lokalny tween `Tool.Grip`). Wibracja: pad przez HapticService, telefon przez HapticEffect (w pcall).
+- **Baner i combo (`UI/Minigame/Banner.luau`):** PERFECT ROUND! / AWESOME! / GREAT! / NICE TRY, suma obrażeń liczona w górę, znaczki CRITICAL! i WEAK SPOT. Licznik `N COMBO` rozgrzewa się kolorem. Własne obrażenia pokazuje tylko baner, liczby w świecie zostały dla innych graczy.
+- **Dźwięki (`tools/crack_sfx_gen.py` → `art/audio/crack/`, Open Cloud):** crackSpawn, hitPerfect (wysokość rośnie z combo), hitGood, hitMiss, hitWeak, hitCrit (3D, słyszą inni), roundPerfect, roundEnd. Wpisy w `SoundIds`.
+- **Tekstury (`tools/crack_vfx_gen.py`, upload_image):** `TARGET_RING`, `TARGET_CORE`, `VIGNETTE` w `VfxIds`.
+- **Liczby:** `AnimConfig.CRACK`. `SoundController.play2D` dostał opcjonalne `speed`.
+- **Test w Studio (emulator iPhone 17 Pro):** rundy, combo, baner i słaby punkt działają. Przy 50% HP widać 17 odcinków pęknięć. DOF, CameraOffset i dźwięki potwierdzone skryptem. Konsola bez błędów. Pierwsza wersja świateł prześwietlała obraz (bloom), więc jasność przycięto. Zrzut: ![[T06 minigra v2.jpg]]
+- **Uwagi:**
+  - Studio używała równolegle sesja UI (otwierała sklep, restartowała Play), część zrzutów była nieczytelna.
+  - Dźwięki audio mają status moderacji „Reviewing” i przez kilka minut mogą nie grać.
+  - Nie sprawdzono wibracji na fizycznym telefonie.

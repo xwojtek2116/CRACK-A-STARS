@@ -27,4 +27,8 @@ return table.freeze({
 	HEAT_RING = "rbxassetid://78691950068423", -- heat_ring.png: pierścień przyspieszenia
 	ENERGY_WAVE = "rbxassetid://107174927114880", -- energy_wave.png: fala energii na ziemi
 	GLINT = "rbxassetid://121860539319055", -- glint.png: błysk-gwiazdka
+	-- T06 v2: minigra rozbijania (tools/crack_vfx_gen.py)
+	TARGET_RING = "rbxassetid://82346269429918", -- target_ring.png: pierścień zbliżania
+	TARGET_CORE = "rbxassetid://91978444739363", -- target_core.png: kryształ punktu
+	VIGNETTE = "rbxassetid://123990783647141", -- vignette.png: winieta ekranu w rundzie
 })

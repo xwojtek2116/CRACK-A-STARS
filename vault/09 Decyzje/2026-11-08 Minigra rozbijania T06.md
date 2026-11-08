@@ -20,3 +20,8 @@ tags: [decyzja]
 **Dlaczego:** krótka runda (2,8–4,6 s), czytelna na telefonie, serwer liczy wszystko z seed i czasów.
 
 **Skutki:** T09 podmienia zastępczy Tool (kontrakt: atrybut `ToolId` na Toolu w ręku). Monetyzacja musi dopisać `assetId` gamepassa `auto_crack` w Monetization.json. Ustawienie `cameraShake` czeka na okno ustawień (T13).
+
+## v2 (8.11 wieczór)
+**Decyzja:** minigra dostaje pełną oprawę: kryształowe punkty, światło i odłamki, pęknięcia gwiazdy widoczne dla wszystkich, rozmycie tła, winietę, kamerę zza ramienia, wibracje, baner rundy i combo. **Combo to same efekty** (licznik, rosnący dźwięk), bez bonusu do obrażeń. Balans się nie zmienia.
+**Dlaczego:** użytkownik chciał więcej imersji i efektowności. Wpływ combo na obrażenia wymagałby zmiany balansu i walidacji na serwerze.
+**Skutki:** liczby oprawy są w `AnimConfig.CRACK`. Własne obrażenia pokazuje baner, liczby w świecie zostały tylko dla innych graczy.

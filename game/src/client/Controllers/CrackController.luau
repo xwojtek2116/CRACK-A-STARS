@@ -3,6 +3,8 @@
 -- Tool w ręku (atrybut ToolId) + Activated przy leżącej gwieździe → pętla: CrackStart → runda (UI/Minigame/Round)
 -- → CrackFinish → cooldown narzędzia → kolejna, dopóki gracz trzyma narzędzie, stoi w zasięgu i gwiazda żyje.
 -- CrackResult od serwera: liczby obrażeń (UI/Minigame/DamageNumbers), wstrząs u siebie (ustawienie cameraShake).
+-- T06 v2: dźwięki trafień (Perfect rośnie z serią), wibracja, zamach narzędziem, iskry/odłamki (Fx/CrackFx),
+-- skupienie kamery i winieta (UI/Minigame/Feel), baner rundy i licznik combo (UI/Minigame/Banner, same efekty).
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -11,6 +13,7 @@ local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local AnimConfig = require(Shared.Config.AnimConfig)
 local CrackRound = require(Shared.CrackRound)
 local Logger = require(Shared.Logger)
 local Remotes = require(Shared.Remotes)
@@ -18,14 +21,20 @@ local StarConfig = require(Shared.Config.StarConfig)
 
 local Client = script.Parent.Parent
 local CinematicController = require(script.Parent.CinematicController)
+local SoundController = require(script.Parent.SoundController)
 local StateController = require(script.Parent.StateController)
+local CrackFx = require(Client.Fx.CrackFx)
+local Banner = require(Client.UI.Minigame.Banner)
 local DamageNumbers = require(Client.UI.Minigame.DamageNumbers)
+local Feel = require(Client.UI.Minigame.Feel)
 local Round = require(Client.UI.Minigame.Round)
 
 type Grade = CrackRound.Grade
 
 local MINIGAME = CrackRound.MINIGAME
 local FX = MINIGAME.fx
+local CRACK = AnimConfig.CRACK
+local PERFECT_FLASH = Color3.fromRGB(255, 235, 150)
 local RETRY_SECONDS = 0.2
 local HINT_SECONDS = 1.6
 
@@ -39,12 +48,25 @@ local zoomValue: NumberValue
 local zoomApplied = 0
 local hintLabel: TextLabel? = nil
 local hintToken = 0
+local combo = 0
+local currentGlow = Color3.new(1, 1, 1)
+local currentRadius = 0
 
 local CrackController = {}
 
 local function shakeEnabled(): boolean
 	local state = StateController.get()
 	return not (state and state.settings and state.settings.cameraShake == false)
+end
+
+local function lowGraphics(): boolean
+	local state = StateController.get()
+	return state ~= nil and state.settings ~= nil and (state.settings :: any).lowGraphics == true
+end
+
+local function starGlow(star: Model): Color3
+	local typeId = star:GetAttribute("Type")
+	return if typeof(typeId) == "string" then StarConfig.glow(typeId) else Color3.new(1, 1, 1)
 end
 
 local function showHint(text: string)
@@ -115,9 +137,37 @@ local function setZoom(on: boolean)
 		:Play()
 end
 
-local function onGrade(_target: CrackRound.Target, grade: Grade)
-	if grade == "Perfect" and shakeEnabled() then
-		CinematicController.shake(FX.shakePerfect, FX.shakeTime)
+-- Trafienie jednego punktu (ocena klienta — tylko efekty; obrażenia liczy serwer).
+local function onGrade(target: CrackRound.Target, grade: Grade, position: Vector3, normal: Vector3)
+	CrackFx.burst(
+		position,
+		normal,
+		if target.weak then Color3.fromRGB(255, 205, 60) else currentGlow,
+		grade,
+		currentRadius
+	)
+	Feel.haptic(grade)
+	if grade == "Miss" then
+		combo = 0
+		Banner.setCombo(0)
+		SoundController.play2D("hitMiss")
+		return
+	end
+	combo += 1
+	Banner.setCombo(combo)
+	Feel.swing(equipped)
+	if target.weak then
+		SoundController.play2D("hitWeak")
+	end
+	if grade == "Perfect" then
+		SoundController.play2D("hitPerfect", nil, math.min(1 + combo * CRACK.comboPitchStep, CRACK.comboPitchMax))
+		Feel.flash(PERFECT_FLASH)
+		CinematicController.punchFov(CRACK.perfectFov, CRACK.perfectFovSeconds)
+		if shakeEnabled() then
+			CinematicController.shake(FX.shakePerfect, FX.shakeTime)
+		end
+	else
+		SoundController.play2D("hitGood")
 	end
 end
 
@@ -125,6 +175,9 @@ end
 local function runLoop(star: Model, radius: number)
 	looping = true
 	setZoom(true)
+	currentGlow = starGlow(star)
+	currentRadius = radius
+	Feel.begin(star:GetPivot().Position, radius, currentGlow, lowGraphics())
 	while stillValid(star) do
 		local ok, response, reason = pcall(Remotes.invoke, "CrackStart", star.Name)
 		if not ok then
@@ -145,7 +198,7 @@ local function runLoop(star: Model, radius: number)
 		if not round then
 			break
 		end
-		local handle = Round.play(round, star, radius, response.autoCrack == true)
+		local handle = Round.play(round, star, radius, currentGlow, response.autoCrack == true)
 		handle.onGrade = onGrade
 		currentRound = handle
 		local times = handle:wait()
@@ -155,6 +208,7 @@ local function runLoop(star: Model, radius: number)
 		task.wait(if tool then tool.cooldown else 1)
 	end
 	setZoom(false)
+	Feel.finish()
 	looping = false
 end
 
@@ -194,14 +248,53 @@ local function onResult(payload: any)
 		return
 	end
 	local mine = payload.userId == player.UserId
-	DamageNumbers.show(payload.pos, payload.damage, {
-		mine = mine,
-		crit = payload.crit == true,
-		grade = payload.grade,
+	local crit = payload.crit == true
+	-- Własne obrażenia pokazuje baner rundy; liczby w świecie tylko dla innych graczy.
+	if not mine then
+		DamageNumbers.show(payload.pos, payload.damage, {
+			mine = mine,
+			crit = crit,
+			grade = payload.grade,
+			weak = payload.weak == true,
+		})
+	end
+	if crit then
+		SoundController.playAt("hitCrit", payload.pos)
+	end
+	if not mine then
+		-- Trafienie innego gracza: skromny wybuch w jego punkcie.
+		local folder = Workspace:FindFirstChild("ActiveStars")
+		local star = folder and type(payload.starId) == "string" and folder:FindFirstChild(payload.starId)
+		if star and star:IsA("Model") then
+			local center = star:GetPivot().Position
+			local normal = if (payload.pos - center).Magnitude > 0.01
+				then (payload.pos - center).Unit
+				else Vector3.yAxis
+			CrackFx.burst(payload.pos, normal, starGlow(star), "Other", (payload.pos - center).Magnitude)
+		end
+		return
+	end
+	local grades = if type(payload.grades) == "table" then payload.grades else {}
+	local allPerfect = #grades > 0
+	for _, grade in grades do
+		if grade ~= "Perfect" then
+			allPerfect = false
+		end
+	end
+	Banner.showRound({
+		damage = payload.damage,
+		grade = if type(payload.grade) == "string" then payload.grade else "Good",
+		allPerfect = allPerfect,
+		crit = crit,
 		weak = payload.weak == true,
 	})
-	if mine and payload.crit == true and shakeEnabled() then
-		CinematicController.shake(FX.shakeCrit, FX.shakeTime * 1.5)
+	SoundController.play2D(if allPerfect then "roundPerfect" else "roundEnd")
+	if crit then
+		Feel.flash(Color3.fromRGB(255, 170, 40))
+		Feel.haptic("Crit")
+		if shakeEnabled() then
+			CinematicController.shake(FX.shakeCrit, FX.shakeTime * 1.5)
+		end
 	end
 end
 

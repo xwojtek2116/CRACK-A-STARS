@@ -20,3 +20,4 @@ Cel: krótka (1–2 s), satysfakcjonująca, działająca dotykiem. Lepsze narzę
 - Kod: `CrackService` (serwer), `CrackController` + `UI/Minigame/{Round,DamageNumbers}` (klient), wspólna logika `Shared/CrackRound`.
 - Remotes: `CrackStart(starId)` → `{ roundId, seed, toolId, autoCrack }`, `CrackFinish(roundId, times[])` (−1 = brak), `CrackResult` do wszystkich.
 - Szczegóły decyzji: [[2026-11-08 Minigra rozbijania T06]]. Zrzut: ![[T06 minigra telefon.jpg]]
+- v2 (oprawa): `Fx/CrackFx` (światło, iskry, odłamki, pęknięcia gwiazdy), `UI/Minigame/{Feel,Banner}` (kamera, winieta, wibracje, baner, combo), dźwięki `crack*/hit*/round*` w `SoundIds`, liczby w `AnimConfig.CRACK`. Zrzut: ![[T06 minigra v2.jpg]]

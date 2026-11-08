@@ -175,4 +175,50 @@ return table.freeze({
 		pullBack = 18, -- studs do tyłu i w górę od obecnej kamery
 		cooldown = 8, -- min. przerwa między ujęciami
 	}),
+	-- T06 v2: minigra rozbijania — wygląd punktów, efekty trafień, pęknięcia gwiazdy, kamera, baner rundy.
+	CRACK = table.freeze({
+		ringStart = 2.3, -- średnica pierścienia zbliżania na starcie (× kółko)
+		ringSpin = 120, -- °/s obrotu gradientu pierścienia
+		popSeconds = 0.22, -- pojawienie punktu (skala Back)
+		glowPulse = 3, -- Hz pulsu poświaty punktu
+		leakWidth = 0.35, -- × promień: szerokość snopu światła z punktu (rośnie z fazą)
+		leakLength = 0.5, -- × promień: jak daleko snop wychodzi ponad powierzchnię
+		leakLight = 8, -- zasięg PointLight w punkcie
+		burstSparks = table.freeze({ Perfect = 28, Good = 16, Miss = 0, Other = 10 }),
+		burstShards = table.freeze({ Perfect = 6, Good = 3, Miss = 0, Other = 2 }),
+		shardSpeed = 22, -- studs/s
+		shardGravity = 60,
+		shardSeconds = 0.9,
+		flashRange = 12,
+		flashSeconds = 0.25,
+		perfectFov = 3, -- uderzenie FOV przy Perfect
+		perfectFovSeconds = 0.18,
+		-- Pęknięcia gwiazdy (widzą wszyscy): ścieżki odsłaniane wraz z utratą HP.
+		crackPaths = bySize(5, 7, 9, 12, 14),
+		crackSteps = table.freeze({ 3, 6 }), -- min/max odcinków w ścieżce
+		crackStep = 0.22, -- × promień: długość odcinka
+		crackWidth = 0.035, -- × promień (min. crackMinWidth)
+		crackMinWidth = 0.15,
+		crackJitter = 0.6, -- rad: losowe skręcanie ścieżki
+		crackGrowSeconds = 0.35,
+		crackFlash = 0.3, -- s rozjaśnienia pęknięć po obrażeniach
+		innerLight = table.freeze({ 0.3, 1.8 }), -- jasność światła z wnętrza przy 0 i 100% obrażeń
+		-- Kamera i ekran w trakcie rundy
+		focusFar = 0.35, -- DepthOfField FarIntensity (rozmycie tła)
+		focusMargin = 14, -- studs ostrości poza promieniem gwiazdy
+		vignette = 0.35, -- przezroczystość winiety w rundzie (1 = brak)
+		vignetteFlash = 0.15, -- przezroczystość winiety w błysku Perfect
+		fadeSeconds = 0.4,
+		shoulderOffset = Vector3.new(2.6, 0.8, 0), -- Humanoid.CameraOffset w rundzie: kamera zza ramienia, gwiazda nie chowa się za postacią
+		swingBack = 0.08, -- s zamachu kilofem
+		swingHit = 0.14, -- s uderzenia i powrotu
+		swingAngle = 1.1, -- rad
+		-- Baner rundy i combo
+		bannerSeconds = 1.2,
+		comboPitchStep = 0.035, -- PlaybackSpeed hitPerfect za każde trafienie w serii
+		comboPitchMax = 1.45,
+		comboIdleSeconds = 4, -- licznik combo znika po tylu sekundach bez trafień
+		haptic = table.freeze({ Perfect = 0.6, Good = 0.35, Miss = 0.15, Crit = 1 }), -- siła wibracji pada
+		hapticSeconds = 0.09,
+	}),
 })
