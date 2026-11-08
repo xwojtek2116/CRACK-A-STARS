@@ -82,6 +82,8 @@ Generator gwiazd i rodzaje 1-4.
 - Z przodu widać płatek śniegu, z boku czteroramienny błysk gwiazdy (`star_frost_angles.png`).
 - Tris: 352 / 800 / 1670 / ~2.2k.
 
+**Akceptacja:** użytkownik zaakceptował wygląd Iron/Lava/Frost/Geode (8.11).
+
 **Użyte skille:** `task`, `anthropic-skills:computer-use` (dostęp odrzucony), Studio MCP (`execute_luau`, `open_cloud_invoke`), Blender CLI.
 
 **Problemy:**
