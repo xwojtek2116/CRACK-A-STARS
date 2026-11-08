@@ -809,6 +809,23 @@ local function interval(class: StarConfig.SizeClass): number
 	return rng:NextNumber(class.intervalMin, class.intervalMax) * StarConfig.TIME_SCALE
 end
 
+-- Czas następnego planowego spadku (czas serwera) w atrybucie Workspace.NextStarAt — licznik w HUD (T13).
+local function publishNextDrop()
+	local soonest = math.huge
+	for _, dueAt in nextDropAt do
+		soonest = math.min(soonest, dueAt)
+	end
+	if soonest == math.huge then
+		return
+	end
+	local at = now() + math.max(0, soonest - os.clock())
+	-- Replikuj tylko przy zmianie harmonogramu, nie przy dryfie zegara między tickami.
+	local previous = Workspace:GetAttribute("NextStarAt")
+	if type(previous) ~= "number" or math.abs(previous - at) > 0.5 then
+		Workspace:SetAttribute("NextStarAt", at)
+	end
+end
+
 local function tick()
 	local clock = os.clock()
 	for sizeId, dueAt in nextDropAt do
@@ -826,6 +843,7 @@ local function tick()
 		end
 		nextDropAt[sizeId] = clock + if ok and result then interval(class) else SCHEDULE.retryDelay
 	end
+	publishNextDrop()
 
 	local serverNow = now()
 	for index = #scars, 1, -1 do
@@ -913,6 +931,7 @@ function StarService.Start()
 	if nextDropAt[SCHEDULE.firstDropSize] then
 		nextDropAt[SCHEDULE.firstDropSize] = clock + SCHEDULE.firstDropDelay
 	end
+	publishNextDrop()
 	task.spawn(function()
 		while true do
 			task.wait(TICK_SECONDS)

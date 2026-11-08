@@ -44,6 +44,11 @@ local SOUNDS: { [string]: SoundDef } = {
 	beaconHum = { id = "rbxassetid://129191615321540", volume = 0.35, rolloff = { 20, 260 }, looped = true }, -- beacon_hum.wav
 	musicTension = { id = "rbxassetid://90038145810674", volume = 0.4, looped = true }, -- music_tension.wav (2D, pętla 16 s)
 	musicImpact = { id = "rbxassetid://74551511793377", volume = 0.6 }, -- music_impact.wav (2D stinger)
+	-- Interfejs (T13, tools/ui_sfx_gen.py → art/audio/ui/), 2D
+	uiClick = { id = "rbxassetid://71710572047303", volume = 0.5, pitchVariance = 0.04 }, -- ui_click.wav
+	uiPop = { id = "rbxassetid://75915657998732", volume = 0.5 }, -- ui_pop.wav (otwarcie okna)
+	uiClose = { id = "rbxassetid://85310015334687", volume = 0.45 }, -- ui_close.wav
+	uiCoin = { id = "rbxassetid://90231723581600", volume = 0.45, pitchVariance = 0.06 }, -- ui_coin.wav
 }
 
 -- Dźwięk uderzenia dla rozmiaru gwiazdy.

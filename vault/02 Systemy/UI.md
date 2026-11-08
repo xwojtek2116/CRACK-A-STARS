@@ -17,10 +17,18 @@ Co bierzemy z referencji (układ i „feel”, nie grafiki):
 - **Karty ofert**: szeroki baner z gradientem w kolorze rzadkości/rodzaju, render przedmiotu wychodzący poza kartę, nazwa **italic, gruba, z obrysem**, mały opis, żółty dopisek „LIMITED TIME ONLY” / „NEW!”, **zielony przycisk ceny** z ikoną monety lub Robux.
 - Kolory nasycone, gradienty, mocne obrysy (`UIStroke` 3–4 px), font Fredoka One / Luckiest Guy.
 
-Nasz motyw: tła ramek granat → fiolet z gwiazdkami, nagłówki w kolorze danego sklepu (narzędzia = pomarańcz, pojazdy = turkus, Robux = złoto), kolory rzadkości z `Rarities.json`. Wszystkie ozdoby i ikony robimy sami (render z Blendera albo Claude Design), nic z referencji nie kopiujemy.
+Nasz motyw (**zmiana 8.11, T13: „kosmiczna czerń”** — patrz [[2026-11-08 Styl UI kosmiczna czerń]]): tła prawie czarne z mgławicami i neonowym obrysem (dawniej granat → fiolet), nagłówki w kolorze danego sklepu (narzędzia = pomarańcz, pojazdy = turkus, Robux = złoto), kolory rzadkości z `Rarities.json`. Wszystkie ozdoby i ikony robimy sami (render z Blendera albo Claude Design), nic z referencji nie kopiujemy.
 
 **Animacje UI** (każde okno, patrz [[Animacje i cinematiki]]): otwarcie = pop z overshootem (0,25 s), zamknięcie = szybki zjazd, przyciski sprężynują przy hover/tap, liczniki kasy „liczą się” w górę, nowe rzeczy mają błysk.
 
 **Ekrany na premierę**: HUD (kasa, $/s, paliwo, kompas do gwiazdy, licznik do następnej gwiazdy, przyciski Shop/Base/Index/Vehicles/Robux), minigra, karta łupu, sklep narzędzi, garaż, baza, indeks, sklep Robux, daily, kody, ustawienia, rebirth.
 
 Makiety: Claude Design → akceptacja z telefonu → kod. Mobile: przyciski ≥ 44 px, ScreenInsets, `UIScale`.
+
+## Stan po T13 (8.11)
+
+Kod: `game/src/client/UI/` — `Theme` (paleta, ikony, `IDLE`), `Motion` (pop, licznik, pętle „życia”), `Store`, `Format` (skróty kasy), `Sfx`, `Hud`, `Windows` (wzór okna sklepu, reszta „Coming soon” → T14), komponenty `Label`, `Button`, `PriceButton`, `RibbonHeader`, `Window`, `OfferCard`, `Toasts`. Kontroler: `Controllers/UIController`.
+Dane HUD: atrybuty gracza `IncomePerSec`, `Fuel`, `FuelMax`; `Workspace.NextStarAt`. HUD publikuje `PlayerGui.HudTopInset` / `HudLeftInset` (banery gwiazd i kompas omijają HUD).
+![[T13 HUD PC.jpg]]
+![[T13 HUD telefon.jpg]]
+![[T13 sklep.jpg]]

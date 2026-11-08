@@ -407,9 +407,11 @@ local function updateCompass(serverNow: number, stars: { StarInfo })
 	local viewport = camera.ViewportSize
 	local point, onScreen = camera:WorldToViewportPoint(target)
 
+	-- Lewa krawędź: za menu HUD (atrybut HudLeftInset z UI/Hud), żeby strzałka nie wchodziła na przyciski.
+	local leftMargin = math.max(EDGE_MARGIN, (tonumber(player.PlayerGui:GetAttribute("HudLeftInset")) or 0) + 40)
 	local inView = onScreen
 		and point.Z > 0
-		and point.X > EDGE_MARGIN
+		and point.X > leftMargin
 		and point.X < viewport.X - EDGE_MARGIN
 		and point.Y > EDGE_MARGIN
 		and point.Y < viewport.Y - EDGE_MARGIN
@@ -434,8 +436,9 @@ local function updateCompass(serverNow: number, stars: { StarInfo })
 
 	compassMarker.Visible = false
 	compassMarkerLabel.Visible = false
-	local center = viewport / 2
-	local dx, dy = point.X - center.X, point.Y - center.Y
+	-- Środek obszaru strzałki (prostokąt od leftMargin do prawej krawędzi), nie ekranu.
+	local center = Vector2.new((leftMargin + viewport.X - EDGE_MARGIN) / 2, viewport.Y / 2)
+	local dx, dy = point.X - viewport.X / 2, point.Y - center.Y
 	if point.Z < 0 then
 		dx, dy = -dx, -dy
 	end
@@ -443,7 +446,7 @@ local function updateCompass(serverNow: number, stars: { StarInfo })
 		dy = 1
 	end
 	local scale = math.min(
-		(center.X - EDGE_MARGIN) / math.max(math.abs(dx), 1e-3),
+		(center.X - leftMargin) / math.max(math.abs(dx), 1e-3),
 		(center.Y - EDGE_MARGIN) / math.max(math.abs(dy), 1e-3)
 	)
 	local px, py = center.X + dx * scale, center.Y + dy * scale
@@ -459,6 +462,9 @@ local function updateCompass(serverNow: number, stars: { StarInfo })
 end
 
 function StarHud.update(serverNow: number, stars: { StarInfo })
+	-- Banery pod licznikiem gwiazdy z HUD (atrybut HudTopInset z UI/Hud).
+	local topInset = tonumber(player.PlayerGui:GetAttribute("HudTopInset")) or 0
+	bannerList.Position = UDim2.new(0.5, 0, 0, topInset + 8)
 	updateBanners(serverNow)
 	updateCompass(serverNow, stars)
 end
