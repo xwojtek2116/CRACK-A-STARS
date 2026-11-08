@@ -19,6 +19,8 @@ Projekt gry: `vault/01 GDD/GDD.md`. Przed pisaniem systemu przeczytaj jego notat
 - **Jeden czat = jeden task.** Po zakończeniu taska nie bierz następnego w tym samym czacie.
 - **Otwarte pliki:** jeśli w Blenderze/Studio jest otwarty inny plik — najpierw go zapisz (Ctrl+S), potem otwórz nowy plik do pracy. Nigdy nie zostawiaj niezapisanych zmian.
 - **Po testach zamykaj zbędne okna Roblox Studio — zostaje dokładnie jedno** (główne okno edycji gry).
+- **Miejsce gry = chmura Roblox:** gra „Crack a Star”, `placeId 128852283478472`, `universeId 10775327732` (prywatna). Uprawnienia MCP (upload, HTTP, Open Cloud) działają tylko na miejscu zapisanym na Robloxie, więc pracujemy na nim, a Ctrl+S zapisuje na Robloxa. `game/places/*.rbxl` to tylko kopie zapasowe — po większej zmianie zrób też Plik → Zapisz do pliku jako `game/places/CrackAStars.rbxl`. Gdy Studio zgubi połączenie (RCC-1025), odzyskaj z `%LOCALAPPDATA%\Roblox\RobloxStudio\AutoSaves\128852283478472_AutoRecovery_*.rbxl`.
+- **Sterowanie ekranem zatwierdza się w każdym czacie osobno** (okienko na komputerze). Jeśli task go potrzebuje, poproś o nie na samym początku. Nie używaj `open_application` dla Studio — otwiera drugie okno.
 - **Jedna sesja = jeden task** (`/task T07`). Do **3 sesji równolegle** — tory: **A kod**, **B art (Blender)**, **C świat/UI/biznes**. Dwie sesje nigdy nie zmieniają tych samych plików (karta ma pole „Pliki”).
 - Nie zmieniaj zakresu taska. Brak czegoś albo błąd w karcie → zapisz w Raporcie.
 - Szukaj grepem, nie czytaj całych folderów. Nie wypisuj całych plików w czacie.
