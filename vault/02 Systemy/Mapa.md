@@ -43,4 +43,6 @@ tags: [system]
 
 Blockout w Studio (T03, mały) → **powiększenie i lobby (T36)** → finalne propsy z Blendera (T15). Zapis `.rbxm` w `game/assets/map/`.
 
+**Duża mapa (T36, 2026-11-08):** teren z Terrain generowany skryptem `tools/studio/T36_map_gen.luau`; `Workspace.Map` = `Lobby` (płaskowyż +20, stacje z tagiem `LobbyStation` + atrybut `Station`), `Biomes/<Theme>/LandingZone` (tag `StarLandingZone`, atrybuty `Theme`, `AngleMin/Max`, `RadiusMin/Max`), `Ramps`, `Bounds`; działki `Workspace.Plots/Plot_1..8` na r=320. Sprint do średniej gwiazdy ~42–51 s. Szczegóły: [[2026-11-08 Teren i lobby T36]]. Zrzut: ![[T36 mapa z gory.jpg]]
+
 **Blockout (T03, 2026-11-07, przed powiększeniem):** hub r ≤ 110, działki `Workspace.Plots/Plot_1..8` na r=300, strefy `Workspace.Map.Zones.<Theme>.LandingZone` (tag `StarLandingZone`, atrybut `Theme`) na r=600, granice r=790 / y=400. Szczegóły: [[2026-11-07 Blockout mapy]]. Zrzut: ![[T03 blockout z gory.jpg]]
