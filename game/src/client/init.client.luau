@@ -19,6 +19,7 @@ local CONTROLLERS = {
 	"SoundController",
 	"CinematicController",
 	"StarFxController",
+	"CrackController",
 }
 
 local log = Logger.new("Boot")

@@ -17,6 +17,9 @@ local BUCKETS: { [string]: Bucket } = {
 	RequestState = { capacity = 3, refillPerSecond = 0.5 },
 	SetSetting = { capacity = 5, refillPerSecond = 1 },
 	RequestStars = { capacity = 3, refillPerSecond = 0.5 },
+	-- Minigra: legalnie ~1 runda na 2 s (runda + cooldown narzędzia).
+	CrackStart = { capacity = 3, refillPerSecond = 1 },
+	CrackFinish = { capacity = 3, refillPerSecond = 1 },
 }
 
 return {

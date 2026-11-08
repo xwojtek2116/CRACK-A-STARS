@@ -88,6 +88,24 @@ function Validate.optional(checker: Checker): Checker
 	end
 end
 
+-- Tablica-lista liczb skończonych w [min, max], długość 1..maxLen, bez innych kluczy.
+function Validate.numberList(maxLen: number, min: number, max: number): Checker
+	return function(value)
+		if type(value) ~= "table" then
+			return false
+		end
+		local list = value :: { [any]: unknown }
+		local count = 0
+		for key, item in list do
+			count += 1
+			if type(key) ~= "number" or count > maxLen or not Validate.inRange(item, min, max) then
+				return false
+			end
+		end
+		return count >= 1 and count == #(list :: { unknown })
+	end
+end
+
 -- Sprawdza listę argumentów względem schematu. Zwraca (ok, numer złego argumentu).
 function Validate.args(schema: { Checker }, args: { n: number, [number]: unknown }): (boolean, number?)
 	if args.n > #schema then

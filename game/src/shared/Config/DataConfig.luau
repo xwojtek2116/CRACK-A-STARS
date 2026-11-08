@@ -11,7 +11,7 @@ return {
 	STARTING_JETPACK = 1,
 
 	-- Ustawienia gracza, które klient może zmieniać przez SetSetting.
-	SETTING_KEYS = { "music", "sfx", "lowGraphics" },
+	SETTING_KEYS = { "music", "sfx", "lowGraphics", "cameraShake" },
 
 	SESSION_LOST_KICK = "Your save was opened on another server. Please rejoin.",
 	LOAD_FAILED_KICK = "Could not load your save. Please rejoin.",

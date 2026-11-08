@@ -30,6 +30,9 @@ export type RemoteName =
 	| "Announcement"
 	| "StarEvent"
 	| "RequestStars"
+	| "CrackStart"
+	| "CrackFinish"
+	| "CrackResult"
 
 local DEFINITIONS: { [RemoteName]: Definition } = {
 	-- Stan gracza: pełny stan po wczytaniu, potem delty { [klucz] = nowa wartość }.
@@ -49,6 +52,16 @@ local DEFINITIONS: { [RemoteName]: Definition } = {
 	StarEvent = { kind = "Event", direction = "ToClient" },
 	-- Klient po wejściu prosi o listę aktywnych gwiazd (spadające i leżące). Zwraca { StarInfo }.
 	RequestStars = { kind = "Function", direction = "ToServer", args = {} },
+	-- Minigra (CrackService). CrackStart(starId) → { roundId, seed, toolId, autoCrack } albo (nil, powód).
+	CrackStart = { kind = "Function", direction = "ToServer", args = { Validate.string(16) } },
+	-- CrackFinish(roundId, times) — times[i] = s od startu rundy dla punktu i, -1 = brak trafienia.
+	CrackFinish = {
+		kind = "Event",
+		direction = "ToServer",
+		args = { Validate.intRange(1, 2 ^ 31), Validate.numberList(8, -1, 30) },
+	},
+	-- Wynik uderzenia dla wszystkich: { starId, userId, damage, grade, crit, weak, pos }.
+	CrackResult = { kind = "Event", direction = "ToClient" },
 }
 
 local FOLDER_NAME = "Remotes"

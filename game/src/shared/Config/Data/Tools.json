@@ -16,6 +16,13 @@
     "miss":    { "mult": 0.2 },
     "critMult": 2.5,
     "autoCrackGrade": "good",
-    "notes": "window = ułamek czasu kurczenia, w którym trafienie liczy się jako perfect/good. Mnożnik ataku = średnia z punktów."
+    "weakSpotMult": 1.25,
+    "spawnGap": 0.45,
+    "range": 10,
+    "latencyGrace": 0.35,
+    "minTapGap": 0.04,
+    "cooldownGrace": 0.1,
+    "fx": { "coneDeg": 55, "fovZoom": 6, "shakePerfect": 0.6, "shakeCrit": 1.4, "shakeTime": 0.25, "numberRise": 4, "numberTime": 0.9 },
+    "notes": "window = szerokość okna (ułamek shrinkTime) wyśrodkowana na chwili zamknięcia pierścienia: Perfect ±window/2, Good ±window/2; po 1 + good.window/2 punkt znika = Miss. Mnożnik rundy = średnia z punktów × weakSpotMult, jeśli trafiony (≥ Good) złoty słaby punkt. spawnGap = s między kolejnymi punktami. range = studs od krawędzi gwiazdy. targetSize = średnica kółka jako ułamek krótszego boku ekranu."
   }
 }

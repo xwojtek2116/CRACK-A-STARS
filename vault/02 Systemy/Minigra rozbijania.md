@@ -1,6 +1,6 @@
 ---
 typ: system
-status: plan
+status: w toku
 taski: [T06]
 tags: [system]
 ---
@@ -15,3 +15,8 @@ Cel: krótka (1–2 s), satysfakcjonująca, działająca dotykiem. Lepsze narzę
 5. Liczby obrażeń nad gwiazdą, wstrząs kamery przy Perfect i krytyku.
 
 **Auto Crack (gamepass):** klient pomija tarczę, serwer liczy ocenę Good. **Cooldown** liczony na serwerze.
+
+## Implementacja (T06)
+- Kod: `CrackService` (serwer), `CrackController` + `UI/Minigame/{Round,DamageNumbers}` (klient), wspólna logika `Shared/CrackRound`.
+- Remotes: `CrackStart(starId)` → `{ roundId, seed, toolId, autoCrack }`, `CrackFinish(roundId, times[])` (−1 = brak), `CrackResult` do wszystkich.
+- Szczegóły decyzji: [[2026-11-08 Minigra rozbijania T06]]. Zrzut: ![[T06 minigra telefon.jpg]]

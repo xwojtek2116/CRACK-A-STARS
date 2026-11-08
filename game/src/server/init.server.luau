@@ -18,6 +18,7 @@ type Service = {
 local SERVICES = {
 	"DataService",
 	"StarService",
+	"CrackService",
 }
 
 local log = Logger.new("Boot")
