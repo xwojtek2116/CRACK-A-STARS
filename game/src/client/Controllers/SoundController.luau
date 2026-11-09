@@ -14,12 +14,16 @@ local SoundIds = require(Shared.Config.SoundIds)
 local StateController = require(script.Parent.StateController)
 
 local SOUNDS = SoundIds.SOUNDS
+local BACKGROUND = SoundIds.BACKGROUND_MUSIC
 local DEFAULT_TAIL = 8 -- s zapasu na usunięcie jednorazowego dźwięku, gdy długość nieznana
 
 local log = Logger.new("SoundController")
 local rng = Random.new()
 local group: SoundGroup
 local musicGroup: SoundGroup
+local background: Sound? = nil
+local backgroundVolume = 0
+local foreground: { [Sound]: boolean } = {} -- inna muzyka, która przycisza tło
 
 local SoundController = {}
 
@@ -47,7 +51,33 @@ local function build(name: string, volumeMult: number?): Sound?
 	return sound
 end
 
+-- Przyciszenie muzyki w tle, gdy gra inna muzyka; powrót, gdy żadna już nie gra.
+local function updateDuck()
+	local bg = background
+	if not bg then
+		return
+	end
+	local ducked = next(foreground) ~= nil
+	local target = backgroundVolume * (if ducked then BACKGROUND.duckTo else 1)
+	local time = if ducked then BACKGROUND.duckTime else BACKGROUND.restoreTime
+	TweenService:Create(bg, TweenInfo.new(time, Enum.EasingStyle.Sine), { Volume = target }):Play()
+end
+
+local function trackForeground(sound: Sound)
+	foreground[sound] = true
+	updateDuck()
+	local function release()
+		if foreground[sound] then
+			foreground[sound] = nil
+			updateDuck()
+		end
+	end
+	sound.Ended:Connect(release)
+	sound.Destroying:Connect(release)
+end
+
 -- Muzyka 2D w grupie Music (ustawienie `music`), z narastaniem głośności. Zwraca Sound do stopMusic.
+-- Każda muzyka poza tłem przycisza muzykę w tle na czas grania.
 function SoundController.playMusic(name: string, fadeIn: number): Sound?
 	local sound = build(name)
 	if not sound then
@@ -58,6 +88,9 @@ function SoundController.playMusic(name: string, fadeIn: number): Sound?
 	sound.Volume = 0
 	sound.Parent = SoundService
 	sound:Play()
+	if name ~= BACKGROUND.name then
+		trackForeground(sound)
+	end
 	TweenService:Create(sound, TweenInfo.new(math.max(fadeIn, 0.01), Enum.EasingStyle.Linear), { Volume = target })
 		:Play()
 	if not sound.Looped then
@@ -149,8 +182,21 @@ function SoundController.Init()
 	musicGroup.Parent = SoundService
 end
 
+local function startBackground()
+	if background then
+		return
+	end
+	background = SoundController.playMusic(BACKGROUND.name, BACKGROUND.fadeIn)
+	local def = SOUNDS[BACKGROUND.name]
+	backgroundVolume = if def then def.volume else 0
+	if next(foreground) ~= nil then
+		task.delay(BACKGROUND.fadeIn, updateDuck)
+	end
+end
+
 function SoundController.Start()
 	StateController.onLoaded(applySettings)
+	StateController.onLoaded(startBackground)
 	StateController.onChanged("settings", applySettings)
 	-- Wstępne wczytanie, żeby pierwszy spadek nie był niemy.
 	task.spawn(function()

@@ -44,6 +44,8 @@ local SOUNDS: { [string]: SoundDef } = {
 	beaconHum = { id = "rbxassetid://129191615321540", volume = 0.35, rolloff = { 20, 260 }, looped = true }, -- beacon_hum.wav
 	musicTension = { id = "rbxassetid://90038145810674", volume = 0.4, looped = true }, -- music_tension.wav (2D, pętla 16 s)
 	musicImpact = { id = "rbxassetid://74551511793377", volume = 0.6 }, -- music_impact.wav (2D stinger)
+	-- T41: muzyka w tle całej rozgrywki (tools/music_gen.py → art/audio/music/), 2D, pętla 96 s
+	musicAmbient = { id = "rbxassetid://90257014702117", volume = 0.15, looped = true }, -- music_ambient.wav
 	-- Interfejs (T13, tools/ui_sfx_gen.py → art/audio/ui/), 2D
 	uiClick = { id = "rbxassetid://71710572047303", volume = 0.5, pitchVariance = 0.04 }, -- ui_click.wav
 	uiPop = { id = "rbxassetid://75915657998732", volume = 0.5 }, -- ui_pop.wav (otwarcie okna)
@@ -69,7 +71,17 @@ local IMPACT_BY_SIZE: { [string]: string } = {
 	Supernova = "impactHuge",
 }
 
+-- Muzyka w tle (T41): startuje po wczytaniu danych, przycisza się, gdy gra inna muzyka (motyw napięcia, stinger).
+local BACKGROUND_MUSIC = table.freeze({
+	name = "musicAmbient",
+	fadeIn = 4, -- s narastania po wejściu do gry
+	duckTo = 0.2, -- mnożnik głośności, gdy gra inna muzyka
+	duckTime = 0.8, -- s przyciszenia
+	restoreTime = 3, -- s powrotu do pełnej głośności
+})
+
 return table.freeze({
 	SOUNDS = table.freeze(SOUNDS),
+	BACKGROUND_MUSIC = BACKGROUND_MUSIC,
 	IMPACT_BY_SIZE = table.freeze(IMPACT_BY_SIZE),
 })

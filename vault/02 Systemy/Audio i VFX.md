@@ -18,3 +18,5 @@ Scenariusz i czasy animacji: [[Animacje i cinematiki]].
 **T38 (2026-11-08):** 20 własnych dźwięków spadku (`tools/sfx_gen.py` → `art/audio/stars/`, ID w `SoundIds.luau`, odtwarzanie `SoundController`) i 16 tekstur VFX (`tools/vfx_gen.py` → `art/vfx/textures/`, ID w `VfxIds.luau`). Meshe wyrwy, odłamków i skał: `art/vfx/build_vfx.py`.
 
 **T39 (2026-11-08):** +6 dźwięków (pękanie nieba, ogon uderzenia, stygnięcie krateru, buczenie słupa światła, motyw napięcia, akord uderzenia; grupa Music), +5 tekstur (snop światła, plazma, pierścień żaru, fala energii, błysk), +7 meshy (pęknięcia nieba, torus fali, stożek żaru, krople lawy).
+
+**T41 (2026-11-09):** muzyka w tle całej rozgrywki — ambient 96 s (`tools/music_gen.py` → `art/audio/music/`), `musicAmbient` 0.15, przyciszana przy motywie napięcia. [[2026-11-09 Muzyka w tle]]
