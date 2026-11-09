@@ -5,6 +5,7 @@ Tylko inspiracja: kształty, światło, efekty. Nic z tych stron nie trafia do g
 ## Od użytkownika
 - `toxic_user_1.webp`: Toxic. 5 ramion, popękana skorupa ze świecącym zielonym środkiem, łańcuchy, fiolki, metalowy emblemat biohazard, kapiąca maź, dym.
 - `toxic_user_2.webp`: plansza Toxic. Widoki, paleta, materiały (glow, metal, szkło, maź, dym) i animacje: Idle Spin, Pulse, Toxic Aura, Dripping, Orbit, Toxic Smoke, Burst, Hover.
+- `toxic_user_3.png` (9.11, **obowiązuje**): nowy Toxic, skalno-kryształowa korona wokół rdzenia, widoki, zbliżenia, stany i rozbiór na części. Zastępuje 1 i 2.
 
 ## Z sieci
 - **Toxic:** [Stylized Radioactive Fairy (Carina Eriksen)](https://carinaeriksen.artstation.com/projects/bgq6Pg) jako wzór emisji, [Toxic slime in rocky vessel](https://pixie.haus/pixelart/522182/glowing-toxic-slime-rock-vessel-asset).

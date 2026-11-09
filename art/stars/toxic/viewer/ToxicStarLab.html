@@ -1,0 +1,907 @@
+<meta charset="utf-8">
+<title>Toxic Star Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Układ: viewport 3D po lewej (na telefonie u góry), panel narzędzi z zakładkami po prawej (na telefonie pod spodem). Jeden ciemny wygląd, celowo. */
+:root{
+  --bg:#0c0f0c; --panel:#131813; --panel-2:#1a211a; --line:#2a352a; --fg:#e9f0e4; --muted:#a3b39d;
+  --accent:#b6ff3b; --accent-ink:#0e1608; --warn:#ffb347; --danger:#ff6b5b;
+  --f-display:"Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font:14px/1.45 var(--f-body);overflow:hidden}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 400px}
+.stage{position:relative;min-width:0;min-height:0;background:#d5d6d8}
+#c{display:block;width:100%;height:100%;touch-action:none}
+.hud{position:absolute;display:flex;gap:6px;align-items:center;pointer-events:none}
+.hud>*{pointer-events:auto}
+.hud.tl{top:12px;left:max(12px,env(safe-area-inset-left,0px));flex-wrap:wrap;max-width:70%}
+.hud.tr{top:12px;right:12px}
+.hud.bl{bottom:12px;left:max(12px,env(safe-area-inset-left,0px))}
+.chip{font:600 12px var(--f-display);letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:5px 10px;border-radius:6px}
+.chip.ghost{background:#141a14e6;color:var(--fg)}
+.ebar{width:120px;height:8px;border-radius:4px;background:#141a14e6;overflow:hidden;border:1px solid #ffffff22}
+.ebar i{display:block;height:100%;width:50%;background:var(--accent)}
+.perf{font:12px/1.5 var(--f-mono);background:#0c0f0ce6;color:var(--fg);padding:8px 10px;border-radius:8px;font-variant-numeric:tabular-nums;white-space:pre}
+.err{position:absolute;inset:auto 12px 56px 12px;background:#2a0f0c;color:#ffd7d2;border:1px solid var(--danger);border-radius:8px;padding:10px;font:12px var(--f-mono);white-space:pre-wrap}
+.panel{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0;min-width:0}
+.ph{padding-block:16px 10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:2px}
+.ph h1{margin:0;font:700 24px var(--f-display);letter-spacing:.02em;color:var(--accent);text-wrap:balance}
+.ph p{margin:0;color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:4px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);font:600 13px var(--f-display);letter-spacing:.06em;text-transform:uppercase;padding:10px 8px;cursor:pointer;min-height:44px}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.tabbody{flex:1;overflow:auto;padding-block:14px 24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tab{display:flex;flex-direction:column;gap:16px}
+h2{margin:0;font:600 13px var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.card{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.sbtn{text-align:left;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--fg);cursor:pointer;display:flex;flex-direction:column;gap:3px;min-height:44px;font:inherit}
+.sbtn b{font:600 14px var(--f-display);letter-spacing:.06em}
+.sbtn span{color:var(--muted);font-size:12px;line-height:1.35}
+.sbtn[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.sbtn:hover{border-color:#4a5a48}
+.btn{background:var(--panel-2);border:1px solid var(--line);color:var(--fg);border-radius:8px;padding:9px 12px;font:600 13px var(--f-body);cursor:pointer;min-height:40px}
+.btn:hover{border-color:#4a5a48}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.danger{border-color:#6a2a24;color:#ffc9c2}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toggle{display:flex;align-items:center;gap:10px;min-height:36px;cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--accent)}
+label.lbl{font-size:12px;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select{background:var(--panel-2);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px;font:inherit;min-height:40px}
+.mono{font:12px/1.5 var(--f-mono)}
+.muted{color:var(--muted)}
+.kv{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 10px;font-size:13px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;overflow-wrap:anywhere}
+.tree{display:flex;flex-direction:column;gap:2px;font-size:13px}
+.trow{display:flex;align-items:center;gap:6px;min-height:32px}
+.trow input{width:16px;height:16px;accent-color:var(--accent);flex:0 0 auto}
+.trow button{background:none;border:0;color:var(--fg);font:500 13px var(--f-mono);cursor:pointer;padding:4px 2px;text-align:left;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trow button[aria-current="true"]{color:var(--accent)}
+.tag{font:600 10px var(--f-display);letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:4px;background:#243024;color:var(--muted);flex:0 0 auto}
+.tag.vfx{background:#2f2a14;color:#ffd98a}
+.tag.anc{background:#1d2a33;color:#9fd6ff}
+.tag.mov{background:#22331a;color:var(--accent)}
+.log{background:#090c09;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:200px;overflow:auto;margin:0;font:12px/1.55 var(--f-mono);color:#cfe8c0;white-space:pre-wrap}
+.alist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.abtn{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--fg);font:500 12px var(--f-mono);text-align:left;cursor:pointer;min-height:40px;overflow-wrap:anywhere}
+.abtn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.transport{display:flex;flex-direction:column;gap:10px}
+.tl-row{display:flex;gap:10px;align-items:center}
+.tl-row output{font:12px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--muted);min-width:92px;text-align:right}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width: 900px){
+  body{overflow:auto}
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:56svh auto;height:auto;min-height:100%}
+  .panel{border-left:0;border-top:1px solid var(--line)}
+  .tabbody{overflow:visible}
+}
+@media (prefers-reduced-motion: reduce){ *{scroll-behavior:auto} }
+</style>
+
+<div class="app">
+  <section class="stage" id="stage">
+    <canvas id="c" aria-label="Podgląd 3D gwiazdy Toxic. Przeciągnij, żeby obracać, przewiń lub uszczypnij, żeby przybliżyć."></canvas>
+    <div class="hud tl"><span class="chip" id="hudState">Active</span><span class="chip ghost" id="hudAnim">bez animacji</span><div class="ebar" title="Energia"><i id="hudE"></i></div></div>
+    <div class="hud tr"><div class="perf" id="perf" hidden></div></div>
+    <div class="hud bl"><button class="btn" id="btnResetCam" type="button">Reset kamery</button></div>
+    <div class="err" id="err" hidden></div>
+  </section>
+
+  <aside class="panel">
+    <header class="ph"><h1>Toxic Star Lab</h1><p>Prototyp techniczny i przekazanie do produkcji · Crack a Stars · T40</p></header>
+    <nav class="tabs" role="tablist" aria-label="Sekcje">
+      <button role="tab" id="t-states" aria-selected="true" data-tab="states">Stany</button>
+      <button role="tab" id="t-anims" aria-selected="false" data-tab="anims">Animacje</button>
+      <button role="tab" id="t-view" aria-selected="false" data-tab="view">Widok</button>
+      <button role="tab" id="t-tree" aria-selected="false" data-tab="tree">Hierarchia</button>
+      <button role="tab" id="t-debug" aria-selected="false" data-tab="debug">Debug</button>
+    </nav>
+    <div class="tabbody">
+      <section class="tab" id="p-states" role="tabpanel" aria-labelledby="t-states">
+        <h2>Stany wizualne</h2>
+        <div class="grid2" id="stateList"></div>
+        <div class="card">
+          <label class="lbl" for="energy">SetEnergyLevel(<span id="energyVal">1.00</span>)</label>
+          <input type="range" id="energy" min="0" max="1.5" step="0.01" value="1">
+          <span class="muted" style="font-size:12px">W grze: mnożnik jasności całej gwiazdy, np. z HP albo z bliskości gracza.</span>
+        </div>
+        <div class="card"><b id="stateTitle" style="font:600 15px var(--f-display)">Active</b><span class="muted" id="stateGame" style="font-size:13px"></span></div>
+      </section>
+
+      <section class="tab" id="p-anims" role="tabpanel" aria-labelledby="t-anims" hidden>
+        <h2>Animation Lab</h2>
+        <div class="alist" id="animList"></div>
+        <div class="card transport">
+          <div class="row" style="justify-content:space-between"><b id="animName" style="font:600 15px var(--f-display)">Core_Pulse</b><span class="mono muted" id="animDur">1.20 s</span></div>
+          <span class="muted" id="animDesc" style="font-size:13px"></span>
+          <div class="tl-row"><input type="range" id="timeline" min="0" max="1000" value="0" aria-label="Oś czasu animacji"><output id="animTime">0.00 / 1.20 s</output></div>
+          <div class="row">
+            <button class="btn primary" id="aPlay" type="button">Play</button>
+            <button class="btn" id="aPause" type="button">Pause</button>
+            <button class="btn" id="aRestart" type="button">Restart</button>
+            <label class="lbl" for="aSpeed">Prędkość</label>
+            <select id="aSpeed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
+            <label class="toggle"><input type="checkbox" id="aLoop"> Loop</label>
+          </div>
+          <span class="mono muted" id="animRbx" style="font-size:12px"></span>
+        </div>
+      </section>
+
+      <section class="tab" id="p-view" role="tabpanel" aria-labelledby="t-view" hidden>
+        <h2>Kamera</h2>
+        <div class="row"><button class="btn" type="button" data-cam="home">Reset</button><button class="btn" type="button" data-cam="front">Przód</button><button class="btn" type="button" data-cam="side">Bok</button><button class="btn" type="button" data-cam="top">Góra</button></div>
+        <h2>Światło</h2>
+        <div class="row"><button class="btn" type="button" id="lightStudio" aria-pressed="true">Studio</button><button class="btn" type="button" id="lightNight" aria-pressed="false">Noc (jak w grze)</button></div>
+        <h2>Pokaż</h2>
+        <div class="card">
+          <label class="toggle"><input type="checkbox" id="vWire"> Wireframe</label>
+          <label class="toggle"><input type="checkbox" id="vCrater" checked> Krater i pęknięcia gruntu</label>
+          <label class="toggle"><input type="checkbox" id="vVfx" checked> VFX (cząsteczki, dym, fala)</label>
+          <label class="toggle"><input type="checkbox" id="vDebris" checked> Latający gruz</label>
+          <label class="toggle"><input type="checkbox" id="vAnchors"> Punkty zaczepienia (Attachments)</label>
+          <label class="toggle"><input type="checkbox" id="vHitbox"> Hitbox</label>
+          <label class="toggle"><input type="checkbox" id="vBloom" checked> Poświata (Bloom)</label>
+          <label class="toggle"><input type="checkbox" id="vFigure" checked> Postać do skali (5 studs)</label>
+          <div class="row"><label class="lbl" for="vSize">Rozmiar gwiazdy</label><select id="vSize"><option value="6">Small · 6 studs</option><option value="12">Medium · 12 studs</option><option value="24" selected>Large · 24 studs</option><option value="45">Huge · 45 studs</option></select></div>
+        </div>
+      </section>
+
+      <section class="tab" id="p-tree" role="tabpanel" aria-labelledby="t-tree" hidden>
+        <h2>Hierarchia komponentów</h2>
+        <div class="tree" id="tree"></div>
+        <div class="card" id="nodeInfo"></div>
+      </section>
+
+      <section class="tab" id="p-debug" role="tabpanel" aria-labelledby="t-debug" hidden>
+        <h2>Panel deweloperski</h2>
+        <div class="card"><div class="row" style="justify-content:space-between"><b style="font:600 15px var(--f-display)">HP</b><span class="mono" id="hpVal">100 / 100</span></div><div class="ebar" style="width:100%"><i id="hpBar" style="width:100%"></i></div></div>
+        <div class="row">
+          <button class="btn primary" type="button" id="dSpawn">Spawn Star</button>
+          <button class="btn" type="button" id="dDespawn">Despawn Star</button>
+          <button class="btn" type="button" id="dBurst">Trigger Burst</button>
+          <button class="btn danger" type="button" id="dDamage">Damage Star −20</button>
+          <button class="btn" type="button" id="dReset">Reset Star</button>
+        </div>
+        <div class="row">
+          <label class="lbl" for="dState">Stan</label><select id="dState"></select>
+          <label class="lbl" for="dAnim">Animacja</label><select id="dAnim"></select>
+        </div>
+        <div class="card">
+          <label class="toggle"><input type="checkbox" id="dFx" checked> Efekty włączone</label>
+          <label class="toggle"><input type="checkbox" id="dHitbox"> Hitbox</label>
+          <label class="toggle"><input type="checkbox" id="dPerf"> Statystyki wydajności</label>
+        </div>
+        <h2>Wywołania API (Luau)</h2>
+        <pre class="log" id="log"></pre>
+      </section>
+    </div>
+  </aside>
+</div>
+
+<script>
+window.addEventListener('error', function (e) { var el = document.getElementById('err'); if (el) { el.hidden = false; el.textContent = 'Błąd: ' + (e.message || e) ; } });
+</script>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const $ = (s) => document.querySelector(s);
+
+// ---------- losowość (stałe ziarno = ten sam model przy każdym otwarciu)
+function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const rnd = mulberry32(40);
+const R = (a, b) => a + (b - a) * rnd();
+const V3 = (x, y, z) => new THREE.Vector3(x, y, z);
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const seg = (p, a, b) => clamp01((p - a) / (b - a));
+const smooth = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const ease = {
+  inQ: (x) => x * x, outQ: (x) => 1 - (1 - x) * (1 - x), inC: (x) => x * x * x, outC: (x) => 1 - Math.pow(1 - x, 3),
+  inOut: (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  outBack: (x) => { const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+};
+const hash = (n) => { const s = Math.sin(n * 127.1) * 43758.5453; return s - Math.floor(s); };
+
+// ---------- renderer, scena, kamera
+const stage = $('#stage');
+const canvas = $('#c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(36, 1, 0.05, 200);
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.minDistance = 2.5;
+controls.maxDistance = 32;
+controls.maxPolarAngle = 1.52;
+const CAMS = {
+  home: { pos: V3(6.4, 4.4, 8.6), target: V3(0, 1.3, 0) },
+  front: { pos: V3(0, 1.8, 10), target: V3(0, 1.4, 0) },
+  side: { pos: V3(10, 1.8, 0), target: V3(0, 1.4, 0) },
+  top: { pos: V3(0, 11, 0.01), target: V3(0, 0.5, 0) },
+};
+function setCam(name) { const c = CAMS[name]; camera.position.copy(c.pos); controls.target.copy(c.target); controls.update(); }
+setCam('home');
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envTex = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(512, 512), 0.5, 0.55, 0.78);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+function resize() {
+  const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
+  renderer.setSize(w, h, false); composer.setSize(w, h);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+resize();
+
+// ---------- światło
+const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8d90, 1.1);
+const key = new THREE.DirectionalLight(0xffffff, 2.4);
+key.position.set(5, 9, 6); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+Object.assign(key.shadow.camera, { left: -5, right: 5, top: 6, bottom: -4, near: 1, far: 30 });
+key.shadow.bias = -0.0008;
+const fill = new THREE.DirectionalLight(0xdfe8ff, 0.7); fill.position.set(-6, 3, 3);
+const rim = new THREE.DirectionalLight(0xffffff, 1.4); rim.position.set(-2, 5, -7);
+scene.add(hemi, key, fill, rim);
+
+const floorMat = new THREE.MeshStandardMaterial({ color: 0xcfd0d2, roughness: 1 });
+const floor = new THREE.Mesh(new THREE.CircleGeometry(60, 48), floorMat);
+floor.rotation.x = -Math.PI / 2; floor.position.y = -0.2; floor.receiveShadow = true;
+scene.add(floor);
+
+let lighting = 'studio';
+function setLighting(mode) {
+  lighting = mode;
+  const studio = mode === 'studio';
+  const bg = new THREE.Color(studio ? 0xd5d6d8 : 0x060907);
+  scene.background = bg; scene.fog = new THREE.Fog(bg, 22, 55);
+  stage.style.background = studio ? '#d5d6d8' : '#060907';
+  floorMat.color.set(studio ? 0xcfd0d2 : 0x0b0f0c);
+  scene.environment = studio ? envTex : null;
+  hemi.intensity = studio ? 1.1 : 0.18; hemi.color.set(studio ? 0xffffff : 0x3a5a44); hemi.groundColor.set(studio ? 0x8a8d90 : 0x050705);
+  key.intensity = studio ? 2.4 : 0.35; key.color.set(studio ? 0xffffff : 0x9fb6ff);
+  fill.intensity = studio ? 0.7 : 0.08;
+  rim.intensity = studio ? 1.4 : 0.9; rim.color.set(studio ? 0xffffff : 0x8fb4ff);
+  bloom.threshold = studio ? 2.4 : 0.95; // w studiu oświetlone podłoże w HDR przekracza 1, świecić ma tylko rdzeń i flary
+  bloom.radius = 0.35;
+  $('#lightStudio').setAttribute('aria-pressed', String(studio));
+  $('#lightNight').setAttribute('aria-pressed', String(!studio));
+}
+
+// ---------- tekstury z płótna (proceduralne, zamiast plików)
+function canvasTex(size, draw, srgb = true) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const g = c.getContext('2d'); draw(g, size);
+  const t = new THREE.CanvasTexture(c);
+  if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 4;
+  return t;
+}
+function drawCrack(g, x, y, a, len, w, depth) {
+  g.lineWidth = w; g.beginPath(); g.moveTo(x, y);
+  let L = 0;
+  while (L < len) {
+    const st = R(10, 26); a += R(-0.55, 0.55);
+    x += Math.cos(a) * st; y += Math.sin(a) * st; g.lineTo(x, y); L += st;
+    if (depth > 0 && rnd() < 0.18) {
+      g.stroke(); drawCrack(g, x, y, a + R(-1.4, 1.4), len * 0.45, Math.max(1, w * 0.6), depth - 1);
+      g.lineWidth = w; g.beginPath(); g.moveTo(x, y);
+    }
+  }
+  g.stroke();
+}
+const rockTex = canvasTex(512, (g, s) => {
+  g.fillStyle = '#8d8a93'; g.fillRect(0, 0, s, s);
+  for (let i = 0; i < 2600; i++) { const v = R(70, 185) | 0; g.fillStyle = `rgba(${v},${v - 4},${v + 8},${R(0.08, 0.3).toFixed(2)})`; const r = R(1, 8); g.fillRect(R(0, s), R(0, s), r, r * R(0.5, 2)); }
+});
+const veinTex = canvasTex(512, (g, s) => {
+  g.fillStyle = '#000'; g.fillRect(0, 0, s, s);
+  g.strokeStyle = '#fff'; g.lineCap = 'round'; g.lineJoin = 'round'; g.shadowColor = '#fff'; g.shadowBlur = 8;
+  for (let i = 0; i < 9; i++) drawCrack(g, R(0, s), R(0, s), R(0, 6.28), R(120, 300), R(2.5, 4.5), 2);
+});
+const groundTex = canvasTex(1024, (g, s) => {
+  const c = s / 2;
+  const rg = g.createRadialGradient(c, c, 0, c, c, s * 0.2); rg.addColorStop(0, 'rgba(255,255,255,0.5)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = rg; g.fillRect(0, 0, s, s);
+  g.strokeStyle = '#fff'; g.lineCap = 'round'; g.lineJoin = 'round'; g.shadowColor = '#fff'; g.shadowBlur = 16;
+  for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 + R(-0.2, 0.2); drawCrack(g, c + Math.cos(a) * s * 0.08, c + Math.sin(a) * s * 0.08, a, R(260, 420), R(4, 7), 2); }
+});
+const glowTex = canvasTex(128, (g, s) => { const rg = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2); rg.addColorStop(0, 'rgba(255,255,255,1)'); rg.addColorStop(0.25, 'rgba(255,255,255,0.6)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(0, 0, s, s); });
+const smokeTex = canvasTex(128, (g, s) => { for (let i = 0; i < 7; i++) { const x = R(40, 88), y = R(40, 88), r = R(22, 40); const rg = g.createRadialGradient(x, y, 0, x, y, r); rg.addColorStop(0, 'rgba(255,255,255,0.35)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(0, 0, s, s); } });
+
+// ---------- materiały (te same nazwy co w Blenderze)
+const TOXIC = new THREE.Color(0xb6ff3b);
+const MAT = {
+  Rock: new THREE.MeshStandardMaterial({ name: 'MAT_Rock', color: 0x4b4853, map: rockTex, roughness: 0.86, metalness: 0.05, flatShading: true, emissive: TOXIC, emissiveMap: veinTex, emissiveIntensity: 1.2 }),
+  Ground: new THREE.MeshStandardMaterial({ name: 'MAT_Ground', color: 0x55525c, map: rockTex, roughness: 0.95, flatShading: true, emissive: TOXIC, emissiveMap: veinTex, emissiveIntensity: 0.6 }),
+  GroundGlow: new THREE.MeshBasicMaterial({ name: 'MAT_GroundGlow', color: TOXIC, map: groundTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }),
+  Core: new THREE.MeshStandardMaterial({ name: 'MAT_Core', color: 0xd8ff7a, emissive: 0x9dff2a, emissiveIntensity: 2.2, roughness: 0.25 }),
+  CoreShell: new THREE.MeshBasicMaterial({ name: 'VFX_CoreShell', color: 0x9dff2a, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending, depthWrite: false }),
+  Crystal: new THREE.MeshPhysicalMaterial({ name: 'MAT_ToxicCrystal', color: 0x8dff3f, emissive: 0x5cff1a, emissiveIntensity: 0.6, roughness: 0.12, metalness: 0, transparent: true, opacity: 0.9, flatShading: true, clearcoat: 0.6 }),
+  Slime: new THREE.MeshStandardMaterial({ name: 'MAT_Slime', color: 0xc6ff5a, emissive: 0x8dff2a, emissiveIntensity: 1.1, roughness: 0.08 }),
+};
+const allMats = new Set(Object.values(MAT));
+
+// ---------- geometrie
+function boxUV(geo, s) {
+  const pos = geo.attributes.position, nor = geo.attributes.normal; const uv = new Float32Array(pos.count * 2);
+  for (let i = 0; i < pos.count; i++) {
+    const nx = Math.abs(nor.getX(i)), ny = Math.abs(nor.getY(i)), nz = Math.abs(nor.getZ(i));
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    let u, v; if (nx >= ny && nx >= nz) { u = z; v = y; } else if (ny >= nz) { u = x; v = z; } else { u = x; v = y; }
+    uv[i * 2] = u / s; uv[i * 2 + 1] = v / s;
+  }
+  geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  return geo;
+}
+function shardGeo(w, h, d) {
+  const p = [];
+  for (let i = 0; i < 5; i++) { const a = i / 5 * 6.283 + R(-0.3, 0.3); p.push(V3(Math.cos(a) * w * R(0.7, 1), R(-0.05, 0.1), Math.sin(a) * d * R(0.7, 1))); }
+  for (let i = 0; i < 4; i++) { const a = i / 4 * 6.283 + R(-0.4, 0.4); p.push(V3(Math.cos(a) * w * R(0.5, 0.85), h * R(0.35, 0.6), Math.sin(a) * d * R(0.5, 0.85))); }
+  p.push(V3(R(-0.15, 0.15) * w, h, R(-0.15, 0.15) * d), V3(R(-0.3, 0.3) * w, h * R(0.72, 0.9), R(-0.3, 0.3) * d));
+  return boxUV(new ConvexGeometry(p), 1.1);
+}
+function rockGeo(r) {
+  const p = [];
+  for (let i = 0; i < 14; i++) { const u = R(-1, 1), a = R(0, 6.283), q = Math.sqrt(1 - u * u), k = r * R(0.7, 1.05); p.push(V3(q * Math.cos(a) * k, u * k * R(0.6, 0.9), q * Math.sin(a) * k)); }
+  return boxUV(new ConvexGeometry(p), 0.8);
+}
+function slabGeo(w, h, d) {
+  const p = [];
+  for (let i = 0; i < 6; i++) { const a = i / 6 * 6.283 + R(-0.3, 0.3); p.push(V3(Math.cos(a) * w * R(0.75, 1), 0, Math.sin(a) * d * R(0.75, 1))); }
+  for (let i = 0; i < 4; i++) { const a = i / 4 * 6.283 + R(-0.4, 0.4); p.push(V3(Math.cos(a) * w * R(0.45, 0.75), h * R(0.7, 1), Math.sin(a) * d * R(0.45, 0.75))); }
+  return boxUV(new ConvexGeometry(p), 1.1);
+}
+function crystalGeo(r, h, tip) {
+  const pts = [new THREE.Vector2(0.0001, 0), new THREE.Vector2(r * 0.8, 0), new THREE.Vector2(r, h * 0.12), new THREE.Vector2(r * R(0.9, 1.05), h), new THREE.Vector2(0.0001, h + tip)];
+  return new THREE.LatheGeometry(pts, 6);
+}
+const UP = V3(0, 1, 0);
+
+// ---------- hierarchia obiektów
+const root = new THREE.Group(); root.name = 'STAR_ROOT'; scene.add(root);
+const body = new THREE.Group(); body.name = 'StarBody'; root.add(body); // wszystko, co ląduje i drży (bez krateru)
+const objs = {};
+function grp(id, parent) { const g = new THREE.Group(); g.name = id; parent.add(g); objs[id] = g; return g; }
+function mesh(geo, mat, cast = true) { const m = new THREE.Mesh(geo, mat); m.castShadow = cast; m.receiveShadow = true; return m; }
+
+const CORE_POS = V3(0, 1.15, 0.2);
+
+// MainBody: 6 segmentów skorupy, każdy rusza się w całości (tak samo w Roblox: 6 MeshPartów)
+const gMain = grp('MainBody', body);
+const SEG_N = 6;
+const segments = [];
+for (let s = 0; s < SEG_N; s++) segments.push({ group: grp('Shell_0' + (s + 1), gMain), pts: [], base: V3(0, 0, 0) });
+const shardPlacements = [];
+function addShard(theta, r, baseY, h, w, d, tilt) { shardPlacements.push({ theta, r, baseY, h, w, d, tilt, twist: R(0, 6.283) }); }
+for (let i = 0; i < 9; i++) { const th = i / 9 * 6.283 + R(-0.15, 0.15); const f = Math.cos(th); let h = R(1.6, 2.5), tilt = R(0.25, 0.5); if (f > 0.55) { h *= 0.5; tilt += 0.35; } addShard(th, R(0.78, 0.95), 0.2, h, R(0.32, 0.48), R(0.22, 0.32), tilt); }
+addShard(Math.PI - 0.35, 0.35, 0.3, R(3.0, 3.3), 0.42, 0.3, 0.14);
+addShard(Math.PI + 0.4, 0.4, 0.3, R(2.8, 3.1), 0.4, 0.28, 0.16);
+for (const k of [-0.9, 0, 0.9]) addShard(Math.PI + k, 0.3, 1.55, R(1.3, 1.8), 0.3, 0.22, 0.4);
+for (let i = 0; i < 8; i++) { const th = i / 8 * 6.283 + 0.2; addShard(th, 1.05, 0.05, R(0.9, 1.5), R(0.28, 0.4), R(0.2, 0.28), R(1.0, 1.22)); }
+for (let i = 0; i < 5; i++) { const th = Math.PI / 2 + i / 4 * Math.PI; addShard(th, 0.5, 0.25, R(1.6, 2.0), 0.36, 0.26, 0.2); }
+
+for (const sp of shardPlacements) {
+  let th = ((sp.theta % 6.283) + 6.283) % 6.283;
+  const si = Math.min(SEG_N - 1, Math.floor(th / (6.283 / SEG_N)));
+  const holder = new THREE.Object3D(); holder.position.set(0, sp.baseY, 0); holder.rotation.y = th;
+  const m = mesh(shardGeo(sp.w, sp.h, sp.d), MAT.Rock);
+  m.position.set(0, 0, sp.r); m.rotation.set(sp.tilt, sp.twist, 0, 'XYZ');
+  holder.add(m); segments[si].group.add(holder);
+  segments[si].pts.push(V3(Math.sin(th) * sp.r, sp.baseY + sp.h * 0.45, Math.cos(th) * sp.r));
+}
+for (const sgm of segments) {
+  const c = V3(0, 0, 0); sgm.pts.forEach((p) => c.add(p)); c.divideScalar(Math.max(1, sgm.pts.length));
+  sgm.group.children.forEach((ch) => ch.position.sub(c));
+  sgm.group.position.copy(c); sgm.base = c.clone();
+  sgm.dir = c.clone().sub(CORE_POS).setY(0).normalize().add(V3(0, 0.35, 0)).normalize();
+  sgm.scatter = V3(R(-4, 4), R(2, 5), R(-4, 4));
+  sgm.rotAxis = V3(R(-1, 1), R(-1, 1), R(-1, 1)).normalize();
+  sgm.loose = rnd() < 0.5;
+}
+
+// Core
+const gCore = grp('Core', body);
+const coreMesh = mesh(new THREE.IcosahedronGeometry(0.55, 3), MAT.Core, false);
+gCore.position.copy(CORE_POS); gCore.add(coreMesh);
+
+// Kryształy: grupy = osobne MeshParty w Roblox
+const gCrystals = grp('Crystals', body);
+const crystalGroups = [];
+function crystalGroup(id, pivot, n, opts) {
+  const g = grp(id, gCrystals); g.position.copy(pivot);
+  const mat = MAT.Crystal.clone(); mat.name = 'MAT_ToxicCrystal'; allMats.add(mat);
+  const outward = pivot.clone().setY(0).normalize();
+  for (let i = 0; i < n; i++) {
+    const h = R(opts.h[0], opts.h[1]), r = h * R(0.13, 0.18);
+    const m = mesh(crystalGeo(r, h, r * R(1.6, 2.4)), mat);
+    const dir = outward.clone().multiplyScalar(R(opts.out[0], opts.out[1])).add(V3(R(-0.35, 0.35), 1, R(-0.35, 0.35)).multiplyScalar(opts.up || 1)).normalize();
+    m.quaternion.setFromUnitVectors(UP, dir);
+    m.position.set(R(-1, 1) * opts.spread, 0, R(-1, 1) * opts.spread);
+    g.add(m);
+  }
+  const rec = { id, group: g, mat, base: pivot.clone(), dist: pivot.distanceTo(CORE_POS), selectable: !!opts.grow, rank: opts.rank,
+    dir: pivot.clone().sub(CORE_POS).normalize(), scatter: V3(R(-4, 4), R(2, 5), R(-4, 4)) };
+  crystalGroups.push(rec); return rec;
+}
+crystalGroup('CrystalGroup_A', V3(-1.0, 0.05, 0.95), 5, { h: [0.5, 1.1], out: [0.5, 0.9], spread: 0.25, grow: true, rank: 0.3 });
+crystalGroup('CrystalGroup_B', V3(1.05, 0.05, 0.8), 4, { h: [0.45, 1.0], out: [0.5, 0.9], spread: 0.22, grow: true, rank: 0.5 });
+crystalGroup('CrystalGroup_C', V3(0.05, 2.05, -0.35), 5, { h: [0.9, 1.5], out: [0.2, 0.5], spread: 0.2, rank: 0.95 });
+const groundSpots = [[1.75, 0.3], [-1.9, -0.6], [0.4, -1.95], [-0.6, 1.85]];
+groundSpots.forEach((p, i) => crystalGroup('CrystalGroup_G0' + (i + 1), V3(p[0], 0.02, p[1]), 2 + (i % 2), { h: [0.3, 0.6], out: [0.6, 1.1], spread: 0.15, grow: true, rank: [0.1, 0.2, 0.62, 0.78][i] }));
+
+// Latający gruz
+const gDebris = grp('FloatingDebris', body);
+const gFRocks = grp('FloatingRocks', gDebris);
+const gFCrys = grp('FloatingCrystals', gDebris);
+const debris = [];
+for (let i = 0; i < 10; i++) {
+  const size = R(0.12, 0.3); const m = mesh(rockGeo(size), MAT.Rock); m.name = 'FloatingRock_' + String(i + 1).padStart(2, '0'); gFRocks.add(m);
+  debris.push({ m, size, r: R(1.9, 3.0), y: R(0.5, 3.4), ang: R(0, 6.283), speed: R(0.12, 0.35) * (rnd() < 0.3 ? -1 : 1), bob: R(0.05, 0.16), bobF: R(0.6, 1.4), ph: R(0, 6.283), spin: V3(R(-1, 1), R(-1, 1), R(-1, 1)), scatter: V3(R(-5, 5), R(2, 6), R(-5, 5)) });
+}
+const fcMat = MAT.Crystal.clone(); allMats.add(fcMat);
+for (let i = 0; i < 5; i++) {
+  const h = R(0.18, 0.32); const m = mesh(crystalGeo(h * 0.2, h, h * 0.4), fcMat); m.name = 'FloatingCrystal_0' + (i + 1); gFCrys.add(m);
+  debris.push({ m, size: h * 0.5, r: R(1.5, 2.4), y: R(1.0, 3.0), ang: R(0, 6.283), speed: R(0.25, 0.5), bob: R(0.08, 0.18), bobF: R(0.8, 1.6), ph: R(0, 6.283), spin: V3(0, R(1, 2), 0), scatter: V3(R(-5, 5), R(2, 6), R(-5, 5)), crystal: true });
+}
+
+// Maź (statyczna geometria) + kałuża
+const gSlime = grp('SlimeDrips', body);
+const dripEnds = [];
+for (const d of [[-0.16, 0.74, 0.5, 0.28], [0.0, 0.7, 0.55, 0.46], [0.13, 0.73, 0.52, 0.32], [-0.55, 1.15, 0.78, 0.3], [0.62, 0.98, 0.7, 0.36]]) {
+  const [x, y, z, len] = d; const m = mesh(new THREE.CapsuleGeometry(0.035, len, 4, 8), MAT.Slime, false);
+  m.position.set(x, y - len / 2, z); gSlime.add(m); dripEnds.push(V3(x, y - len - 0.04, z));
+}
+const puddle = mesh(new THREE.CircleGeometry(0.5, 24), MAT.Slime, false);
+puddle.rotation.x = -Math.PI / 2; puddle.scale.set(1, 0.6, 1); puddle.position.set(0, 0.012, 0.72); gSlime.add(puddle);
+
+// Krater (nie ląduje razem z gwiazdą — leży w kraterze terenu)
+const gCrater = grp('Crater', root);
+const craterFloor = mesh(new THREE.CylinderGeometry(2.7, 2.95, 0.2, 40), MAT.Ground, false);
+craterFloor.position.y = -0.1; gCrater.add(craterFloor);
+for (let i = 0; i < 26; i++) {
+  const a = i / 26 * 6.283 + R(-0.08, 0.08); const r = R(2.2, 2.65);
+  const holder = new THREE.Object3D(); holder.rotation.y = a; holder.position.y = 0;
+  const m = mesh(slabGeo(R(0.35, 0.55), R(0.22, 0.5), R(0.28, 0.45)), MAT.Ground);
+  m.position.set(0, -0.02, r); m.rotation.set(-R(0.15, 0.45), R(0, 6.283), 0, 'XYZ'); holder.add(m); gCrater.add(holder);
+}
+for (let i = 0; i < 14; i++) { const a = R(0, 6.283), r = R(1.2, 1.95); const m = mesh(rockGeo(R(0.08, 0.18)), MAT.Ground); m.position.set(Math.sin(a) * r, 0.04, Math.cos(a) * r); m.rotation.set(R(0, 3), R(0, 3), 0); gCrater.add(m); }
+const gCracks = grp('GroundCracks', root);
+const crackDisc = new THREE.Mesh(new THREE.CircleGeometry(2.55, 48), MAT.GroundGlow);
+crackDisc.rotation.x = -Math.PI / 2; crackDisc.position.y = 0.012; gCracks.add(crackDisc);
+
+// ---------- VFX (w Roblox: tylko klient)
+const gFx = grp('Effects', body);
+const gFxCore = grp('VFX_Core', gFx);
+const coreShell = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 3), MAT.CoreShell); coreShell.position.copy(CORE_POS); gFxCore.add(coreShell);
+const coreSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x9dff2a, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+coreSprite.position.copy(CORE_POS); coreSprite.scale.setScalar(3); gFxCore.add(coreSprite);
+const coreLight = new THREE.PointLight(0x9dff2a, 8, 9, 2); coreLight.position.copy(CORE_POS); gFxCore.add(coreLight);
+
+function makePoints(n, color, size) {
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+  const mat = new THREE.PointsMaterial({ size, map: glowTex, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, color });
+  const p = new THREE.Points(geo, mat); p.frustumCulled = false; return p;
+}
+const gSpores = grp('CoreParticles', gFx);
+const spores = makePoints(90, 0xd4ff8a, 0.09); gSpores.add(spores);
+const sporeData = Array.from({ length: 90 }, () => ({ a: R(0, 6.283), r: R(0.6, 2.0), sp: R(0.4, 1.2), ph: R(0, 1), y0: R(-0.3, 0.4) }));
+const gSparks = grp('CrackSparks', gFx);
+const sparks = makePoints(60, 0xeaffb0, 0.07); gSparks.add(sparks);
+const sparkData = Array.from({ length: 60 }, () => { const th = R(0, 6.283), r = R(0.8, 1.3); return { p: V3(Math.sin(th) * r, R(0.3, 2.4), Math.cos(th) * r), out: V3(Math.sin(th), 0, Math.cos(th)), per: R(0.6, 1.3), ph: R(0, 1) }; });
+const gSmoke = grp('ToxicSmoke', gFx);
+const smoke = Array.from({ length: 16 }, () => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: smokeTex, color: 0x8fae78, transparent: true, depthWrite: false, opacity: 0 })); gSmoke.add(s); const a = R(0, 6.283), r = R(0.4, 2.0); return { s, x: Math.sin(a) * r, z: Math.cos(a) * r, per: R(4, 6.5), ph: R(0, 1) }; });
+const gDrops = grp('Drops', gFx);
+const drops = dripEnds.map((e, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), MAT.Slime); gDrops.add(m); return { m, e, per: R(1.2, 2.0), ph: i * 0.37 }; });
+const gShock = grp('Shockwave', gFx);
+const shockMat = new THREE.MeshBasicMaterial({ color: TOXIC, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+const shockRing = new THREE.Mesh(new THREE.RingGeometry(0.88, 1, 72), shockMat); shockRing.rotation.x = -Math.PI / 2; shockRing.position.y = 0.06; gShock.add(shockRing);
+const shockDomeMat = shockMat.clone(); const shockDome = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 3), shockDomeMat); shockDome.position.copy(CORE_POS); gShock.add(shockDome);
+
+// Punkty zaczepienia i strefy minigry
+const gAnchors = grp('Attachments', body); gAnchors.visible = false;
+const anchorDefs = [
+  ['ANCHOR_Core', CORE_POS, 0xff4fd8], ['ANCHOR_Shockwave', V3(0, 0.06, 0), 0xff4fd8], ['ANCHOR_Particles', V3(0, 1.7, 0), 0xff4fd8],
+  ['ANCHOR_Cracks_01', V3(-0.7, 1.4, 0.55), 0xff4fd8], ['ANCHOR_Cracks_02', V3(0.75, 1.2, 0.5), 0xff4fd8], ['ANCHOR_Cracks_03', V3(0.1, 2.3, -0.6), 0xff4fd8],
+  ...dripEnds.slice(0, 3).map((p, i) => ['ANCHOR_Drip_0' + (i + 1), p, 0xff4fd8]),
+  ['Zone_1', V3(-0.55, 1.5, 0.75), 0x4fd8ff], ['Zone_2', V3(0.6, 1.3, 0.7), 0x4fd8ff], ['Zone_3', V3(0.0, 2.2, 0.15), 0x4fd8ff], ['Zone_4', V3(-0.9, 0.8, -0.4), 0x4fd8ff],
+];
+for (const [name, p, col] of anchorDefs) { const m = new THREE.Mesh(new THREE.OctahedronGeometry(0.07), new THREE.MeshBasicMaterial({ color: col, depthTest: false })); m.renderOrder = 10; m.name = name; m.position.copy(p); gAnchors.add(m); }
+
+const gHit = grp('Hitbox', body); gHit.visible = false;
+const hitBox = new THREE.Mesh(new THREE.BoxGeometry(2.4, 3.4, 2.4), new THREE.MeshBasicMaterial({ color: 0xff5b4f, wireframe: true, depthTest: false }));
+hitBox.position.set(0, 1.7, 0); hitBox.renderOrder = 9; gHit.add(hitBox);
+
+// Postać do skali (5 studs)
+const figure = new THREE.Group(); scene.add(figure);
+{ const fm = new THREE.MeshStandardMaterial({ color: 0x8e9196, roughness: 0.8 });
+  // tułów 2×2×1, ręce, nogi, głowa: wysokość 5 studs
+  const P = [[2, 2, 1, 0, 3, 0], [1, 2, 1, -1.5, 3, 0], [1, 2, 1, 1.5, 3, 0], [1, 2, 1, -0.5, 1, 0], [1, 2, 1, 0.5, 1, 0], [1.2, 1, 1.2, 0, 4.5, 0]];
+  for (const [w, h, d, x, y, z] of P) { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), fm); m.position.set(x, y, z); m.castShadow = true; figure.add(m); } }
+function setFigureScale(studs) { const k = 2.4 / studs; figure.scale.setScalar(k); figure.position.set(-3.6, 0, 1.2); }
+setFigureScale(24);
+
+// ---------- stany
+const KEYS = ['energy', 'pulseRate', 'pulseAmp', 'debrisSpeed', 'debrisRadius', 'debrisLift', 'debrisPull', 'debrisFall', 'explode', 'shake', 'smoke', 'sparks', 'spores', 'drops', 'desat', 'broken', 'flicker', 'grow', 'rebuild'];
+const DEF = { energy: .85, pulseRate: .9, pulseAmp: .35, debrisSpeed: 1, debrisRadius: 1, debrisLift: 0, debrisPull: 0, debrisFall: 0, explode: 0, shake: 0, smoke: .05, sparks: .4, spores: .8, drops: 1, desat: 0, broken: 0, flicker: 0, grow: 1, rebuild: 1 };
+const STATES = {
+  Dormant: { p: { energy: .2, pulseRate: .35, pulseAmp: .25, debrisSpeed: .35, debrisRadius: .95, debrisLift: -.1, smoke: 0, sparks: 0, spores: .15, drops: .2, desat: .35 },
+    d: 'Ledwo żarzy się, gruz płynie powoli.', g: 'Gwiazda daleko od graczy albo opcja „Ogranicz ruch”. Tani tryb dla telefonu.' },
+  Active: { p: {}, d: 'Idle: unoszący się gruz, nieregularny puls rdzenia.', g: 'Landed: gwiazda leży w kraterze i czeka na graczy.' },
+  Charging: { p: { energy: 1.25, pulseRate: 2.6, pulseAmp: .5, debrisSpeed: 3, debrisLift: .15, debrisPull: .45, shake: .02, smoke: .1, sparks: 1.1, spores: 1.5, drops: 1.3 },
+    d: 'Gruz ściąga do środka, energia rośnie.', g: 'Ktoś rozbija gwiazdę (trwa runda minigry).' },
+  Burst: { p: { energy: 1.45, pulseRate: 2, pulseAmp: .4, debrisSpeed: 2, debrisRadius: 1.3, debrisLift: .25, explode: .18, smoke: .55, sparks: 1.5, spores: 2, drops: 1.5 },
+    d: 'Wybuch toksycznej energii i fala uderzeniowa.', g: 'Dying + Cracked: gwiazda rozbita, łup wylatuje.' },
+  Damaged: { p: { energy: .55, pulseRate: 1.5, pulseAmp: .7, debrisSpeed: .8, debrisRadius: 1.05, explode: .07, shake: .006, smoke: .35, sparks: .7, spores: .5, drops: .7, desat: .15, broken: .35, flicker: .55 },
+    d: 'Niestabilna: migotanie, brak części kryształów.', g: 'Hp poniżej 40% MaxHp.' },
+  Depleted: { p: { energy: .05, pulseRate: .5, pulseAmp: .6, debrisSpeed: 0, debrisFall: 1, explode: .04, smoke: .45, sparks: 0, spores: 0, drops: 0, desat: .85, broken: .5 },
+    d: 'Wygasła: gruz leży, został dym.', g: 'Po wybuchu albo Dying + Expired, do zniknięcia modelu.' },
+};
+const stateTarget = (name) => Object.assign({}, DEF, STATES[name].p);
+let stateName = 'Active';
+let base = stateTarget('Active');
+let target = stateTarget('Active');
+let energyLevel = 1;
+
+// ---------- animacje (p = postęp 0..1, P = poza do zmiany)
+const ANIMS = {
+  Idle_Loop: { dur: 4, loop: true, d: 'Delikatnie unoszący się gruz i nieregularny puls rdzenia.', rbx: 'StarVisual: pętla w RenderStepped, sinusy z fazą per część',
+    f: (p, P) => { P.pulse += 0.18 * (Math.max(0, Math.sin(p * 6.283)) ** 3 + 0.5 * Math.max(0, Math.sin(p * 6.283 * 2.7 + 1)) ** 4); P.debrisLift += 0.08 * Math.sin(p * 6.283); } },
+  Core_Pulse: { dur: 1.2, d: 'Rdzeń lekko rośnie i rozjaśnia się, potem wraca.', rbx: 'Tween Core.Size + PointLight.Brightness, Quad Out / In',
+    f: (p, P) => { const k = p < 0.3 ? ease.outQ(p / 0.3) : 1 - ease.inQ((p - 0.3) / 0.7); P.coreScale *= 1 + 0.28 * k; P.pulse += 0.9 * k; } },
+  Floating_Debris_Loop: { dur: 8, loop: true, d: 'Skały krążą z różnymi prędkościami i falują w pionie.', rbx: 'Klient: CFrame każdej skały co klatkę (PivotTo), bez fizyki',
+    f: (p, P) => { P.debrisSpeed *= 2.2; P.debrisLift += 0.3 * Math.sin(p * 6.283 * 2); P.debrisRadius *= 1 + 0.12 * Math.sin(p * 6.283); } },
+  Crystal_Pulse: { dur: 1.6, d: 'Fala energii biegnie od rdzenia przez grupy kryształów.', rbx: 'Opóźnienie per grupa wg odległości od ANCHOR_Core; kolor + Highlight',
+    f: (p, P) => { P.crystalWave = p; } },
+  Crystal_Growth: { dur: 1.4, d: 'Wybrane kryształy wyrastają z pęknięć.', rbx: 'Tween Size + CFrame grupy od podstawy (pivot w Blenderze na dole)',
+    f: (p, P) => { P.growSel = ease.outBack(p); } },
+  Energy_Charge: { dur: 2.5, d: 'Gruz ściąga do środka, jasność rośnie.', rbx: 'Lerp parametrów pozy + Beam od skał do rdzenia',
+    f: (p, P) => { const k = ease.inQ(p); P.debrisPull += 0.75 * k; P.pulse += 1.1 * k; P.coreScale *= 1 + 0.2 * k; P.shake += 0.04 * k; P.debrisSpeed *= 1 + 3 * k; P.spores += k; P.sparks += k; P.flash += Math.max(0, (p - 0.92) / 0.08) * 0.6; } },
+  Toxic_Burst: { dur: 1.8, d: 'Szybki ruch na zewnątrz, potem toksyczna fala uderzeniowa.', rbx: 'Skorupa: Tween CFrame od rdzenia; fala: Neon pierścień + ParticleEmitter:Emit',
+    f: (p, P) => {
+      const pre = seg(p, 0, 0.12), out = seg(p, 0.12, 0.32), back = seg(p, 0.35, 1);
+      P.debrisPull += 0.6 * pre * (1 - out); P.coreScale *= 1 - 0.15 * pre * (1 - out) + 0.35 * out * (1 - back);
+      P.explode += ease.outC(out) * (1 - ease.inOut(back)) * 1.1; P.debrisRadius *= 1 + 0.8 * out * (1 - back);
+      P.pulse += 1.5 * pre + 2 * out * (1 - back); P.flash += Math.max(0, 1 - Math.abs(p - 0.15) / 0.1);
+      P.shockT = p >= 0.12 ? seg(p, 0.12, 0.75) : -1; P.smoke += 0.8 * out; P.sparks += 2 * out * (1 - back); P.spores += 2 * out * (1 - back);
+    } },
+  Impact_Landing: { dur: 1.6, d: 'Uderza w ziemię, lekko odbija, osiada, gruz rozlatuje się.', rbx: 'StarFxController: koniec FallFx → ta animacja; krater terenu robi serwer',
+    f: (p, P) => {
+      const fall = seg(p, 0, 0.3); const after = seg(p, 0.3, 1);
+      if (p < 0.3) { P.bodyY = 7 * (1 - ease.inQ(fall)); P.debrisRadius *= 0.6; }
+      else { const dmp = Math.exp(-after * 6); P.bodyY = 0.35 * Math.abs(Math.sin(after * 9)) * dmp; P.bodySquash = 0.22 * Math.cos(after * 14) * dmp; P.debrisRadius *= 1 + 0.7 * dmp; P.shockT = seg(p, 0.3, 0.8); P.smoke += 0.8 * dmp; P.flash += Math.max(0, 1 - after * 8); P.shake += 0.08 * dmp; }
+    } },
+  Damage_Reaction: { dur: 0.6, d: 'Krótki, gwałtowny impuls niestabilności i ruch odłamków.', rbx: 'Na zmianę atrybutu Hp: losowy offset CFrame segmentów + błysk',
+    f: (p, P) => { const k = 1 - p; P.shake += 0.12 * k; P.explode += 0.12 * Math.sin(Math.PI * p); P.pulse += (hash(Math.floor(p * 30)) - 0.4) * 1.2 * k; P.coreScale *= 1 - 0.12 * Math.sin(Math.PI * p); P.sparks += 2 * k; } },
+  Collapse: { dur: 2.2, end: 'Depleted', d: 'Energia gaśnie, latające elementy spadają.', rbx: 'Dying + Expired: Tween parametrów do stanu Depleted',
+    f: (p, P) => { const k = ease.inQ(p); P.energy *= 1 - 0.95 * ease.outQ(p); P.debrisFall = Math.max(P.debrisFall, k); P.desat = Math.max(P.desat, 0.85 * p); P.explode += 0.05 * p; P.bodySquash = 0.04 * p; P.smoke += 0.5 * p; P.spores *= 1 - p; P.drops *= 1 - p; P.broken = Math.max(P.broken, 0.5 * p); } },
+  Depleted_Idle: { dur: 3, loop: true, d: 'Minimalny, słaby, niestabilny puls.', rbx: 'Pętla klienta, bez cząstek poza dymem',
+    f: (p, P) => { P.pulse += 0.12 * Math.max(0, Math.sin(p * 6.283 * 3)) * (hash(Math.floor(p * 12)) > 0.4 ? 1 : 0.2); } },
+  Respawn_Rebuild: { dur: 3, end: 'Active', d: 'Odłamki i energia składają gwiazdę z powrotem.', rbx: 'Tylko dev/eventy: Tween z rozrzuconych CFrame do bazowych',
+    f: (p, P) => { P.rebuild = ease.inOut(seg(p, 0, 0.8)); P.energy = 0.15 + 0.9 * ease.inQ(p); P.growSel = ease.outBack(seg(p, 0.55, 1)); P.debrisFall = 0; P.desat = 0.6 * (1 - p); P.broken = 0; P.shockT = p >= 0.82 ? seg(p, 0.82, 1) : -1; P.flash += Math.max(0, 1 - Math.abs(p - 0.85) / 0.06); } },
+};
+const ANIM_NAMES = Object.keys(ANIMS);
+let anim = null; // { name, t, playing, loop, speed, end }
+let selAnim = 'Core_Pulse';
+let animSpeed = 1, animLoop = false;
+
+// ---------- API (te same nazwy co w Luau)
+const logEl = $('#log');
+function log(line) { logEl.textContent = (line + '\n' + logEl.textContent).slice(0, 4000); }
+function SetState(name, silent) {
+  stateName = name; target = stateTarget(name);
+  if (!silent) log(`star:SetState("${name}")`);
+  if (name === 'Burst') PlayAnimation('Toxic_Burst', { silent: true });
+  updateStateUI();
+}
+function PlayAnimation(name, opt = {}) {
+  const a = ANIMS[name];
+  anim = { name, t: 0, playing: true, loop: opt.loop ?? (name === selAnim ? animLoop : !!a.loop), end: opt.end ?? a.end ?? null };
+  if (!opt.silent) log(`star:PlayAnimation("${name.replace(/_/g, '')}")`);
+  if (name === 'Respawn_Rebuild') { base.rebuild = 0; }
+  updateAnimUI();
+}
+function SetEnergyLevel(v) { energyLevel = v; log(`star:SetEnergyLevel(${v.toFixed(2)})`); }
+
+// ---------- pętla
+const clock = new THREE.Clock();
+let time = 0, fpsAcc = 0, fpsN = 0, fps = 0;
+const tmpQ = new THREE.Quaternion(), tmpV = new THREE.Vector3();
+const desatCol = new THREE.Color(0x46523f), crysCol = new THREE.Color(0x8dff3f), coreCol = new THREE.Color(0xd8ff7a), coreDead = new THREE.Color(0x3b4236), emiss = new THREE.Color(0x5cff1a), coreEmis = new THREE.Color(0x9dff2a), slimeCol = new THREE.Color(0xc6ff5a);
+
+function frame() {
+  const dt = Math.min(0.05, clock.getDelta()); time += dt;
+  // stan → baza (płynnie)
+  const k = Math.min(1, dt * 2.5);
+  for (const key of KEYS) base[key] += (target[key] - base[key]) * k;
+  const P = Object.assign({}, base, { pulse: 0, coreScale: 1, shockT: -1, flash: 0, growSel: 1, crystalWave: -1, bodyY: 0, bodySquash: 0 });
+  // animacja
+  if (anim) {
+    const a = ANIMS[anim.name];
+    if (anim.playing) anim.t += dt * animSpeed;
+    if (anim.t >= a.dur) {
+      if (anim.loop) anim.t %= a.dur;
+      else { anim.t = a.dur; a.f(1, P); finishAnim(P); }
+    }
+    if (anim) a.f(Math.min(1, anim.t / a.dur), P);
+  }
+  apply(P, dt);
+  controls.update();
+  composer.render();
+  // HUD
+  fpsAcc += dt; fpsN++; if (fpsAcc > 0.5) { fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; if (!$('#perf').hidden) perfText(); }
+  if (anim) { const a = ANIMS[anim.name]; if (anim.name === selAnim) { $('#timeline').value = String(Math.round(anim.t / a.dur * 1000)); $('#animTime').textContent = `${anim.t.toFixed(2)} / ${a.dur.toFixed(2)} s`; } }
+  requestAnimationFrame(frame);
+}
+function finishAnim(P) {
+  const end = anim.end;
+  if (end) { for (const key of KEYS) base[key] = P[key]; SetState(end, true); log(`-- koniec ${anim.name} → stan ${end}`); }
+  anim = null; updateAnimUI();
+}
+
+function pulseWave(x) { return Math.max(0, Math.sin(x * 6.283)) ** 3 * 0.7 + Math.max(0, Math.sin(x * 6.283 * 1.7 + 1)) ** 4 * 0.3; }
+
+function apply(P, dt) {
+  const pv = pulseWave(time * P.pulseRate);
+  let E = Math.max(0, P.energy * (1 + P.pulseAmp * (pv - 0.3)) + P.pulse * Math.max(0.3, P.energy));
+  if (P.flicker > 0.01 && hash(Math.floor(time * 11)) > 1 - P.flicker * 0.35) E *= 0.3;
+  E *= energyLevel;
+  const glowOn = $('#dFx').checked;
+  // materiały
+  const Ec = Math.min(E, 1.3); // żyły i grunt nie mogą zalać kadru
+  MAT.Rock.emissiveIntensity = glowOn ? Ec * 1.1 : 0;
+  MAT.Ground.emissiveIntensity = glowOn ? Ec * 0.6 : 0;
+  MAT.GroundGlow.opacity = clamp01(Ec * 0.75);
+  MAT.Core.emissiveIntensity = 0.04 + E * 2.2;
+  MAT.Core.color.copy(coreCol).lerp(coreDead, P.desat);
+  MAT.Core.emissive.copy(coreEmis).lerp(coreDead, P.desat);
+  MAT.Slime.emissiveIntensity = (0.05 + E * 0.9) * (1 - 0.8 * P.desat);
+  MAT.Slime.color.copy(slimeCol).lerp(coreDead, P.desat * 0.8);
+  MAT.CoreShell.opacity = clamp01(0.08 + E * 0.22);
+  coreSprite.material.opacity = clamp01(E * 0.3 + P.flash * 0.6);
+  coreSprite.scale.setScalar(2 + Ec * 1.0 + P.flash * 3);
+  coreLight.intensity = Ec * 5 + P.flash * 25;
+  bloom.strength = $('#vBloom').checked ? (lighting === 'studio' ? 0.3 : 0.3) + 0.12 * Ec + P.flash * 0.7 : 0;
+  // ciało: lądowanie, zgniecenie, drżenie
+  const sh = P.shake;
+  body.position.set((hash(time * 60) - 0.5) * sh * 2, P.bodyY + (hash(time * 60 + 7) - 0.5) * sh, (hash(time * 60 + 3) - 0.5) * sh * 2);
+  body.scale.set(1 + P.bodySquash * 0.5, 1 - P.bodySquash, 1 + P.bodySquash * 0.5);
+  // rdzeń
+  const cs = P.coreScale * (1 + 0.07 * pv * P.pulseAmp) * (0.4 + 0.6 * P.rebuild);
+  gCore.scale.setScalar(cs); coreShell.scale.setScalar(cs * (1 + 0.05 * Math.sin(time * 3)));
+  // skorupa
+  for (const s of segments) {
+    tmpV.copy(s.base).addScaledVector(s.dir, P.explode * 1.8).addScaledVector(s.scatter, 1 - P.rebuild);
+    if (s.loose && P.flicker > 0.01) tmpV.y += Math.sin(time * 23 + s.base.x) * 0.012;
+    s.group.position.copy(tmpV);
+    s.group.quaternion.setFromAxisAngle(s.rotAxis, P.explode * 0.35 + (1 - P.rebuild) * 1.6);
+  }
+  // kryształy
+  for (const c of crystalGroups) {
+    const brokenF = smooth(P.broken - 0.06, P.broken + 0.06, c.rank);
+    const grow = (c.selectable ? P.growSel : 1) * P.grow * brokenF * (0.2 + 0.8 * P.rebuild);
+    c.group.scale.setScalar(Math.max(0.0001, grow));
+    tmpV.copy(c.base).addScaledVector(c.dir, P.explode * 2.2).addScaledVector(c.scatter, 1 - P.rebuild);
+    c.group.position.copy(tmpV);
+    let wave = 0;
+    if (P.crystalWave >= 0) { const front = P.crystalWave * 3.6; wave = Math.exp(-((c.dist - front) ** 2) / 0.12) * 2.6; }
+    const shimmer = 0.15 * Math.sin(time * 2.2 - c.dist * 2.5);
+    c.mat.emissiveIntensity = Math.max(0, (0.2 + E * 0.8) * (1 + shimmer) + wave);
+    c.mat.color.copy(crysCol).lerp(desatCol, P.desat);
+    c.mat.emissive.copy(emiss).lerp(desatCol, P.desat);
+  }
+  fcMat.emissiveIntensity = 0.2 + E * 0.8; fcMat.color.copy(crysCol).lerp(desatCol, P.desat);
+  // gruz
+  const fall = ease.inQ(clamp01(P.debrisFall));
+  for (const d of debris) {
+    d.ang += dt * d.speed * P.debrisSpeed * (1 - fall);
+    const rad = d.r * P.debrisRadius * (1 - P.debrisPull * 0.7) + P.explode * 1.4;
+    const yOrbit = d.y + P.debrisLift + Math.sin(time * d.bobF + d.ph) * d.bob;
+    const ox = Math.sin(d.ang) * rad, oz = Math.cos(d.ang) * rad;
+    const gx = Math.sin(d.ang) * Math.min(2.4, d.r * 0.85), gz = Math.cos(d.ang) * Math.min(2.4, d.r * 0.85), gy = d.size * 0.55 - P.bodyY;
+    d.m.position.set(ox + (gx - ox) * fall, yOrbit + (gy - yOrbit) * fall, oz + (gz - oz) * fall).addScaledVector(d.scatter, 1 - P.rebuild);
+    const sp = (1 - fall) * dt;
+    d.m.rotation.x += d.spin.x * sp; d.m.rotation.y += d.spin.y * sp; d.m.rotation.z += d.spin.z * sp;
+  }
+  // cząsteczki
+  const fxOn = glowOn;
+  { const pos = spores.geometry.attributes.position, col = spores.geometry.attributes.color; const n = sporeData.length; const vis = Math.min(1, P.spores) * (fxOn ? 1 : 0); const cnt = Math.floor(n * Math.min(1, P.spores / 1.5 + 0.3));
+    for (let i = 0; i < n; i++) { const s = sporeData[i]; const q = (time * s.sp * 0.25 + s.ph) % 1; const a = s.a + time * 0.3 * s.sp; const r = s.r * (1 - P.debrisPull * 0.6) + P.explode * 1.5;
+      pos.setXYZ(i, CORE_POS.x + Math.cos(a) * r, CORE_POS.y + s.y0 - 0.4 + q * 2.2, CORE_POS.z + Math.sin(a) * r);
+      const c = i < cnt ? vis * Math.sin(Math.PI * q) : 0; col.setXYZ(i, c, c, c); }
+    pos.needsUpdate = true; col.needsUpdate = true; }
+  { const pos = sparks.geometry.attributes.position, col = sparks.geometry.attributes.color; const n = sparkData.length; const cnt = Math.floor(n * Math.min(1, P.sparks / 1.5)) * (fxOn ? 1 : 0);
+    for (let i = 0; i < n; i++) { const s = sparkData[i]; const q = (time / s.per + s.ph) % 1;
+      pos.setXYZ(i, s.p.x + s.out.x * (q * 0.35 + P.explode * 1.5), s.p.y + q * 0.6, s.p.z + s.out.z * (q * 0.35 + P.explode * 1.5));
+      const c = i < cnt ? (1 - q) * 1.4 : 0; col.setXYZ(i, c, c, c); }
+    pos.needsUpdate = true; col.needsUpdate = true; }
+  for (const s of smoke) { const q = (time / s.per + s.ph) % 1; s.s.position.set(s.x + q * 0.3, 0.2 + q * 2.4 - P.bodyY, s.z); s.s.scale.setScalar(0.6 + q * 1.8); s.s.material.opacity = fxOn ? clamp01(P.smoke) * 0.55 * Math.sin(Math.PI * q) : 0; s.s.material.color.set(lighting === 'studio' ? 0x6f8a5c : 0x8fae78); }
+  for (const d of drops) { const q = (time / d.per + d.ph) % 1; const on = fxOn && P.drops > 0.1 && P.rebuild > 0.95; d.m.visible = on; if (on) { d.m.position.set(d.e.x, d.e.y - q * q * (d.e.y - 0.02), d.e.z); d.m.scale.set(1, 1 + q * 1.2, 1); } }
+  // fala
+  const st = P.shockT; const shockOn = fxOn && st >= 0 && st < 1;
+  shockRing.visible = shockDome.visible = shockOn;
+  if (shockOn) { const r = 0.4 + st * 5.5; shockRing.scale.setScalar(r); shockMat.opacity = (1 - st) * 0.9; shockDome.scale.setScalar(0.3 + st * 3.6); shockDomeMat.opacity = (1 - st) * 0.28; }
+  // HUD energii
+  $('#hudE').style.width = Math.min(100, E / 1.6 * 100) + '%';
+}
+
+function perfText() {
+  const i = renderer.info.render;
+  $('#perf').textContent = `FPS     ${fps.toFixed(0)}\nTris    ${i.triangles.toLocaleString('pl-PL')}\nDraws   ${i.calls}\nMeshes  ${countMeshes()}`;
+}
+function countMeshes() { let n = 0; root.traverse((o) => { if (o.isMesh && o.visible) n++; }); return n; }
+function tris(obj) { let t = 0; obj.traverse((o) => { if (o.isMesh) { const g = o.geometry; t += g.index ? g.index.count / 3 : g.attributes.position.count / 3; } }); return Math.round(t); }
+
+// ---------- UI: stany
+const stateList = $('#stateList');
+for (const name of Object.keys(STATES)) {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'sbtn'; b.dataset.state = name;
+  b.innerHTML = `<b>${name.toUpperCase()}</b><span>${STATES[name].d}</span>`;
+  b.addEventListener('click', () => SetState(name)); stateList.appendChild(b);
+}
+function updateStateUI() {
+  stateList.querySelectorAll('.sbtn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.state === stateName)));
+  $('#hudState').textContent = stateName; $('#stateTitle').textContent = stateName;
+  $('#stateGame').textContent = 'W grze: ' + STATES[stateName].g;
+  $('#dState').value = stateName;
+}
+$('#energy').addEventListener('input', (e) => { const v = +e.target.value; $('#energyVal').textContent = v.toFixed(2); energyLevel = v; });
+$('#energy').addEventListener('change', (e) => SetEnergyLevel(+e.target.value));
+
+// ---------- UI: animacje
+const animList = $('#animList');
+for (const name of ANIM_NAMES) { const b = document.createElement('button'); b.type = 'button'; b.className = 'abtn'; b.textContent = name; b.dataset.anim = name; b.addEventListener('click', () => { selAnim = name; animLoop = !!ANIMS[name].loop; $('#aLoop').checked = animLoop; updateAnimUI(); PlayAnimation(name); }); animList.appendChild(b); }
+function updateAnimUI() {
+  const a = ANIMS[selAnim];
+  animList.querySelectorAll('.abtn').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.anim === selAnim)));
+  $('#animName').textContent = selAnim; $('#animDur').textContent = a.dur.toFixed(2) + ' s'; $('#animDesc').textContent = a.d; $('#animRbx').textContent = 'Roblox: ' + a.rbx;
+  $('#hudAnim').textContent = anim ? anim.name + (anim.playing ? '' : ' (pauza)') : 'bez animacji';
+  if (!anim || anim.name !== selAnim) { $('#timeline').value = '0'; $('#animTime').textContent = `0.00 / ${a.dur.toFixed(2)} s`; }
+  $('#dAnim').value = selAnim;
+}
+$('#aPlay').addEventListener('click', () => { if (anim && anim.name === selAnim && !anim.playing) { anim.playing = true; updateAnimUI(); } else PlayAnimation(selAnim, { loop: animLoop }); });
+$('#aPause').addEventListener('click', () => { if (anim) { anim.playing = false; updateAnimUI(); } });
+$('#aRestart').addEventListener('click', () => PlayAnimation(selAnim, { loop: animLoop }));
+$('#aSpeed').addEventListener('change', (e) => { animSpeed = +e.target.value; });
+$('#aLoop').addEventListener('change', (e) => { animLoop = e.target.checked; if (anim && anim.name === selAnim) anim.loop = animLoop; });
+$('#timeline').addEventListener('input', (e) => {
+  const a = ANIMS[selAnim];
+  if (!anim || anim.name !== selAnim) anim = { name: selAnim, t: 0, playing: false, loop: animLoop, end: a.end ?? null };
+  anim.playing = false; anim.t = (+e.target.value / 1000) * a.dur * 0.999; updateAnimUI();
+});
+
+// ---------- UI: widok
+document.querySelectorAll('[data-cam]').forEach((b) => b.addEventListener('click', () => setCam(b.dataset.cam)));
+$('#btnResetCam').addEventListener('click', () => setCam('home'));
+$('#lightStudio').addEventListener('click', () => setLighting('studio'));
+$('#lightNight').addEventListener('click', () => setLighting('night'));
+$('#vWire').addEventListener('change', (e) => { for (const m of allMats) m.wireframe = e.target.checked; floorMat.wireframe = false; });
+function bindVis(id, objList) { $(id).addEventListener('change', (e) => { objList.forEach((o) => { o.visible = e.target.checked; }); syncTree(); }); }
+bindVis('#vCrater', [gCrater, gCracks]);
+bindVis('#vVfx', [gFx]);
+bindVis('#vDebris', [gDebris]);
+bindVis('#vAnchors', [gAnchors]);
+function setHitbox(on) { gHit.visible = on; $('#vHitbox').checked = on; $('#dHitbox').checked = on; syncTree(); }
+$('#vHitbox').addEventListener('change', (e) => setHitbox(e.target.checked));
+$('#dHitbox').addEventListener('change', (e) => { setHitbox(e.target.checked); log(`-- debug: hitbox ${e.target.checked ? 'on' : 'off'}`); });
+$('#vFigure').addEventListener('change', (e) => { figure.visible = e.target.checked; });
+$('#vSize').addEventListener('change', (e) => setFigureScale(+e.target.value));
+
+// ---------- UI: hierarchia
+const HIER = { id: 'STAR_ROOT', obj: root, kind: 'root', blender: 'STAR_ROOT (Empty, origin w środku dna krateru)', roblox: 'Model ToxicStar · PrimaryPart = MainBody', note: 'Cały asset. Serwer klonuje go z ServerStorage.Stars/Toxic/<Rozmiar>.', children: [
+  { id: 'MainBody', kind: 'mesh', move: true, blender: 'STAR_Shell_01…06', roblox: 'MainBody (Model) → Shell01…Shell06 (MeshPart)', mat: 'MAT_Rock + świecące żyły (Neon: STAR_CrackVeins)', budget: '6 000', note: '6 segmentów skorupy, bo przy wybuchu i odbudowie każdy leci osobno. Pivot segmentu w jego środku.', children: segments.map((s, i) => ({ id: 'Shell_0' + (i + 1), kind: 'mesh', move: true, blender: 'STAR_Shell_0' + (i + 1), roblox: 'Shell0' + (i + 1) + ' (MeshPart, Anchored, CanCollide)', mat: 'MAT_Rock', budget: '≈1 000' })) },
+  { id: 'Core', kind: 'mesh', move: true, blender: 'STAR_Core', roblox: 'Core (MeshPart, Material Neon) + PointLight w ANCHOR_Core', mat: 'MAT_Core', budget: '600', note: 'Kula ~0,46 szerokości gwiazdy. Puls = Size + Brightness. Wzór komórek z ref. w teksturze lub CoreShell.' },
+  { id: 'Crystals', kind: 'mesh', move: true, blender: 'STAR_Crystal_*', roblox: 'Crystals (Model)', mat: 'MAT_ToxicCrystal', budget: '4 000', note: 'Kryształy scalone w grupy: jedna grupa = jeden MeshPart z pivotem u podstawy (do wyrastania).', children: crystalGroups.map((c) => ({ id: c.id, kind: 'mesh', move: true, blender: 'STAR_Crystal_' + c.id.split('_')[1] + '_01…', roblox: c.id.replace('CrystalGroup_', 'Crystal') + ' (MeshPart, CanCollide off)', mat: 'MAT_ToxicCrystal (Glass/Neon)', budget: c.id.includes('_G0') ? '250' : '900', note: c.selectable ? 'Wyrasta w Crystal_Growth.' : 'Główny pióropusz na górze, nie znika w Damaged.' })) },
+  { id: 'FloatingDebris', kind: 'mesh', move: true, blender: 'STAR_FloatingRock_01…10, STAR_FloatingCrystal_01…05', roblox: 'FloatingDebris (Folder, tylko klient)', mat: 'MAT_Rock / MAT_ToxicCrystal', budget: '1 400', note: 'Tworzy i animuje klient. Serwer ich nie ma: zero replikacji ruchu.', children: [
+    { id: 'FloatingRocks', kind: 'mesh', move: true, blender: 'STAR_FloatingRock_01…10', roblox: 'Rock01…Rock10 (MeshPart, jedna siatka ×3 warianty)', mat: 'MAT_Rock', budget: '10 × 120' },
+    { id: 'FloatingCrystals', kind: 'mesh', move: true, blender: 'STAR_FloatingCrystal_01…05', roblox: 'Shard01…Shard05 (MeshPart)', mat: 'MAT_ToxicCrystal', budget: '5 × 40' } ] },
+  { id: 'SlimeDrips', kind: 'mesh', blender: 'STAR_Slime', roblox: 'Slime (MeshPart, Neon)', mat: 'MAT_Slime', budget: '800', note: 'Zastygłe zacieki i kałuża. Spadające krople to VFX (Drops).' },
+  { id: 'Crater', kind: 'mesh', blender: 'STAR_Crater', roblox: 'Crater (MeshPart, CanCollide, CollisionFidelity Box)', mat: 'MAT_Ground', budget: '4 500', note: 'Pierścień płyt + dno. Leży w kraterze terenu z T05 (teren robi wgłębienie, mesh daje detal).' },
+  { id: 'GroundCracks', kind: 'mesh', blender: 'STAR_GroundCracks', roblox: 'GroundCracks (płaski MeshPart, Neon, CanCollide/CanQuery off)', mat: 'MAT_GroundGlow', budget: '600', note: 'Pęknięcia jako geometria pasków Neon, nie tekstura: SurfaceAppearance nie świeci.' },
+  { id: 'Effects', kind: 'vfx', blender: '— (tylko Roblox)', roblox: 'Effects (Folder, klient)', note: 'Wszystko tutaj powstaje po stronie klienta w StarVisual.', children: [
+    { id: 'VFX_Core', kind: 'vfx', roblox: 'CoreGlow: PointLight + ParticleEmitter (flara) w ANCHOR_Core', note: 'Jasność = Energy.' },
+    { id: 'CoreParticles', kind: 'vfx', roblox: 'ParticleEmitter Spores (LightEmission 1, Rate ∝ spores)' },
+    { id: 'CrackSparks', kind: 'vfx', roblox: 'ParticleEmitter Sparks w ANCHOR_Cracks_*' },
+    { id: 'ToxicSmoke', kind: 'vfx', roblox: 'ParticleEmitter Smoke (flipbook 4×4) w ANCHOR_Shockwave' },
+    { id: 'Drops', kind: 'vfx', roblox: 'ParticleEmitter Drops (Acceleration −40) w ANCHOR_Drip_*' },
+    { id: 'Shockwave', kind: 'vfx', roblox: 'Neon pierścień (MeshPart, Tween Size/Transparency) + Emit(40) dymu' } ] },
+  { id: 'Attachments', kind: 'anchor', blender: 'ANCHOR_* (Empty)', roblox: 'Attachment w MainBody (nazwy 1:1)', note: 'Różowe: punkty efektów. Niebieskie Zone_N: strefy trafień minigry (istniejący system z T04).' },
+  { id: 'Hitbox', kind: 'anchor', blender: '— (generuje import)', roblox: 'Hitbox (Part, Transparency 1, CanQuery on, CanCollide off)', note: 'Jedna prosta bryła do raycastów minigry zamiast precyzyjnej kolizji skorupy.' },
+] };
+const treeEl = $('#tree');
+let selectedNode = null; let selBox = null;
+const nodeRows = [];
+function buildTree(node, depth) {
+  const obj = node.obj || objs[node.id] || null; node.obj = obj;
+  const row = document.createElement('div'); row.className = 'trow'; row.style.paddingLeft = depth * 14 + 'px';
+  const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = obj ? obj.visible : true; cb.disabled = !obj || node.id === 'STAR_ROOT'; cb.setAttribute('aria-label', 'Widoczność ' + node.id);
+  cb.addEventListener('change', () => { if (obj) obj.visible = cb.checked; syncToggles(); });
+  const b = document.createElement('button'); b.type = 'button'; b.textContent = node.id; b.addEventListener('click', () => selectNode(node));
+  row.append(cb, b);
+  const tag = document.createElement('span'); tag.className = 'tag' + (node.kind === 'vfx' ? ' vfx' : node.kind === 'anchor' ? ' anc' : ''); tag.textContent = node.kind === 'vfx' ? 'VFX' : node.kind === 'anchor' ? 'pomoc' : node.kind === 'root' ? 'model' : 'mesh'; row.append(tag);
+  if (node.move) { const m = document.createElement('span'); m.className = 'tag mov'; m.textContent = 'rusza'; row.append(m); }
+  treeEl.appendChild(row); nodeRows.push({ node, cb, b });
+  (node.children || []).forEach((c) => buildTree(c, depth + 1));
+}
+buildTree(HIER, 0);
+function syncTree() { for (const r of nodeRows) if (r.node.obj) r.cb.checked = r.node.obj.visible; }
+function syncToggles() { $('#vCrater').checked = gCrater.visible; $('#vVfx').checked = gFx.visible; $('#vDebris').checked = gDebris.visible; $('#vAnchors').checked = gAnchors.visible; setHitbox(gHit.visible); }
+function selectNode(node) {
+  selectedNode = node;
+  nodeRows.forEach((r) => r.b.setAttribute('aria-current', String(r.node === node)));
+  if (selBox) { scene.remove(selBox); selBox = null; }
+  if (node.obj && node.id !== 'STAR_ROOT') { selBox = new THREE.BoxHelper(node.obj, 0xff4fd8); scene.add(selBox); }
+  const t = node.obj ? tris(node.obj) : 0;
+  const rows = [['Blender', node.blender], ['Roblox', node.roblox], ['Materiał', node.mat], ['Tris (podgląd)', node.obj && node.kind === 'mesh' ? t.toLocaleString('pl-PL') : null], ['Budżet Huge', node.budget], ['Uwagi', node.note]].filter((r) => r[1]);
+  $('#nodeInfo').innerHTML = `<b style="font:600 15px var(--f-display)">${node.id}</b><dl class="kv">${rows.map((r) => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')}</dl>`;
+}
+selectNode(HIER);
+
+// ---------- UI: debug
+let hp = 100;
+function setHp(v) { hp = Math.max(0, Math.min(100, v)); $('#hpVal').textContent = `${hp} / 100`; $('#hpBar').style.width = hp + '%'; }
+const dState = $('#dState'); Object.keys(STATES).forEach((s) => dState.add(new Option(s, s)));
+const dAnim = $('#dAnim'); ANIM_NAMES.forEach((s) => dAnim.add(new Option(s, s)));
+dState.addEventListener('change', (e) => SetState(e.target.value));
+dAnim.addEventListener('change', (e) => { selAnim = e.target.value; animLoop = !!ANIMS[selAnim].loop; $('#aLoop').checked = animLoop; PlayAnimation(selAnim); });
+$('#dSpawn').addEventListener('click', () => { root.visible = true; setHp(100); log('StarService.spawn("Toxic", "Large")'); SetState('Active', true); PlayAnimation('Impact_Landing'); });
+$('#dDespawn').addEventListener('click', () => { root.visible = false; anim = null; updateAnimUI(); log('StarService.despawn(star)  -- model:Destroy()'); });
+$('#dBurst').addEventListener('click', () => { root.visible = true; log('-- Dying, EndReason = "Cracked"'); SetState('Burst'); anim.end = 'Depleted'; setHp(0); });
+$('#dDamage').addEventListener('click', () => {
+  if (!root.visible || stateName === 'Depleted') return;
+  setHp(hp - 20); log(`model:SetAttribute("Hp", ${hp})  -- serwer`);
+  if (hp <= 0) { SetState('Burst'); anim.end = 'Depleted'; return; }
+  if (hp <= 40 && stateName !== 'Damaged') SetState('Damaged');
+  PlayAnimation('Damage_Reaction');
+});
+$('#dReset').addEventListener('click', () => { root.visible = true; setHp(100); anim = null; base = stateTarget('Active'); SetState('Active'); log('star:Reset()'); updateAnimUI(); });
+$('#dFx').addEventListener('change', (e) => { gFx.visible = e.target.checked; syncTree(); syncToggles(); log(`star:SetEffectsEnabled(${e.target.checked})`); });
+$('#dPerf').addEventListener('change', (e) => { $('#perf').hidden = !e.target.checked; if (e.target.checked) perfText(); });
+
+// ---------- zakładki
+const tabs = document.querySelectorAll('[role=tab]');
+tabs.forEach((t) => t.addEventListener('click', () => {
+  tabs.forEach((x) => { const on = x === t; x.setAttribute('aria-selected', String(on)); $('#p-' + x.dataset.tab).hidden = !on; });
+  try { localStorage.setItem('tsl-tab', t.dataset.tab); } catch (e) { /* brak pamięci przeglądarki */ }
+}));
+try { const saved = localStorage.getItem('tsl-tab'); if (saved) { const t = document.querySelector(`[data-tab="${saved}"]`); if (t) t.click(); } } catch (e) { /* brak */ }
+
+// start
+setLighting('studio');
+updateStateUI(); updateAnimUI();
+log('local star = StarVisual.attach(model)  -- klient');
+requestAnimationFrame(frame);
+</script>

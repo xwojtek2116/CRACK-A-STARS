@@ -19,7 +19,7 @@ Wszystkie gwiazdy (rodzaje 1-12 i Supernowa) od nowa, naprawdę „wow”: zło�
 ## Ustalenia z użytkownikiem (9.11)
 - **Zakres:** wszystkie 12 rodzajów + Supernowa (T34 robimy tym samym sposobem).
 - **Kształt:** mieszany. Część gwiazd jako 5 ramion (np. Toxic, Lava, Frost, Storm, Geode), reszta jako bryły tematyczne (Comet z ogonem, Nebula galaktyka, Ringed, Void). Ostateczny podział na planszach konceptów.
-- **Wzór Toxic:** zdjęcie od użytkownika: 5-ramienna gwiazda, popękana zielona skorupa, łańcuchy, fiolki, metalowy emblemat biohazard w środku, kapiąca maź, zielony dym (`vault/_ref/toxic_user_*`).
+- ~~**Wzór Toxic:** 5-ramienna gwiazda z łańcuchami, fiolkami i emblematem (`toxic_user_1/2`)~~ → **zmiana 9.11:** Toxic według arkusza `vault/_ref/toxic_user_3.png`: korona z płyt bazaltu wokół zielonego rdzenia, kryształy, latający gruz, maź, krater z pęknięciami. Decyzja: [[2026-11-09 Toxic v2 skalno-krysztalowy]], specyfikacja: [[Toxic Star v2 - specyfikacja produkcyjna]].
 - **Gwiazdy mają żyć:** migają, pulsują, lekkie animacje (obrót, unoszenie, pulsowanie jądra, migotanie poświaty, kapanie mazi, dym, iskry). Na każdej gwieździe zawsze coś się rusza.
 - **Płyny:** z niektórych gwiazd wypływa ciecz (Toxic: maź, Lava: magma, Frost: topniejąca woda/mgła itd.).
 - **Budżet:** Small ≤ 5k, Huge ≤ 20k tris. Detal głównie z tekstur PBR (SurfaceAppearance).
@@ -51,11 +51,13 @@ Wszystkie gwiazdy (rodzaje 1-12 i Supernowa) od nowa, naprawdę „wow”: zło�
 - Utworzone **puste** płótno Claude Design: https://claude.ai/artifact/FX9urch7Hf194qCsFvkRp6 („Gwiazdy Crack a Stars koncepty”). Kontynuujemy na nim, nie zakładamy nowego.
   - Plan płótna: `Main.dc.html` = przegląd 13 kart (sylwetka SVG, paleta, płyn, animacje życia pokazane jako CSS) oraz plansza `Toxic.dc.html` jak druga grafika użytkownika.
   - ✔ 9.11 (2. czat): narysowane plansze v1 na płótnie — `Main.dc.html` (13 animowanych kart + zasady) i `Toxic.dc.html` (duży widok, 4 rozmiary z budżetem, materiały PBR, efekty → technika Roblox, oś rozbicia). Czeka na akceptację użytkownika.
+  - 9.11 (2. czat, cd.): użytkownik zmienił Toxic (arkusz `toxic_user_3.png`) i poprosił o prototyp techniczny + handoff. Zrobione: **Toxic Star Lab** https://claude.ai/artifact/Ws7C2sw5cG8dXctChArpmM (źródło `art/stars/toxic/viewer/ToxicStarLab.html`: three.js, 6 stanów, 12 animacji z osią czasu, hierarchia, debug, log wywołań Luau) oraz specyfikacja produkcyjna w vaulcie. Karta Toxic na płótnie konceptów jest nieaktualna. **Następny krok po akceptacji:** `build_toxic_v2.py` w Blenderze według sekcji 4 specyfikacji.
 
 ## Do zrobienia
 - [x] Zdjęcia referencyjne: zdjęcia od użytkownika i linki w `vault/_ref/`
 - [ ] Plansze konceptów w Claude Design dla 13 gwiazd → akceptacja
-- [ ] Generator v2: gęstsze modele, tekstury PBR, łańcuchy/fiolki/emblematy, zacieki
+- [x] Toxic v2: prototyp techniczny (Toxic Star Lab) + specyfikacja produkcyjna → akceptacja
+- [ ] Generator v2: gęstsze modele, tekstury PBR, zacieki (Toxic: `build_toxic_v2.py` według specyfikacji)
 - [ ] `StarFX` (klient): idle obrót/unoszenie, puls jądra, miganie, kapanie, dym, aura; więcej efektów z rozmiarem; „Ogranicz ruch”
 - [ ] Prototyp Toxic (4 rozmiary) w Studio → zrzuty + nagranie → akceptacja
 - [ ] Pozostałe 12 gwiazd × 4 rozmiary, import do `ServerStorage.Stars`, kolizja (`PreciseConvexDecomposition` dla Shell)
