@@ -1,7 +1,7 @@
 ---
 id: T40
 tytul: "Przebudowa gwiazd: efektowne, żywe, VFX"
-status: todo
+status: doing
 dzien: 4
 data: 2026-11-09
 tor: B
@@ -50,6 +50,7 @@ Wszystkie gwiazdy (rodzaje 1-12 i Supernowa) od nowa, naprawdę „wow”: zło�
 - Zdjęcia od użytkownika: `vault/_ref/toxic_user_1.webp`, `toxic_user_2.webp`. Linki z sieci: `vault/_ref/Referencje gwiazd.md`. Wyszukiwarka zwraca tylko tekst, więc plansze rysujemy sami (SVG plus animacje CSS), a zdjęcia z sieci zostają wyłącznie linkami.
 - Utworzone **puste** płótno Claude Design: https://claude.ai/artifact/FX9urch7Hf194qCsFvkRp6 („Gwiazdy Crack a Stars koncepty”). Kontynuujemy na nim, nie zakładamy nowego.
   - Plan płótna: `Main.dc.html` = przegląd 13 kart (sylwetka SVG, paleta, płyn, animacje życia pokazane jako CSS) oraz plansza `Toxic.dc.html` jak druga grafika użytkownika.
+  - ✔ 9.11 (2. czat): narysowane plansze v1 na płótnie — `Main.dc.html` (13 animowanych kart + zasady) i `Toxic.dc.html` (duży widok, 4 rozmiary z budżetem, materiały PBR, efekty → technika Roblox, oś rozbicia). Czeka na akceptację użytkownika.
 
 ## Do zrobienia
 - [x] Zdjęcia referencyjne: zdjęcia od użytkownika i linki w `vault/_ref/`
