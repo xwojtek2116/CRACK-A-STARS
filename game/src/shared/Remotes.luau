@@ -11,6 +11,10 @@ local Logger = require(script.Parent.Logger)
 local NetConfig = require(script.Parent.Config.NetConfig)
 local RateLimiter = require(script.Parent.Net.RateLimiter)
 local Validate = require(script.Parent.Net.Validate)
+local BaseMath = require(script.Parent.BaseMath)
+
+-- „Sell all below X”: X od Uncommon do Legendary (Legendary+ zawsze pojedynczo, z potwierdzeniem).
+local SELL_BELOW = { "Uncommon", "Rare", "Epic", "Legendary" }
 
 type Checker = Validate.Checker
 
@@ -34,6 +38,14 @@ export type RemoteName =
 	| "CrackFinish"
 	| "CrackResult"
 	| "LootDrop"
+	| "PlaceItem"
+	| "RemoveItem"
+	| "AutoPlace"
+	| "BuySlot"
+	| "SellItem"
+	| "SellBelow"
+	| "WelcomeInfo"
+	| "BaseNotice"
 
 local DEFINITIONS: { [RemoteName]: Definition } = {
 	-- Stan gracza: pełny stan po wczytaniu, potem delty { [klucz] = nowa wartość }.
@@ -66,6 +78,32 @@ local DEFINITIONS: { [RemoteName]: Definition } = {
 	-- Łup gracza po rozbiciu (LootService → karta łupu): LootService.LootDropPayload.
 	-- Rzadki łup innych graczy idzie przez Announcement { kind = "Loot", userId, name, star, drops }.
 	LootDrop = { kind = "Event", direction = "ToClient" },
+	-- Baza (BaseService). Każda zwraca { ok, reason?, ... }. Serwer sprawdza właściciela, zasięg i saldo.
+	-- PlaceItem(uid, slot) — przedmiot z ekwipunku na postument (zajęty = zamiana).
+	PlaceItem = {
+		kind = "Function",
+		direction = "ToServer",
+		args = { Validate.uuid, Validate.intRange(1, BaseMath.MAX_SLOTS + 10) },
+	},
+	-- RemoveItem(slot) — zdejmuje przedmiot z postumentu do ekwipunku.
+	RemoveItem = { kind = "Function", direction = "ToServer", args = { Validate.intRange(1, BaseMath.MAX_SLOTS + 10) } },
+	-- AutoPlace() — najlepsze $/s na postumenty.
+	AutoPlace = { kind = "Function", direction = "ToServer", args = {} },
+	-- BuySlot() — kupno następnego postumentu (hologram na działce albo Upgrades w lobby).
+	BuySlot = { kind = "Function", direction = "ToServer", args = {} },
+	-- Sprzedaż (SellService). SellItem(uid, confirm?) — od Legendary confirm = true. Zasięg: Sell Station
+	-- albo (przedmiot z postumentu) własna działka.
+	SellItem = {
+		kind = "Function",
+		direction = "ToServer",
+		args = { Validate.uuid, Validate.optional(Validate.boolean) },
+	},
+	-- SellBelow(rarity) — cały ekwipunek poniżej rzadkości (bez mutacji, bez postumentów), przy Sell Station.
+	SellBelow = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(SELL_BELOW) } },
+	-- WelcomeInfo() → { seconds, amount } zarobku offline (już dopisanego do kasy) raz po wejściu, albo nil.
+	WelcomeInfo = { kind = "Function", direction = "ToServer", args = {} },
+	-- Komunikaty bazy dla gracza: { kind = "Replaced" | "AutoSold" | "Full", ... } (toasty).
+	BaseNotice = { kind = "Event", direction = "ToClient" },
 }
 
 local FOLDER_NAME = "Remotes"

@@ -20,7 +20,11 @@ export type Incoming = {
 	launchedAt: number,
 	impactAt: number,
 }
-export type WindowId = "Shop" | "Base" | "Index" | "Rides" | "Premium"
+export type WindowId = "Shop" | "Base" | "Index" | "Rides" | "Premium" | "Sell" | "Pedestal" | "Welcome"
+-- Przedmiot gracza (kopia z PlayerState.items, BaseController).
+export type OwnedItem = { itemId: string, mutation: string, obtainedAt: number, slot: number? }
+-- Podsumowanie offline do okna „Welcome back” (EconomyService → WelcomeInfo).
+export type Welcome = { seconds: number, amount: number, income: number }
 export type State = {
 	loaded: boolean,
 	cash: number,
@@ -34,6 +38,14 @@ export type State = {
 	tab: string?, -- zakładka otwartego okna (np. sklep: "tools" | "exclusives")
 	toasts: { Toast },
 	hudHidden: boolean,
+	-- Baza (T08, BaseController): przedmioty, kupione sloty, pojemność (z gamepassami), cena slotu, mnożnik.
+	items: { [string]: OwnedItem },
+	slots: number,
+	capacity: number,
+	nextSlotPrice: number?, -- nil = maksimum
+	incomeMult: number,
+	pedestal: number?, -- slot otwarty w oknie Pedestal
+	welcome: Welcome?,
 }
 
 local state: State = {
@@ -48,6 +60,13 @@ local state: State = {
 	window = nil,
 	toasts = {},
 	hudHidden = false,
+	items = {},
+	slots = 0,
+	capacity = 0,
+	nextSlotPrice = nil,
+	incomeMult = 1,
+	pedestal = nil,
+	welcome = nil,
 }
 local listeners: { (State) -> () } = {}
 local nextId = 0
@@ -139,12 +158,13 @@ function Store.removeIncoming(id: string)
 	end
 end
 
-function Store.openWindow(id: WindowId)
-	Store.set({ window = if state.window == id then Store.none else id })
+-- Otwiera okno (pierwsza zakładka); to samo okno drugi raz = zamyka.
+function Store.openWindow(id: WindowId, tab: string?)
+	Store.set({ window = if state.window == id then Store.none else id, tab = tab or Store.none })
 end
 
 function Store.closeWindow()
-	Store.set({ window = Store.none })
+	Store.set({ window = Store.none, tab = Store.none })
 end
 
 -- Hook React: wartość wybrana z Store; przerysowanie, gdy selektor zwróci inną wartość.

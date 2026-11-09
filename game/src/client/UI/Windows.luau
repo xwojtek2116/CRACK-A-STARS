@@ -1,7 +1,8 @@
 --!strict
 -- Windows — okna otwierane z menu HUD. Sklep narzędzi: zakładki TOOLS (Tools.json, kasa) i EXCLUSIVES
 -- (Monetization.json → exclusives, Robux) — wygląd gotowy, kupowanie podłączy T09/T14 (na razie toast).
--- Pozostałe okna (baza, indeks, pojazdy, R$) = „Coming soon” w tym samym stylu, ekrany robi T14.
+-- Baza (T08): MY BASE (postumenty/ekwipunek), PEDESTAL (menu postumentu), SELL STATION, WELCOME BACK.
+-- Pozostałe okna (indeks, pojazdy, R$) = „Coming soon” w tym samym stylu, ekrany robi T14.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -19,9 +20,19 @@ local Store = require(UI.Store)
 local Theme = require(UI.Theme)
 local Window = require(UI.Components.Window)
 
+local BaseWindow = require(UI.Base.BaseWindow)
+local PedestalWindow = require(UI.Base.PedestalWindow)
+local SellWindow = require(UI.Base.SellWindow)
+local WelcomeWindow = require(UI.Base.WelcomeWindow)
+
 local e = React.createElement
 
 type WindowInfo = { title: string, icon: string, color: Color3 }
+
+local SHOP_TABS = {
+	{ id = "tools", text = "TOOLS" },
+	{ id = "exclusives", text = "EXCLUSIVES" },
+}
 
 local INFO: { [Store.WindowId]: WindowInfo } = {
 	Shop = { title = "TOOLS SHOP", icon = Theme.ICONS.shop, color = Theme.COLORS.shop },
@@ -29,11 +40,23 @@ local INFO: { [Store.WindowId]: WindowInfo } = {
 	Index = { title = "STAR INDEX", icon = Theme.ICONS.index, color = Theme.COLORS.index },
 	Rides = { title = "RIDES", icon = Theme.ICONS.rides, color = Theme.COLORS.rides },
 	Premium = { title = "R$ SHOP", icon = Theme.ICONS.premium, color = Theme.COLORS.premium },
+	Sell = { title = "SELL STATION", icon = Theme.ICONS.coin, color = Theme.COLORS.price },
+	Pedestal = { title = "PEDESTAL", icon = Theme.ICONS.base, color = Theme.COLORS.base },
+	Welcome = { title = "WELCOME BACK!", icon = Theme.ICONS.coin, color = Theme.COLORS.gold },
 }
 
-local SHOP_TABS = {
-	{ id = "tools", text = "TOOLS" },
-	{ id = "exclusives", text = "EXCLUSIVES" },
+-- Zakładki i rozmiary okien bazy.
+local TABS: { [string]: { Window.Tab } } = {
+	Shop = SHOP_TABS,
+	Base = BaseWindow.TABS,
+	Sell = SellWindow.TABS,
+}
+local SIZES: { [string]: Vector2 } = {
+	Shop = Vector2.new(880, 540),
+	Base = Vector2.new(880, 540),
+	Sell = Vector2.new(880, 540),
+	Pedestal = Vector2.new(800, 500),
+	Welcome = Vector2.new(560, 360),
 }
 
 -- Obrazek oferty Exclusives: render podobnego narzędzia albo ikona rodzaju (własne rendery → T11/T24).
@@ -146,9 +169,9 @@ local function Windows(props: { viewport: Vector2 })
 	local window = Store.use(function(state)
 		return state.window
 	end)
-	local tab = Store.use(function(state)
+	local storedTab = Store.use(function(state)
 		return state.tab
-	end) or "tools"
+	end)
 	local setTab = function(id: string)
 		Store.set({ tab = id })
 	end
@@ -157,7 +180,26 @@ local function Windows(props: { viewport: Vector2 })
 	end
 	local info = INFO[window]
 	local isShop = window == "Shop"
-	local size = if isShop then Vector2.new(880, 540) else Vector2.new(620, 360)
+	local tabs = TABS[window]
+	local tab = storedTab or (if tabs then tabs[1].id else "tools")
+	local size = SIZES[window] or Vector2.new(620, 360)
+	local body
+	if window == "Base" then
+		body = e(BaseWindow.Body, { key = `base_{tab}`, tab = tab })
+	elseif window == "Sell" then
+		body = e(SellWindow.Body, { key = `sell_{tab}`, tab = tab })
+	elseif window == "Pedestal" then
+		body = e(PedestalWindow.Body, { key = "pedestal" })
+	elseif window == "Welcome" then
+		body = e(WelcomeWindow.Body, { key = "welcome" })
+	elseif not isShop then
+		body = e(ComingSoon, { color = info.color })
+	elseif tab == "exclusives" then
+		body = e(ExclusivesList, { key = "ex" })
+	else
+		body = e(ToolsList, { key = "tools" })
+	end
+	local onClose = if window == "Welcome" then WelcomeWindow.collect else Store.closeWindow
 	-- Okno + nagłówek/X wystające poza ramkę muszą zmieścić się na ekranie (telefon poziomo).
 	local fit = math.min(1, (props.viewport.Y - 40) / (size.Y + 90), (props.viewport.X - 40) / (size.X + 90))
 	return e(Window, {
@@ -165,17 +207,14 @@ local function Windows(props: { viewport: Vector2 })
 		title = info.title,
 		icon = info.icon,
 		color = info.color,
-		tabs = if isShop then SHOP_TABS else nil,
+		tabs = tabs,
 		tab = tab,
 		onTab = setTab,
 		size = size,
 		fit = fit,
-		onClose = Store.closeWindow,
+		onClose = onClose,
 	}, {
-		Body = if not isShop
-			then e(ComingSoon, { color = info.color })
-			elseif tab == "exclusives" then e(ExclusivesList, { key = "ex" })
-			else e(ToolsList, { key = "tools" }),
+		Body = body,
 	})
 end
 

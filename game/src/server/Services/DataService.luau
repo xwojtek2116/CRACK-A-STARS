@@ -25,6 +25,7 @@ type ChangedCallback = (player: Player, newValue: any, oldValue: any) -> ()
 local HIDDEN_KEYS: { [string]: boolean } = {
 	purchases = true,
 	pity = true, -- liczniki pity (klient widzi tylko pasek postępu z osobnego remote, jeśli będzie)
+	lastOnline = true, -- zmienia się co tik dochodu (EconomyService), klientowi niepotrzebny
 }
 
 local log = Logger.new("DataService")

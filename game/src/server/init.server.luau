@@ -17,6 +17,10 @@ type Service = {
 -- Kolejność ładowania. Nowy serwis dopisz we właściwym miejscu.
 local SERVICES = {
 	"DataService",
+	"EconomyService",
+	"PlotService",
+	"BaseService",
+	"SellService",
 	"StarService",
 	"CrackService",
 	"LootService",

@@ -6,7 +6,12 @@
     "slotPriceBase": 1000,
     "slotPriceGrowth": 1.6,
     "offlineCapHours": 8,
-    "offlineRate": 0.5
+    "offlineRate": 0.5,
+    "incomeTickSeconds": 1,
+    "offlineMinSeconds": 60,
+    "inventoryLimit": 100,
+    "autoSellMaxRarity": "Uncommon",
+    "notes": "Dochód = suma $/s postumentów × (1 + 0,5 × rebirths) × 2× Cash. Offline liczony przy wejściu (min 60 s nieobecności). Ekwipunek max 100: nadmiar sprzedaje się sam (najsłabszy Common/Uncommon bez mutacji, potem najsłabszy poniżej Legendary)."
   },
   "rebirth": {
     "costBase": 1000000,
@@ -51,7 +56,9 @@
   "sell": {
     "incomeSeconds": 300,
     "confirmFromRarity": "Legendary",
-    "notes": "Sprzedaż w lobby (Sell Station): cena = $/s przedmiotu × 300 s (z mutacją). Od Legendary wzwyż wymaga potwierdzenia."
+    "notes": "Sprzedaż w lobby (Sell Station): cena = $/s przedmiotu × 300 s (z mutacją). Od Legendary wzwyż wymaga potwierdzenia.",
+    "stationDistance": 30,
+    "pedestalDistance": 30
   },
   "map": {
     "radius": 2000,

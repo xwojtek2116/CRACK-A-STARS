@@ -20,6 +20,14 @@ local BUCKETS: { [string]: Bucket } = {
 	-- Minigra: legalnie ~1 runda na 2 s (runda + cooldown narzędzia).
 	CrackStart = { capacity = 3, refillPerSecond = 1 },
 	CrackFinish = { capacity = 3, refillPerSecond = 1 },
+	-- Baza i sprzedaż: klikanie po postumentach / liście, ale bez spamu.
+	PlaceItem = { capacity = 6, refillPerSecond = 3 },
+	RemoveItem = { capacity = 6, refillPerSecond = 3 },
+	AutoPlace = { capacity = 2, refillPerSecond = 0.5 },
+	BuySlot = { capacity = 3, refillPerSecond = 1 },
+	SellItem = { capacity = 8, refillPerSecond = 4 },
+	SellBelow = { capacity = 2, refillPerSecond = 0.5 },
+	WelcomeInfo = { capacity = 2, refillPerSecond = 0.2 },
 }
 
 return {

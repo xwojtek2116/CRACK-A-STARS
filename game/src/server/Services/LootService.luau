@@ -1,7 +1,8 @@
 --!strict
 -- LootService — łup po rozbiciu gwiazdy (T07). Słucha StarService.onCracked i dla każdego gracza z udziałem
 -- ≥ minShare: liczy luck (rozmiar × gamepassy × indeks × boost), losuje przez LootMath (Random.new(), tylko
--- serwer), stosuje pity, zapisuje przedmioty (items[uid] z wolnym postumentem albo ekwipunek) i indeks,
+-- serwer), stosuje pity, zapisuje przedmioty (items[uid] na wolny postument, przy pełnej bazie zamiana
+-- z najsłabszym — BaseMath.placeNew; nadmiar ekwipunku sprzedaje się sam — BaseMath.trimInventory) i indeks,
 -- wysyła graczowi kartę łupu (LootDrop), a rzadki łup ogłasza całemu serwerowi (Announcement).
 -- Klient niczego tu nie wysyła — brak remotów klient → serwer.
 
@@ -12,6 +13,7 @@ local RunService = game:GetService("RunService")
 local ServerStorage = game:GetService("ServerStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local BaseMath = require(Shared.BaseMath)
 local LootConfig = require(Shared.Config.LootConfig)
 local LootMath = require(Shared.LootMath)
 local Logger = require(Shared.Logger)
@@ -103,19 +105,28 @@ local function award(player: Player, info: StarInfo, share: number): LootDropPay
 
 	local granted: { GrantedDrop } = {}
 	local newlyComplete: { string } = {}
+	local replaced: { string } = {} -- nazwy przedmiotów zdjętych z postumentów przez lepszy łup
+	local autoSold: { BaseMath.SoldItem } = {}
 	local ok = DataService.update(player, function(data: PlayerData)
 		local before = completedSet(data.index)
 		local capacity = LootMath.slotCapacity(data.slots, data.purchases)
+		local fresh: { [string]: boolean } = {}
 		for _, drop in result.drops do
 			local uid = HttpService:GenerateGUID(false)
-			local slot = LootMath.freeSlot(data.items, capacity)
 			local isNew = not data.index[drop.itemId]
 			data.items[uid] = {
 				itemId = drop.itemId,
 				mutation = drop.mutation,
 				obtainedAt = now,
-				slot = slot,
+				slot = nil,
 			}
+			fresh[uid] = true
+			-- Wolny postument, a przy pełnej bazie zamiana z najsłabszym, jeśli nowy jest lepszy.
+			local slot, replacedUid = BaseMath.placeNew(data.items :: any, uid, capacity)
+			if replacedUid then
+				local old = data.items[replacedUid]
+				table.insert(replaced, LootConfig.ITEMS[old.itemId].name)
+			end
 			data.index[drop.itemId] = true
 			table.insert(granted, {
 				uid = uid,
@@ -133,6 +144,16 @@ local function award(player: Player, info: StarInfo, share: number): LootDropPay
 				bump(data.stats, `found{drop.mutation}`, 1)
 			end
 		end
+		-- Limit ekwipunku: nadmiar sprzedaje się sam (nigdy świeży łup ani Legendary+).
+		autoSold = BaseMath.trimInventory(data.items :: any, capacity, nil, fresh)
+		for _, sold in autoSold do
+			data.cash += sold.price
+		end
+		-- Późniejszy łup z tej samej gwiazdy mógł zająć slot wcześniejszego — slot z danych.
+		for _, drop in granted do
+			local owned = data.items[drop.uid]
+			drop.slot = if owned then owned.slot else nil
+		end
 		data.pity = table.clone(result.pity)
 		bump(data.stats, "starsCracked", 1)
 		bump(data.stats, "itemsLooted", #result.drops)
@@ -144,6 +165,16 @@ local function award(player: Player, info: StarInfo, share: number): LootDropPay
 	end)
 	if not ok or #granted == 0 then
 		return nil
+	end
+	for _, name in replaced do
+		Remotes.fireClient("BaseNotice", player, { kind = "Replaced", name = name })
+	end
+	if #autoSold > 0 then
+		local cash = 0
+		for _, sold in autoSold do
+			cash += sold.price
+		end
+		Remotes.fireClient("BaseNotice", player, { kind = "AutoSold", count = #autoSold, cash = cash })
 	end
 
 	local parts = {}

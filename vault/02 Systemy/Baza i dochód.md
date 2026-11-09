@@ -1,6 +1,6 @@
 ---
 typ: system
-status: plan
+status: w toku
 taski: [T08]
 tags: [system]
 ---
@@ -13,3 +13,11 @@ tags: [system]
 - **Dochód**: suma `incomePerSec × mnożnik motywu × mutacja` × (1 + 0,5 × rebirths) × 2× Cash. Tick 1 s na serwerze.
 - **Offline**: `min(teraz − lastOnline, 8 h) × dochód × 0,5` + okienko „Welcome back”.
 - Klik postumentu → zamień/zdejmij; „Auto-place best”.
+
+## Stan po T08 (2026-11-09)
+Decyzje: [[2026-11-09 Baza postumenty dochód sprzedaż]]. Render: ![[T08 postument.png]]
+
+- Kod: `PlotService` (działki), `BaseService` (postumenty, akcje, sloty), `EconomyService` (kasa, tik 1 s, offline), `SellService` (Sell Station), wzory w `shared/BaseMath`, układ i wygląd w `Config/BaseConfig`. Klient: `BaseController` + okna `UI/Base/` (MY BASE, PEDESTAL, SELL STATION, WELCOME BACK).
+- Liczby: `Economy.json` → `base` (sloty, offline, `inventoryLimit` 100, `autoSellMaxRarity`), `sell` (300 s, potwierdzenie od Legendary, zasięgi).
+- Działka: `Plot_N/Pedestals/Pedestal_<slot>` + `Hologram`, siatka 6×6 od `BuildOrigin` (rząd 1 od strony lobby). Atrybuty postumentu: `Slot, ItemUid, ItemId, ItemName, Rarity, Mutation, Income`. Atrybuty gracza: `IncomePerSec, BaseCapacity, NextSlotPrice, IncomeMult`.
+- Modele: `ServerStorage.BaseAssets/{Pedestal, Hologram, Placeholder}` (asset 74109633398415, skrypt `art/map/pedestal/import_pedestal.luau`); modele łupu: `ServerStorage.Items/<itemId>`.

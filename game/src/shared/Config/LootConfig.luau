@@ -46,6 +46,7 @@ export type PassEffect = {
 	id: string,
 	luckBonus: number?,
 	slotBonus: number?,
+	cashMult: number?, -- mnożnik dochodu bazy (2× Cash)
 	luckMult: number?,
 	durationSeconds: number?,
 }

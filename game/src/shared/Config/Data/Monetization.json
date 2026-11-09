@@ -4,7 +4,8 @@
       "id": "double_cash",
       "name": "2x Cash",
       "robux": 199,
-      "effect": "Base income x2"
+      "effect": "Base income x2",
+      "cashMult": 2
     },
     {
       "id": "vip",

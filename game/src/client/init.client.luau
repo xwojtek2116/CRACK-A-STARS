@@ -21,6 +21,7 @@ local CONTROLLERS = {
 	"StarFxController",
 	"CrackController",
 	"LootController",
+	"BaseController",
 	"UIController",
 }
 
