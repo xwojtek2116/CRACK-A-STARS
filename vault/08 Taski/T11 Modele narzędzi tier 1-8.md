@@ -53,9 +53,19 @@ Modele narzędzi tier 1-8.
 - [x] Tris: 466–2284 na narzędzie (≤ 3k OK).
 - [x] Szkice wysłane: `vault/_img/T11 narzedzia sylwetki.png`, `T11 narzedzia.png`, `T11 skala.png`.
 
-**Następne kroki:**
-1. Akceptacja kształtów przez użytkownika (szkice wysłane 9.11, odpowiedź jeszcze nie padła).
-2. Studio: upload `tools.fbx` (Open Cloud, folder `E:\CrackAStars\art` zatwierdzony w MCP Permissions), `insert_asset`, skrypt importu z `tools_meta.json` → `ServerStorage.Tools/<id>` (Tool: Handle, Weld do Handle — Weld, nie WeldConstraint, żeby klient mógł kręcić `Spin*` przez C0; Massless, CanCollide/CanQuery/CanTouch false; atrybuty ToolId, Tier; Grip; Trail + Attachmenty; ParticleEmitter z `Theme.FX`/VfxIds). Skalę wyznacz z rozmiaru Handle vs `parts.Handle.size` z meta.
+**Druga sesja (9.11, przerwana limitem):**
+- [x] Kształty zaakceptowane przez użytkownika („Tak, dalej”).
+- [x] Upload FBX (asset 92818850521397) → `ServerStorage.ToolImport` → import `art/tools/import_tools.luau` (generuje `gen_import.py` z `import_tools.template.luau` + meta) → **10 Tooli w `ServerStorage.Tools/<toolId>`** (Name = toolId, ToolTip/atrybut DisplayName, ToolId, Tier, Exclusive; Weld `ToolWeld`; Trail, cząsteczki, PointLight). Błąd osi vs meta 0,000.
+- [x] Grip = środek części Grip + **obrót 180° wokół trzonka** (bez niego obuch patrzył na gracza). Sprawdzone w Play: obuch do przodu, `Feel.swing` zamach za bark → cios przed siebie → powrót.
+- [x] `ToolFxController` (klient, tag `ToolSpin`, czeka na `ToolWeld`) — tarcza piły i pierścienie kręcą się w Play.
+- [x] Zrzut z gry: `vault/_img/T11 narzedzia w grze.jpg` (wysłany).
+- `ToolImport` zostaje w ServerStorage (do usunięcia na koniec taska).
+
+**Następne kroki (zostały):** 5 (ikony sklepu) i 6 (vault, Raport, `status: done`) poniżej, potem usunąć `ServerStorage.ToolImport`, commit + push.
+
+**Następne kroki (stara lista):**
+1. ~~Akceptacja kształtów~~ (zrobione).
+2. ~~Studio~~ (zrobione): upload `tools.fbx` (Open Cloud, folder `E:\CrackAStars\art` zatwierdzony w MCP Permissions), `insert_asset`, skrypt importu z `tools_meta.json` → `ServerStorage.Tools/<id>` (Tool: Handle, Weld do Handle — Weld, nie WeldConstraint, żeby klient mógł kręcić `Spin*` przez C0; Massless, CanCollide/CanQuery/CanTouch false; atrybuty ToolId, Tier; Grip; Trail + Attachmenty; ParticleEmitter z `Theme.FX`/VfxIds). Skalę wyznacz z rozmiaru Handle vs `parts.Handle.size` z meta.
 3. Mały klient `ToolFxController` (CollectionService/atrybut Spin) — kręci części `Spin*`.
 4. Test Play: założyć Tool na postać (execute_luau), sprawdzić orientację Grip w zamachu (`Feel.swing`), zrzut.
 5. Ikony sklepu: rendery 10 narzędzi → upload → `Theme.TOOL_RENDERS` (+ comet_blade, galaxy_hammer w `Windows.luau`).

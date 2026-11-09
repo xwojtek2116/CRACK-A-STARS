@@ -19,6 +19,7 @@ local CONTROLLERS = {
 	"SoundController",
 	"CinematicController",
 	"StarFxController",
+	"ToolFxController",
 	"CrackController",
 	"LootController",
 	"BaseController",
