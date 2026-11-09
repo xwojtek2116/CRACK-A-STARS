@@ -1,0 +1,1299 @@
+{
+ "stone_pickaxe": {
+  "name": "Stone Pickaxe",
+  "tier": 1,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Wood",
+    "color": "#8A5530",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.935,
+     0.0
+    ],
+    "size": [
+     0.317,
+     3.03,
+     0.317
+    ],
+    "tris": 184
+   },
+   "Grip": {
+    "material": "Leather",
+    "color": "#5A3420",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.33,
+     0.8,
+     0.33
+    ],
+    "tris": 112
+   },
+   "HeadCore": {
+    "material": "Slate",
+    "color": "#5E5A6E",
+    "transparency": 0,
+    "center": [
+     0.0005,
+     2.42,
+     -0.0038
+    ],
+    "size": [
+     0.4758,
+     0.6,
+     0.5169
+    ],
+    "tris": 48
+   },
+   "Head": {
+    "material": "Slate",
+    "color": "#8C8798",
+    "transparency": 0,
+    "center": [
+     0.0008,
+     2.3488,
+     -0.1813
+    ],
+    "size": [
+     0.3762,
+     0.5755,
+     2.2029
+    ],
+    "tris": 126
+   },
+   "Wrap": {
+    "material": "Fabric",
+    "color": "#C9A66B",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.27,
+     0.0
+    ],
+    "size": [
+     0.5,
+     0.86,
+     0.3
+    ],
+    "tris": 144
+   }
+  },
+  "tris": 614,
+  "ok": true,
+  "length": 3.3
+ },
+ "iron_hammer": {
+  "name": "Iron Hammer",
+  "tier": 2,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Wood",
+    "color": "#5C3519",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.075,
+     0.0
+    ],
+    "size": [
+     0.2246,
+     3.05,
+     0.2246
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Leather",
+    "color": "#5A3420",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.33,
+     0.9,
+     0.33
+    ],
+    "tris": 140
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#4E576A",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.3593,
+     0.0
+    ],
+    "size": [
+     0.877,
+     3.9185,
+     1.56
+    ],
+    "tris": 884
+   },
+   "Head": {
+    "material": "Metal",
+    "color": "#A7B0C0",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.88,
+     0.0
+    ],
+    "size": [
+     0.64,
+     0.72,
+     1.3
+    ],
+    "tris": 44
+   }
+  },
+  "tris": 1160,
+  "ok": true,
+  "length": 3.919
+ },
+ "crystal_axe": {
+  "name": "Crystal Axe",
+  "tier": 3,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#3A2466",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.375,
+     0.0
+    ],
+    "size": [
+     0.2085,
+     3.75,
+     0.2085
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Metal",
+    "color": "#2C3142",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.075,
+     0.0
+    ],
+    "size": [
+     0.31,
+     0.95,
+     0.31
+    ],
+    "tris": 140
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#C9D2DE",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.0275,
+     0.0
+    ],
+    "size": [
+     0.3,
+     2.645,
+     0.44
+    ],
+    "tris": 128
+   },
+   "Crystal": {
+    "material": "Glass",
+    "color": "#4FC8FF",
+    "transparency": 0.15,
+    "center": [
+     -0.0,
+     1.485,
+     -0.35
+    ],
+    "size": [
+     0.26,
+     4.87,
+     2.34
+    ],
+    "tris": 52
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#8FEAFF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     3.195,
+     -0.9068
+    ],
+    "size": [
+     0.11,
+     1.51,
+     1.4216
+    ],
+    "tris": 54
+   }
+  },
+  "tris": 466,
+  "ok": true,
+  "length": 4.9
+ },
+ "plasma_saw": {
+  "name": "Plasma Saw",
+  "tier": 4,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#2C3142",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.06,
+     0.0
+    ],
+    "size": [
+     0.2647,
+     1.12,
+     0.2647
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Leather",
+    "color": "#24202C",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.075,
+     0.0
+    ],
+    "size": [
+     0.34,
+     0.85,
+     0.34
+    ],
+    "tris": 140
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#1C2030",
+    "transparency": 0,
+    "center": [
+     -0.0138,
+     1.8896,
+     0.2701
+    ],
+    "size": [
+     0.5323,
+     5.0191,
+     1.5929
+    ],
+    "tris": 648
+   },
+   "Body": {
+    "material": "Metal",
+    "color": "#C9D2DE",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.475,
+     0.0
+    ],
+    "size": [
+     0.436,
+     1.75,
+     0.436
+    ],
+    "tris": 92
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#3DF2FF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.6364,
+     0.0
+    ],
+    "size": [
+     0.5612,
+     3.2728,
+     1.8856
+    ],
+    "tris": 400
+   },
+   "SpinDisc": {
+    "material": "Metal",
+    "color": "#C9D2DE",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     3.33,
+     0.0
+    ],
+    "size": [
+     0.2,
+     1.7081,
+     1.7081
+    ],
+    "tris": 244,
+    "spin": {
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "speed": 420
+    }
+   }
+  },
+  "tris": 1616,
+  "ok": true,
+  "length": 5.019
+ },
+ "laser_sword": {
+  "name": "Laser Sword",
+  "tier": 5,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#C9D2DE",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.2473,
+     1.3,
+     0.2476
+    ],
+    "tris": 116
+   },
+   "Grip": {
+    "material": "Metal",
+    "color": "#2C3142",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.3,
+     0.9033,
+     0.3
+    ],
+    "tris": 168
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#2C3142",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.15,
+     0.0
+    ],
+    "size": [
+     0.3385,
+     1.74,
+     1.0326
+    ],
+    "tris": 296
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#3DF2FF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.105,
+     0.0
+    ],
+    "size": [
+     0.37,
+     1.92,
+     0.37
+    ],
+    "tris": 116
+   },
+   "Beam": {
+    "material": "Neon",
+    "color": "#E8FFFF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.65,
+     0.0
+    ],
+    "size": [
+     0.16,
+     3.3,
+     0.2771
+    ],
+    "tris": 58
+   },
+   "BeamGlow": {
+    "material": "Neon",
+    "color": "#3DF2FF",
+    "transparency": 0.6,
+    "center": [
+     -0.0,
+     2.7,
+     0.0
+    ],
+    "size": [
+     0.304,
+     3.44,
+     0.4711
+    ],
+    "tris": 58
+   }
+  },
+  "tris": 812,
+  "ok": true,
+  "length": 5.275,
+  "trail": {
+   "a": [
+    0,
+    1.3,
+    0
+   ],
+   "b": [
+    0,
+    4.15,
+    0
+   ],
+   "colors": [
+    "#E8FFFF",
+    "#3DF2FF"
+   ],
+   "lifetime": 0.16,
+   "width": 1.0
+  }
+ },
+ "gravity_hammer": {
+  "name": "Gravity Hammer",
+  "tier": 6,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#2C3142",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.6,
+     0.0
+    ],
+    "size": [
+     0.2447,
+     4.3,
+     0.2447
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Fabric",
+    "color": "#5A2EA6",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.35,
+     1.1,
+     0.35
+    ],
+    "tris": 140
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#1C2030",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.1262,
+     0.0
+    ],
+    "size": [
+     1.3847,
+     5.6923,
+     1.98
+    ],
+    "tris": 552
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#B45CFF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.89,
+     0.0
+    ],
+    "size": [
+     1.34,
+     5.56,
+     2.0964
+    ],
+    "tris": 440
+   },
+   "Body": {
+    "material": "Metal",
+    "color": "#4B2A8C",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     4.28,
+     0.0
+    ],
+    "size": [
+     1.2341,
+     1.2341,
+     1.72
+    ],
+    "tris": 92
+   },
+   "SpinA": {
+    "material": "Neon",
+    "color": "#E08BFF",
+    "transparency": 0,
+    "center": [
+     -0.0174,
+     4.2783,
+     -0.34
+    ],
+    "size": [
+     2.1263,
+     2.0909,
+     0.18
+    ],
+    "tris": 348,
+    "spin": {
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "speed": 80
+    }
+   },
+   "SpinB": {
+    "material": "Neon",
+    "color": "#E08BFF",
+    "transparency": 0,
+    "center": [
+     -0.0016,
+     4.2664,
+     0.34
+    ],
+    "size": [
+     2.2114,
+     2.2397,
+     0.18
+    ],
+    "tris": 348,
+    "spin": {
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "speed": -110
+    }
+   }
+  },
+  "tris": 2012,
+  "ok": true,
+  "length": 6.276,
+  "trail": {
+   "a": [
+    0,
+    3.0,
+    0
+   ],
+   "b": [
+    0,
+    4.8,
+    0
+   ],
+   "colors": [
+    "#E08BFF",
+    "#6A2FD0"
+   ],
+   "lifetime": 0.18,
+   "width": 1.2
+  },
+  "particles": [
+   {
+    "part": "Body",
+    "color": "#C77BFF",
+    "rate": 6,
+    "size": 0.25,
+    "speed": 0.6,
+    "tex": "spark",
+    "life": 1.0
+   }
+  ]
+ },
+ "nova_cannon": {
+  "name": "Nova Cannon",
+  "tier": 7,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#2C3142",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.975,
+     0.0
+    ],
+    "size": [
+     0.2447,
+     5.05,
+     0.2447
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Leather",
+    "color": "#24202C",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.35,
+     1.1,
+     0.35
+    ],
+    "tris": 140
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#FFC23D",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.385,
+     -0.16
+    ],
+    "size": [
+     1.04,
+     6.21,
+     2.72
+    ],
+    "tris": 768
+   },
+   "Body": {
+    "material": "Metal",
+    "color": "#1C2030",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     4.97,
+     -0.575
+    ],
+    "size": [
+     1.0,
+     1.0,
+     1.49
+    ],
+    "tris": 268
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF8A1E",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     4.97,
+     -1.525
+    ],
+    "size": [
+     0.66,
+     0.66,
+     0.05
+    ],
+    "tris": 44
+   },
+   "Glass": {
+    "material": "Glass",
+    "color": "#FFD9A0",
+    "transparency": 0.55,
+    "center": [
+     -0.0,
+     4.97,
+     0.5
+    ],
+    "size": [
+     1.12,
+     1.12,
+     1.12
+    ],
+    "tris": 288
+   },
+   "Core": {
+    "material": "Neon",
+    "color": "#FFE27A",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     4.97,
+     0.5
+    ],
+    "size": [
+     0.6798,
+     0.76,
+     0.6465
+    ],
+    "tris": 80
+   }
+  },
+  "tris": 1680,
+  "ok": true,
+  "length": 6.25,
+  "trail": {
+   "a": [
+    0,
+    3.6,
+    0
+   ],
+   "b": [
+    0,
+    4.97,
+    -1.4
+   ],
+   "colors": [
+    "#FFE27A",
+    "#FF8A1E"
+   ],
+   "lifetime": 0.2,
+   "width": 1.2
+  },
+  "particles": [
+   {
+    "part": "Glow",
+    "color": "#FFB23D",
+    "rate": 8,
+    "size": 0.22,
+    "speed": 0.8,
+    "tex": "spark",
+    "life": 0.8
+   }
+  ]
+ },
+ "starbreaker": {
+  "name": "Starbreaker",
+  "tier": 8,
+  "exclusive": false,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#FFC23D",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.9,
+     0.0
+    ],
+    "size": [
+     0.2647,
+     5.0,
+     0.2647
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Fabric",
+    "color": "#3B1A6E",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.11,
+     0.0
+    ],
+    "size": [
+     0.37,
+     3.18,
+     0.37
+    ],
+    "tris": 196
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#FFC23D",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.4999,
+     -0.1496
+    ],
+    "size": [
+     0.36,
+     6.8402,
+     2.4208
+    ],
+    "tris": 224
+   },
+   "Core": {
+    "material": "Neon",
+    "color": "#FFE27A",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.165,
+     0.0
+    ],
+    "size": [
+     0.44,
+     5.97,
+     0.7608
+    ],
+    "tris": 56
+   },
+   "Blade": {
+    "material": "Glass",
+    "color": "#7A35F0",
+    "transparency": 0.0,
+    "center": [
+     -0.0,
+     4.75,
+     -0.1892
+    ],
+    "size": [
+     0.28,
+     2.24,
+     3.0616
+    ],
+    "tris": 72
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#D07CFF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     4.75,
+     -0.1969
+    ],
+    "size": [
+     0.13,
+     2.34,
+     3.2988
+    ],
+    "tris": 72
+   }
+  },
+  "tris": 712,
+  "ok": true,
+  "length": 6.84,
+  "trail": {
+   "a": [
+    0,
+    3.6,
+    0
+   ],
+   "b": [
+    0,
+    5.9,
+    0
+   ],
+   "colors": [
+    "#FFD45C",
+    "#D07CFF"
+   ],
+   "lifetime": 0.22,
+   "width": 1.4
+  },
+  "particles": [
+   {
+    "part": "Core",
+    "color": "#FFE27A",
+    "rate": 10,
+    "size": 0.25,
+    "speed": 1.0,
+    "tex": "glint",
+    "life": 1.0
+   }
+  ]
+ },
+ "comet_blade": {
+  "name": "Comet Blade",
+  "tier": null,
+  "exclusive": true,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#1F2A4A",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.125,
+     0.0
+    ],
+    "size": [
+     0.2447,
+     1.25,
+     0.2447
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Fabric",
+    "color": "#6FB6FF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.11,
+     0.0
+    ],
+    "size": [
+     0.32,
+     0.98,
+     0.32
+    ],
+    "tris": 168
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#9FF6FF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.76,
+     0.175
+    ],
+    "size": [
+     0.3804,
+     4.98,
+     0.85
+    ],
+    "tris": 178
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#DDE8FF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.79,
+     0.0
+    ],
+    "size": [
+     0.3847,
+     0.14,
+     0.3847
+    ],
+    "tris": 92
+   },
+   "Blade": {
+    "material": "Glass",
+    "color": "#BDEBFF",
+    "transparency": 0.25,
+    "center": [
+     -0.0,
+     2.36,
+     0.3157
+    ],
+    "size": [
+     0.48,
+     3.92,
+     1.2686
+    ],
+    "tris": 216
+   }
+  },
+  "tris": 746,
+  "ok": true,
+  "length": 5.05,
+  "trail": {
+   "a": [
+    0,
+    1.3,
+    0
+   ],
+   "b": [
+    0,
+    4.1,
+    0.5
+   ],
+   "colors": [
+    "#FFFFFF",
+    "#9FF6FF"
+   ],
+   "lifetime": 0.35,
+   "width": 1.3
+  },
+  "particles": [
+   {
+    "part": "Blade",
+    "color": "#CFF8FF",
+    "rate": 8,
+    "size": 0.2,
+    "speed": 0.4,
+    "tex": "glint",
+    "life": 1.2
+   }
+  ]
+ },
+ "galaxy_hammer": {
+  "name": "Galaxy Hammer",
+  "tier": null,
+  "exclusive": true,
+  "grip": [
+   0,
+   0,
+   0
+  ],
+  "parts": {
+   "Handle": {
+    "material": "Metal",
+    "color": "#1A1530",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.675,
+     0.0
+    ],
+    "size": [
+     0.2447,
+     4.45,
+     0.2447
+    ],
+    "tris": 92
+   },
+   "Grip": {
+    "material": "Fabric",
+    "color": "#3B1A6E",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.35,
+     1.1,
+     0.35
+    ],
+    "tris": 140
+   },
+   "Accent": {
+    "material": "Metal",
+    "color": "#FFC23D",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     2.136,
+     0.0
+    ],
+    "size": [
+     1.53,
+     5.712,
+     1.96
+    ],
+    "tris": 888
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FFFFFF",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     1.865,
+     0.0
+    ],
+    "size": [
+     0.32,
+     5.49,
+     2.14
+    ],
+    "tris": 156
+   },
+   "Glass": {
+    "material": "Glass",
+    "color": "#BFD4FF",
+    "transparency": 0.6,
+    "center": [
+     -0.0,
+     4.45,
+     0.0
+    ],
+    "size": [
+     1.36,
+     1.36,
+     1.36
+    ],
+    "tris": 288
+   },
+   "Body": {
+    "material": "Metal",
+    "color": "#1A1530",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     4.2412,
+     0.0
+    ],
+    "size": [
+     0.7847,
+     1.2023,
+     2.1
+    ],
+    "tris": 228
+   },
+   "SpinArms": {
+    "material": "Neon",
+    "color": "#FF5CE1",
+    "transparency": 0,
+    "center": [
+     -0.0,
+     4.45,
+     0.0
+    ],
+    "size": [
+     0.04,
+     0.7084,
+     1.0627
+    ],
+    "tris": 172,
+    "spin": {
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "speed": 60
+    }
+   },
+   "SpinStars": {
+    "material": "Neon",
+    "color": "#7A8CFF",
+    "transparency": 0,
+    "center": [
+     0.0014,
+     4.5104,
+     -0.0146
+    ],
+    "size": [
+     0.1602,
+     0.999,
+     1.0258
+    ],
+    "tris": 320,
+    "spin": {
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "speed": 60
+    }
+   }
+  },
+  "tris": 2284,
+  "ok": true,
+  "length": 6.01,
+  "trail": {
+   "a": [
+    0,
+    3.3,
+    0
+   ],
+   "b": [
+    0,
+    5.0,
+    0
+   ],
+   "colors": [
+    "#FF5CE1",
+    "#7A8CFF"
+   ],
+   "lifetime": 0.2,
+   "width": 1.2
+  },
+  "particles": [
+   {
+    "part": "Glass",
+    "color": "#FFB8F5",
+    "rate": 6,
+    "size": 0.18,
+    "speed": 0.3,
+    "tex": "glint",
+    "life": 1.4
+   }
+  ]
+ }
+}
