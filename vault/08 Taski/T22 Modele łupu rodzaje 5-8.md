@@ -32,6 +32,7 @@ Modele łupu rodzaje 5-8.
 ## Do zrobienia
 - [ ] 24 modele
 - [ ] Rendery + FBX + import
+- [ ] Ikony na karcie łupu: rendery przedmiotów → upload → ID w `Theme.ITEM_RENDERS[itemId]` (mechanizm z T21)
 
 ## Kryteria akceptacji
 - [ ] ≤ 2k tris

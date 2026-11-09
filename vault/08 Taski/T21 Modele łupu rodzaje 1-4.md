@@ -27,11 +27,13 @@ Modele łupu rodzaje 1-4.
 - (Blender MCP, skill projektu `blender-asset`)
 
 ## Pliki
-- art/items/{iron,lava,frost,geode}/*
+- art/items/{iron,lava,frost,geode}/*, art/ui/items/*
+- game/src/client/UI/Theme.luau (`ITEM_RENDERS`), game/src/client/UI/Loot/Reveal.luau (`gem`)
 
 ## Do zrobienia
 - [ ] 24 modele (6 rzadkości × 4 rodzaje), kształt wg rzadkości + styl rodzaju
 - [ ] Rendery + FBX + import do ServerStorage.Items
+- [ ] Ikony na karcie łupu: render każdego przedmiotu (jak `art/ui/build_tool_icons.py`) → upload → ID w `Theme.ITEM_RENDERS[itemId]`; `Reveal.gem` (`client/UI/Loot/Reveal.luau`) pokazuje render zamiast klejnotu, klejnot zostaje tylko gdy brak ID (z T07)
 
 ## Kryteria akceptacji
 - [ ] ≤ 2k tris

@@ -61,14 +61,14 @@ LootService losowanie pity mutacje ogłoszenia.
 - Play (hak debug): Huge Lava z pity 249 → Legendary (pity), 4 losowania przy udziale 40%. Pity Mythic 1199 → Mythic. Po zapełnieniu 6 slotów łup idzie do ekwipunku. Supernova Void/Solar → 6 kart.
 - Play, prawdziwa ścieżka: minigra z Auto Crack dobiła gwiazdę Small → `Cracked` → LootService → przedmiot na postumencie 1, indeks 1, `starsCracked` 1.
 - Baner i czat cudzego Secret Golden. Nazwa z `<b>` wyświetla się jako tekst (escape RichText działa).
-- Zrzuty: ![[T07 karta lupu Supernova.jpg]] ![[T07 karta lupu Huge.jpg]] ![[T07 baner Secret.jpg]]
+- Zrzuty: ![[T07 karta lupu Supernova.jpg]] ![[T07 karta lupu Huge.jpg]] ![[T07 baner Secret.jpg]] ![[T07 czat lupu.jpg]]
 
 **Problemy / uwagi:**
 - Wzór z GDD (osobny rzut na każdą rzadkość) dawał Uncommon −14%. Zmieniony na jeden rzut z progami, szczegóły w decyzji.
 - **Mutacje z luck:** Supernova (luck 9) daje Shiny 36% i Golden 4,5%, Huge — Shiny 18%. Do oceny w balansie.
 - `tools/balance_check.py` nie istnieje (skill `balance-check` nie ma skryptu) — symulacji ekonomii nie uruchomiłem.
 - `items` rośnie bez limitu (ekwipunek), a DataService przy każdej zmianie wysyła klientowi cały klucz `items`. Przy setkach przedmiotów to duży pakiet. Zapisane w [[Pomysły]] dla T08 / Sell Station.
-- Wiadomość na czacie sprawdzona tylko przez brak błędów (`DisplaySystemMessage` w pcall), bez zrzutu okna czatu.
-- Ikony przedmiotów to na razie klejnot w kolorze rzadkości. Po renderach przedmiotów podmienić w `Reveal.gem`.
-- Plakietki NEW!/PITY! i baner przesunięte po zrzutach (nachodziły na sąsiednie karty i pasek NEXT STAR). Nowych pozycji nie sfotografowałem.
-- Drugie okno Studio (bez otwartego miejsca, id `6d52…`) zostało otwarte — sterowanie ekranem nie było włączone w tym czacie.
+- ~~Wiadomość na czacie bez zrzutu~~ ✔ 9.11: miejsce miało `TextChatService.ChatVersion = LegacyChatService`, więc wiadomości systemowe nie trafiały do okna czatu. Przełączone w Properties na `TextChatService` (Team Create). Czat pokazuje „★ StarHunter found Golden Secret Cosmic Egg…” w kolorze rzadkości: ![[T07 czat lupu.jpg]]
+- Ikony przedmiotów to na razie klejnot w kolorze rzadkości. Podmiana na rendery dopisana do kart T21 (mechanizm `Theme.ITEM_RENDERS` + `Reveal.gem`), T22 i T23.
+- Plakietki NEW!/PITY! i baner przesunięte (nachodziły na sąsiednie karty i pasek NEXT STAR). ✔ 9.11 nowe zrzuty: plakietki nie nachodzą, baner jest pod paskiem NEXT STAR (zrzuty wyżej podmienione).
+- ✔ 9.11 drugie, puste okno Studio zamknięte (sterowanie ekranem). Zostało jedno okno gry.

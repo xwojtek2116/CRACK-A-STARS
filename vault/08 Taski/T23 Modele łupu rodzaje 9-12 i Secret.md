@@ -33,6 +33,7 @@ Modele łupu rodzaje 9-12 i Secret.
 ## Do zrobienia
 - [ ] 24 modele + 3 Secret (Singularity, Star Seed, Cosmic Egg)
 - [ ] Rendery + FBX + import
+- [ ] Ikony na karcie łupu: rendery przedmiotów → upload → ID w `Theme.ITEM_RENDERS[itemId]` (mechanizm z T21)
 
 ## Kryteria akceptacji
 - [ ] ≤ 2k tris (Secret ≤ 4k)
