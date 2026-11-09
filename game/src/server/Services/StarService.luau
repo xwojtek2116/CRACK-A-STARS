@@ -663,7 +663,8 @@ local function land(star: Star)
 	star.scar = createScar(info)
 
 	local flightDir = (info.impactPos - info.startPos).Unit
-	local up = (info.normal - flightDir).Unit -- pochylona w stronę, z której przyleciała
+	-- pochylona w stronę, z której przyleciała; gwiazdy v2 (T40, atrybut Upright) stoją prosto, bo mają krater
+	local up = if template:GetAttribute("Upright") then info.normal else (info.normal - flightDir).Unit
 	-- Wbicie liczone od pierwotnego gruntu; dno misy (digBowlDepth) jest płycej niż spód gwiazdy.
 	local center = info.impactPos + up * (class.size * (0.5 - IMPACT.embedDepth))
 	local side = up:Cross(Vector3.new(rng:NextNumber(-1, 1), 0.01, rng:NextNumber(-1, 1)))

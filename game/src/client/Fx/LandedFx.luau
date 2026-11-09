@@ -89,7 +89,8 @@ function LandedFx.attach(model: Model): Landed?
 	highlight.FillTransparency = LANDED.highlightFill[1]
 	highlight.OutlineTransparency = 0.2
 	highlight.DepthMode = Enum.HighlightDepthMode.Occluded
-	highlight.Adornee = model
+	-- v2 (T40): poświata tylko na skorupie, nie na kraterze.
+	highlight.Adornee = if model:GetAttribute("VisualV2") then model:FindFirstChild("MainBody") or model else model
 	highlight.Parent = folder
 
 	-- Pęknięcia w kraterze i światło na grunt (w punkcie przecięcia z terenem pod gwiazdą).
@@ -347,9 +348,12 @@ function LandedFx.attach(model: Model): Landed?
 			})
 			dust:Emit(FxUtil.count(20))
 		end
-		-- Model: zanik na kliencie (serwer usuwa go po dyingSeconds).
+		-- Model: zanik na kliencie (serwer usuwa go po dyingSeconds). v2: części animuje i wygasza StarVisual.
+		local v2 = model:GetAttribute("VisualV2") == true
 		for _, descendant in model:GetDescendants() do
-			if descendant:IsA("BasePart") then
+			if descendant:IsA("BasePart") and v2 then
+				continue
+			elseif descendant:IsA("BasePart") then
 				if reason == "Expired" and descendant.Name == "Core" then
 					FxUtil.tween(descendant, seconds * 0.5, { Color = Color3.fromRGB(60, 56, 56) })
 				end

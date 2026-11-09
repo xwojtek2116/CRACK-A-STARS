@@ -69,6 +69,7 @@ return table.freeze({
 
 	FALL = table.freeze({
 		spinSpeed = 1.4, -- rad/s
+		v2DebrisTighten = 0.55, -- T40: gruz gwiazdy v2 w locie bliżej rdzenia (× odległość)
 		heatShell = 1.3, -- × rozmiar (otoczka ForceField)
 		trailLifetime = bySize(0.8, 1.1, 1.5, 2.0),
 		smokeRate = 26,

@@ -23,6 +23,7 @@ local FallFx = require(Fx.FallFx)
 local FxUtil = require(Fx.FxUtil)
 local ImpactFx = require(Fx.ImpactFx)
 local LandedFx = require(Fx.LandedFx)
+local StarVisual = require(Fx.StarVisual)
 local RiftFx = require(Fx.RiftFx)
 local SkyFx = require(Fx.SkyFx)
 local StarHud = require(Fx.StarHud)
@@ -49,6 +50,7 @@ local log = Logger.new("StarFxController")
 
 local known: { [string]: ClientStar } = {}
 local landed: { [Model]: LandedFx.Landed } = {}
+local visuals: { [Model]: StarVisual.StarVisual } = {}
 local labelClock = 0
 local fpsFrames = 0
 local fpsClock = 0
@@ -148,11 +150,37 @@ local function removeStar(id: string)
 	known[id] = nil
 end
 
-local function onModel(model: Model)
+-- fresh = model przyszedł w trakcie gry (świeże lądowanie → animacja ImpactLanding), nie przy wejściu gracza.
+local function onModel(model: Model, fresh: boolean)
 	if landed[model] or model:GetAttribute("State") == "Dying" then
 		return
 	end
 	StarHud.addLabel(model)
+	-- T40: gwiazdy v2 „żyją” (StarVisual), działa obok LandedFx i trwa także w czasie rozpadu.
+	if StarVisual.isV2(model) and not visuals[model] then
+		local okVisual, visual = pcall(StarVisual.attach, model, fresh)
+		if not okVisual then
+			log:error(`StarVisual {model.Name}: {visual}`)
+		elseif visual then
+			visuals[model] = visual
+			local visualState: RBXScriptConnection
+			local visualAncestry: RBXScriptConnection
+			visualState = model:GetAttributeChangedSignal("State"):Connect(function()
+				if model:GetAttribute("State") == "Dying" then
+					local reason = model:GetAttribute("EndReason")
+					visual.dying(if typeof(reason) == "string" then reason else "Expired")
+				end
+			end)
+			visualAncestry = model.AncestryChanged:Connect(function()
+				if not model:IsDescendantOf(Workspace) then
+					visual.destroy()
+					visuals[model] = nil
+					visualState:Disconnect()
+					visualAncestry:Disconnect()
+				end
+			end)
+		end
+	end
 	local ok, handle = pcall(LandedFx.attach, model)
 	if not ok then
 		log:error(`LandedFx {model.Name}: {handle}`)
@@ -280,6 +308,9 @@ local function onRender(dt: number)
 	for _, handle in landed do
 		handle.update(dt)
 	end
+	for _, visual in visuals do
+		visual.update(dt)
+	end
 	StarHud.update(serverNow, infos)
 	labelClock += dt
 	if labelClock >= LABEL_UPDATE_SECONDS then
@@ -314,13 +345,15 @@ function StarFxController.Start()
 		activeStars.ChildAdded:Connect(function(child)
 			if child:IsA("Model") then
 				-- Model może przyjść bez części (streaming) — chwilę czekamy na Shell.
-				child:WaitForChild("Shell", 5)
-				onModel(child)
+				if not child.PrimaryPart then
+					child:WaitForChild("Shell", 5)
+				end
+				onModel(child, true)
 			end
 		end)
 		for _, child in activeStars:GetChildren() do
 			if child:IsA("Model") then
-				task.spawn(onModel, child)
+				task.spawn(onModel, child, false)
 			end
 		end
 	end)

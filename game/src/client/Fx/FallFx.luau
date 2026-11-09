@@ -153,6 +153,28 @@ function FallFx.create(info: StarInfo, full: boolean): Fall
 
 		if template then
 			local model = template:Clone()
+			if model:GetAttribute("VisualV2") then
+				-- T40: w locie tylko gwiazda — krater pojawia się dopiero przy uderzeniu (StarVisual.ImpactLanding).
+				for _, name in { "Crater", "Hitbox" } do
+					local part = model:FindFirstChild(name)
+					if part then
+						part:Destroy()
+					end
+				end
+				local core = model:FindFirstChild("Core")
+				if core and core:IsA("BasePart") then
+					model.WorldPivot = core.CFrame -- wiruje wokół rdzenia, nie dna krateru
+					-- gruz ciasno przy gwieździe; po uderzeniu rozlatuje się na orbity
+					local debris = model:FindFirstChild("FloatingDebris")
+					if debris then
+						for _, rock in debris:GetChildren() do
+							if rock:IsA("BasePart") then
+								rock.Position = core.Position + (rock.Position - core.Position) * FALL.v2DebrisTighten
+							end
+						end
+					end
+				end
+			end
 			for _, descendant in model:GetDescendants() do
 				if descendant:IsA("BasePart") then
 					descendant.Anchored = true
