@@ -46,7 +46,7 @@ SIZE_CFG = {
 }
 # Budżet tris (Styl graficzny): Small ≤ 2k, Huge ≤ 8k; pośrednie liniowo.
 BUDGET = {"Small": 2000, "Medium": 3500, "Large": 5500, "Huge": 8000}
-SEED = {"Iron": 101, "Lava": 202, "Frost": 303, "Geode": 404}
+SEED = {"Iron": 101, "Lava": 202, "Frost": 303, "Geode": 404, "Comet": 505, "Toxic": 606, "Electric": 707, "Nebula": 808}
 
 
 # ---------------------------------------------------------------- wspólne
@@ -481,7 +481,295 @@ def build_geode(coll, cfg, rng, seed):
     return parts
 
 
-BUILDERS = {"Iron": build_iron, "Lava": build_lava, "Frost": build_frost, "Geode": build_geode}
+# ---------------------------------------------------------------- rodzaje 5-8 (T33): pomocnicze
+
+def sweep(bm, pts, radii, sides=6, flat=1.0, twist=0.0, ref=None):
+    """Rurka/wstęga wzdłuż punktów pts o promieniach radii (zamknięta, z deklami).
+    flat<1 spłaszcza przekrój w kierunku `ref` (wstęga leży prostopadle do ref)."""
+    tmp = bmesh.new()
+    n = len(pts)
+    rings = []
+    for i, p in enumerate(pts):
+        tan = (pts[min(i + 1, n - 1)] - pts[max(i - 1, 0)]).normalized()
+        r_ = ref if ref is not None else Vector((0, 0, 1))
+        if abs(tan.dot(r_)) > 0.97:
+            r_ = Vector((1, 0, 0)) if abs(tan.x) < 0.9 else Vector((0, 1, 0))
+        s1 = tan.cross(r_).normalized()
+        s2 = tan.cross(s1).normalized()
+        r = max(radii[i], 0.004)
+        a0 = twist * i / max(1, n - 1)
+        rings.append([tmp.verts.new(p + s1 * math.cos(a0 + k * math.tau / sides) * r
+                                    + s2 * math.sin(a0 + k * math.tau / sides) * r * flat) for k in range(sides)])
+    for i in range(n - 1):
+        for k in range(sides):
+            j = (k + 1) % sides
+            tmp.faces.new((rings[i][k], rings[i][j], rings[i + 1][j], rings[i + 1][k]))
+    tmp.faces.new(rings[0])
+    tmp.faces.new(rings[-1])
+    bmesh.ops.recalc_face_normals(tmp, faces=tmp.faces)
+    bm_add(bm, tmp)
+
+
+def bolt(bm, a, b, rng, segs=7, jag=0.08, radius=0.022):
+    """Piorun: łamana z a do b z losowymi odchyleniami w poprzek."""
+    axis = (b - a)
+    side = axis.cross(rand_dir(rng)).normalized()
+    up = axis.cross(side).normalized()
+    pts = [a]
+    for i in range(1, segs):
+        t = i / segs
+        k = jag * axis.length * math.sin(math.pi * t) ** 0.5
+        pts.append(a.lerp(b, t) + side * rng.uniform(-k, k) + up * rng.uniform(-k, k))
+    pts.append(b)
+    sweep(bm, pts, [radius * (1.0 - 0.4 * i / segs) for i in range(segs + 1)], sides=4)
+
+
+def star_at(bm, center, radius, spike):
+    """Mała kolczasta gwiazdka (iskra) w punkcie center."""
+    tmp = bmesh.new()
+    spiky_star(tmp, radius, spike)
+    bmesh.ops.translate(tmp, verts=tmp.verts, vec=center)
+    bm_add(bm, tmp)
+
+
+def append_bm(ob, bm):
+    """Dokleja bmesh do istniejącego obiektu (np. trzonki grzybów do Shell po split_rim)."""
+    cur = bmesh.new()
+    cur.from_mesh(ob.data)
+    bm_add(cur, bm)
+    cur.to_mesh(ob.data)
+    cur.free()
+
+
+def frame(axis):
+    axis = axis.normalized()
+    up = Vector((0, 0, 1)) if abs(axis.z) < 0.9 else Vector((1, 0, 0))
+    s1 = axis.cross(up).normalized()
+    return s1, axis.cross(s1).normalized()
+
+
+def dome(bm, center, axis, radius, seed):
+    """Kapelusz grzyba: spłaszczona półkula wzdłuż osi axis, lekko falująca krawędź."""
+    s1, s2 = frame(axis)
+    tmp = ico(1.0, 2)
+    for v in tmp.verts:
+        n = v.co.normalized()
+        h = n.z * (0.62 if n.z > 0 else 0.16)
+        w = 1 + 0.08 * noise.noise(n * 3 + Vector((seed, 0, 0)))
+        v.co = center + (s1 * n.x + s2 * n.y) * radius * w + axis * h * radius
+    bm_add(bm, tmp)
+
+
+def plated_ball(coll, cfg, rng, seed, radius, cells, gap, lift, thick, amp=0.6, squash=(1, 1, 1), sub=None):
+    """Kula z płyt Voronoi: Shell (płyty) + bmesh szwów (do Core). Wspólne dla Comet/Toxic/Storm."""
+    bm = ico(radius, sub or cfg["sub"])
+    for v in bm.verts:
+        n = v.co.normalized()
+        p = n * radius * rocky(n, seed, amp)
+        v.co = Vector((p.x * squash[0], p.y * squash[1], p.z * squash[2]))
+    voronoi_plates(bm, cells, gap, lift, rng)
+    shell = mesh_obj("Shell", bm, coll)
+    solidify(shell, thick, rim_mat=True)
+    return shell, split_rim(shell)
+
+
+# ---------------------------------------------------------------- rodzaje 5-8
+
+COMET_TAIL = Vector((1.0, 0.45, 0.32)).normalized()
+
+
+def build_comet(coll, cfg, rng, seed):
+    """Comet: brudne lodowe jądro (płyty lodu ze świecącymi białymi szwami) i długi ogon z kilku
+    świecących wstęg rozchodzących się stożkiem; od Medium iskry wzdłuż ogona. Ogon zawsze w +X."""
+    d = cfg["d"]
+    sq = (1.12, 0.95, 0.9)
+    shell, rim = plated_ball(coll, cfg, rng, seed, 0.95, [7, 10, 13, 17][d], 0.955, (0.99, 1.04), 0.12,
+                             amp=0.9, squash=sq)
+    core = ico(0.86, 3)
+    for v in core.verts:
+        n = v.co.normalized()
+        v.co = Vector((n.x * sq[0], n.y * sq[1], n.z * sq[2])) * 0.86
+    bm_add(core, rim)
+
+    tail_len = [1.7, 2.1, 2.5, 2.9][d]
+    u, v_ = frame(COMET_TAIL)
+    acc = bmesh.new()
+    n_rib = [4, 5, 6, 8][d]
+    for j in range(n_rib):
+        phi = j / n_rib * math.tau + rng.uniform(-0.25, 0.25)
+        radial = u * math.cos(phi) + v_ * math.sin(phi)
+        length = tail_len * rng.uniform(0.75, 1.05)
+        pts, radii = [], []
+        for i in range(17):
+            t = i / 16
+            spread = 0.18 + 0.8 * t ** 1.3
+            pts.append(COMET_TAIL * (0.55 + length * t) + radial * spread + u * 0.5 * t * t)
+            radii.append((0.09 + 0.24 * t) * (1.0 if t < 0.7 else max(0.04, (1 - t) / 0.3)))
+        sweep(acc, pts, radii, sides=4, flat=0.14, twist=rng.uniform(-1.2, 1.2), ref=radial)
+    # Jasny środek ogona (Core) + iskry.
+    pts = [COMET_TAIL * (0.5 + tail_len * 0.65 * i / 10) + u * 0.35 * (i / 10) ** 2 for i in range(11)]
+    sweep(core, pts, [0.24 * (1 - i / 10) ** 1.3 + 0.01 for i in range(11)], sides=6)
+    for _ in range([0, 4, 7, 10][d]):
+        t = rng.uniform(0.25, 1.0)
+        c = COMET_TAIL * (0.6 + tail_len * t) + (u * rng.uniform(-1, 1) + v_ * rng.uniform(-1, 1)) * (0.25 + 0.6 * t)
+        star_at(core, c, 0.04, rng.uniform(0.1, 0.16))
+    parts = {"Shell": shell, "Core": mesh_obj("Core", core, coll), "Accent": mesh_obj("Accent", acc, coll)}
+    parts["_fx"] = {"tail": [COMET_TAIL * 0.6, COMET_TAIL]}
+    return parts
+
+
+def build_toxic(coll, cfg, rng, seed):
+    """Toxic Star: skażona gwiazda — twarda, popękana skorupa, z szerokich pęknięć wylewa się świecąca
+    maź (kałuże, zacieki, wiszące krople), na górze rosną kępy świecących grzybów z zarodnikami."""
+    d = cfg["d"]
+    shell, rim = plated_ball(coll, cfg, rng, seed, 1.0, [7, 10, 14, 18][d], 0.9, (0.99, 1.05), 0.15, amp=0.9)
+    core = ico(0.93, 3)
+    for v in core.verts:
+        n = v.co.normalized()
+        v.co = n * 0.93 * rocky(n, seed + 5, 0.5)
+    bm_add(core, rim)
+
+    def surf(n):
+        return n * rocky(n, seed, 0.9)
+
+    acc = bmesh.new()
+    # Maź: kałuże wylewające się z pęknięć.
+    for i, n in enumerate(fib_dirs([2, 3, 5, 7][d], rng, 0.4, min_z=-0.3)):
+        blob(acc, surf(n) * 0.99, rng.uniform(0.14, 0.22), seed + 17 * i, sub=2, amp=1.4)
+    # Zacieki z kroplą na końcu — po bokach, w dół.
+    for n in fib_dirs([2, 3, 5, 7][d], rng, 0.5, min_z=-0.5)[:]:
+        n = Vector((n.x, n.y, -abs(n.z) * 0.5)).normalized()
+        p0 = surf(n) * 0.98
+        down = (Vector((0, 0, -1)) - n * n.dot(Vector((0, 0, -1)))).normalized()
+        ln = rng.uniform(0.35, 0.55)
+        pts = [p0 + down * ln * t + n * (0.05 + 0.12 * t * t) for t in (0, 0.25, 0.5, 0.7, 0.82, 0.93, 1.0)]
+        sweep(acc, pts, [0.09, 0.07, 0.055, 0.05, 0.085, 0.07, 0.01], sides=6)
+    # Grzyby: trzonek ciemny (Shell), kapelusz świecący (Accent), zarodniki na kapeluszach (Core).
+    stems = bmesh.new()
+    n_cl = [1, 2, 4, 5][d]
+    for c in fib_dirs(n_cl, rng, 0.35, min_z=0.15):
+        for k in range([2, 2, 3, 3][d]):
+            n = (c + rand_dir(rng) * (0.0 if k == 0 else 0.28)).normalized()
+            base = surf(n) * 0.95
+            h = rng.uniform(0.35, 0.55) * (1.0 if k == 0 else 0.7) * (1 + 0.1 * d)
+            bend = rand_dir(rng) * 0.12
+            pts = [base + n * h * t + bend * t * t for t in (0, 0.35, 0.7, 1.0)]
+            rs = rng.uniform(0.05, 0.065) * (1.0 if k == 0 else 0.8)
+            sweep(stems, pts, [rs * 1.3, rs, rs * 0.9, rs * 0.85], sides=6)
+            top = pts[-1]
+            axis = (pts[-1] - pts[-2]).normalized()
+            rc = h * rng.uniform(0.38, 0.5)
+            dome(acc, top, axis, rc, seed + k)
+            s1, s2 = frame(axis)
+            for _ in range(2):
+                a = rng.uniform(0, math.tau)
+                spot = top + axis * rc * 0.45 + (s1 * math.cos(a) + s2 * math.sin(a)) * rc * 0.55
+                blob(core, spot, rc * 0.16, seed, sub=1)
+    append_bm(shell, stems)
+    return {"Shell": shell, "Core": mesh_obj("Core", core, coll), "Accent": mesh_obj("Accent", acc, coll, smooth=True)}
+
+
+def build_electric(coll, cfg, rng, seed):
+    """Storm Star: metalowa kula z płyt (cyjanowe szwy) w klatce pływających prętów-cewek ułożonych
+    w walec, z pierścieniami nad i pod klatką (od Medium); żółte pioruny skaczą z kuli na pręty."""
+    d = cfg["d"]
+    shell, rim = plated_ball(coll, cfg, rng, seed, 0.64, [6, 8, 10, 12][d], 0.94, (0.995, 1.03), 0.09, amp=0.3,
+                             sub=3)
+    core = ico(0.59, 2)
+    bm_add(core, rim)
+    R, h = 0.98, 0.82 + 0.05 * d
+    n_rods = [6, 8, 10, 12][d]
+    tw = 0.22
+    rods = bmesh.new()
+    rod_mid = []
+    for i in range(n_rods):
+        a = i / n_rods * math.tau
+        p0 = Vector((math.cos(a) * R, math.sin(a) * R, -h))
+        p1 = Vector((math.cos(a + tw) * R, math.sin(a + tw) * R, h))
+        r = 0.055 + 0.006 * d
+        ts = (0, 0.07, 0.5, 0.93, 1.0)
+        sweep(rods, [p0.lerp(p1, t) for t in ts], [0.012, r, r, r, 0.012], sides=6)
+        ax = (p1 - p0).normalized()
+        for t in ((0.5,) if d < 2 else (0.3, 0.7)):
+            c = p0.lerp(p1, t)
+            sweep(core, [c - ax * 0.045, c + ax * 0.045], [r * 1.7, r * 1.7], sides=6)  # świecąca cewka
+        for p in (p0, p1):
+            blob(core, p, 0.05, seed, sub=1)
+        rod_mid.append((p0, p1))
+    if d >= 1:  # pierścienie nad i pod klatką
+        for z in (-h - 0.1, h + 0.1):
+            pts = [Vector((math.cos(a) * R * 0.86, math.sin(a) * R * 0.86, z))
+                   for a in (k / 24 * math.tau for k in range(25))]
+            sweep(rods, pts, [0.03] * 25, sides=5)
+    if d >= 3:  # zewnętrzny pierścień na równiku z węzłami
+        pts = [Vector((math.cos(a) * 1.3, math.sin(a) * 1.3, 0)) for a in (k / 32 * math.tau for k in range(33))]
+        sweep(rods, pts, [0.026] * 33, sides=5)
+        for k in range(6):
+            a = k / 6 * math.tau + 0.3
+            blob(core, Vector((math.cos(a) * 1.3, math.sin(a) * 1.3, 0)), 0.06, seed, sub=1)
+    append_bm(shell, rods)
+
+    def rod_pt(i, t):
+        p0, p1 = rod_mid[i % n_rods]
+        p = p0.lerp(p1, t)
+        return p - Vector((p.x, p.y, 0)).normalized() * 0.05
+
+    acc = bmesh.new()
+    picks = rng.sample(range(n_rods), min(n_rods, [2, 3, 4, 6][d]))
+    for i in picks:
+        b = rod_pt(i, rng.uniform(0.3, 0.7))
+        a = Vector((b.x, b.y, b.z * 0.5)).normalized() * 0.66
+        bolt(acc, a, b, rng, radius=0.036)
+    for i in rng.sample(range(n_rods), [0, 0, 2, 4][d]):
+        bolt(acc, rod_pt(i, rng.uniform(0.2, 0.8)), rod_pt(i + 1, rng.uniform(0.2, 0.8)), rng, segs=5, jag=0.12,
+             radius=0.026)
+    # Pary punktów pod animowane Beamy w Studio (inne niż pioruny w siatce).
+    beams = []
+    for i in [k for k in range(n_rods) if k not in picks][: [2, 3, 4, 6][d]]:
+        b = rod_pt(i, rng.uniform(0.3, 0.7))
+        beams.append([Vector((b.x, b.y, b.z * 0.5)).normalized() * 0.66, b])
+    parts = {"Shell": shell, "Core": mesh_obj("Core", core, coll), "Accent": mesh_obj("Accent", acc, coll)}
+    parts["_fx"] = {"beams": beams}
+    return parts
+
+
+def spiral(bm, rot, r0, r1, turns, w0, w1, a0, rng, n=24, flat=0.22, wob=0.06):
+    """Ramię spirali w płaszczyźnie rot (Matrix 3x3): promień r0→r1, szerokość w0→w1→0."""
+    pts, radii = [], []
+    for i in range(n + 1):
+        t = i / n
+        a = a0 + turns * math.tau * t
+        r = r0 + (r1 - r0) * t
+        pts.append(rot @ Vector((math.cos(a) * r, math.sin(a) * r, wob * math.sin(t * 7 + a0))))
+        radii.append((w0 + (w1 - w0) * math.sin(math.pi * min(1.0, t * 1.15)) ) * (1.0 if t < 0.85 else (1 - t) / 0.15 + 0.03))
+    sweep(bm, pts, radii, sides=4, flat=flat, ref=rot @ Vector((0, 0, 1)))
+
+
+def build_nebula(coll, cfg, rng, seed):
+    """Nebula Star: „galaktyka w butelce” — fasetowana szklana kula, w środku jasne jądro i wirujące
+    wstęgi gazu w różnych płaszczyznach; od Medium gaz wylewa się na zewnątrz w płaski dysk spiralnych ramion."""
+    d = cfg["d"]
+    shell = mesh_obj("Shell", gem(rng, [28, 36, 48, 60][d], 1.0, 0.12), coll)
+    core = ico(0.2, 2)
+    acc = bmesh.new()
+    for k in range([2, 3, 4, 5][d]):
+        rot = Matrix.Rotation(rng.uniform(0, math.tau), 3, rand_dir(rng))
+        spiral(core, rot, 0.12, 0.8, 0.85, 0.05, 0.15, rng.uniform(0, math.tau), rng)
+    for k in range([1, 2, 2, 3][d]):
+        rot = Matrix.Rotation(rng.uniform(0, math.tau), 3, rand_dir(rng))
+        spiral(acc, rot, 0.25, 0.82, 0.6, 0.04, 0.12, rng.uniform(0, math.tau), rng)
+    # Dysk spiralnych ramion na zewnątrz (pochylony) — sylwetka galaktyki.
+    disk = Matrix.Rotation(math.radians(24), 3, "X") @ Matrix.Rotation(math.radians(-12), 3, "Y")
+    n_arm = [0, 2, 3, 4][d]
+    for k in range(n_arm):
+        a0 = k / max(1, n_arm) * math.tau
+        spiral(acc, disk, 0.85, 1.5 + 0.12 * d, 0.38, 0.07, 0.17, a0, rng, n=20, flat=0.2, wob=0.03)
+        spiral(core, disk, 0.9, 1.25 + 0.1 * d, 0.3, 0.025, 0.06, a0 + 0.12, rng, n=14, flat=0.3, wob=0.03)
+    return {"Shell": shell, "Core": mesh_obj("Core", core, coll), "Accent": mesh_obj("Accent", acc, coll)}
+
+
+BUILDERS = {"Iron": build_iron, "Lava": build_lava, "Frost": build_frost, "Geode": build_geode,
+            "Comet": build_comet, "Toxic": build_toxic, "Electric": build_electric, "Nebula": build_nebula}
 
 
 def orbit_maker(type_id, rng, seed):
@@ -493,8 +781,21 @@ def orbit_maker(type_id, rng, seed):
         return shard
     if type_id == "Geode":
         return lambda bm, c, k: crystal(bm, c, rand_dir(rng), rng.uniform(0.25, 0.45), 0.08, rng, sides=5, sink=0.1)
-    if type_id == "Iron":
+    if type_id in ("Iron", "Electric"):
         return lambda bm, c, k: cube_at(bm, c, rng.uniform(0.07, 0.12), rng)
+    if type_id == "Comet":  # okruchy lodu lecące za ogonem zamiast orbity
+        u, v_ = frame(COMET_TAIL)
+
+        def ice(bm, c, k):
+            t = rng.uniform(0.2, 1.0)
+            p = COMET_TAIL * (0.9 + 2.4 * t) + (u * rng.uniform(-1, 1) + v_ * rng.uniform(-1, 1)) * (0.3 + 0.5 * t)
+            crystal(bm, p, (COMET_TAIL + rand_dir(rng) * 0.4).normalized(), rng.uniform(0.2, 0.32), 0.06, rng,
+                    sides=5, sink=0.08)
+        return ice
+    if type_id == "Toxic":
+        return lambda bm, c, k: blob(bm, c, rng.uniform(0.07, 0.12), seed + k, sub=1, amp=1.5)
+    if type_id == "Nebula":
+        return lambda bm, c, k: star_at(bm, c, 0.05, rng.uniform(0.14, 0.2))
     return lambda bm, c, k: chunk(bm, c, rng.uniform(0.1, 0.17), seed + 31 * k, (1, 1, 0.5))
 
 
@@ -555,6 +856,22 @@ def theme_materials(type_id):
         accent = material("Frost_Accent", color, alpha=0.5, rough=0.05, emission=0.5)
         orbit = material("Frost_Orbit", color, alpha=0.6, rough=0.05, emission=1.2)
         sh = material("Frost_Shell", shell, alpha=0.6, rough=0.03)
+    elif type_id == "Comet":
+        accent = material("Comet_Accent", color, emission=1.8, neon=True)
+        orbit = material("Comet_Orbit", color, alpha=0.6, rough=0.05, emission=0.8)
+        sh = material("Comet_Shell", shell, rough=0.25, metal=0.1)
+    elif type_id == "Toxic":
+        accent = material("Toxic_Accent", color, emission=1.8, neon=True)
+        orbit = material("Toxic_Orbit", color, emission=1.6, neon=True)
+        sh = material("Toxic_Shell", shell, rough=0.85)
+    elif type_id == "Electric":
+        accent = material("Electric_Accent", color, emission=2.4, neon=True)
+        orbit = material("Electric_Orbit", shell, rough=0.3, metal=1.0)
+        sh = material("Electric_Shell", shell, rough=0.3, metal=0.9)
+    elif type_id == "Nebula":
+        accent = material("Nebula_Accent", color, emission=1.8, neon=True)
+        orbit = material("Nebula_Orbit", glow, emission=1.6, neon=True)
+        sh = material("Nebula_Shell", color, alpha=0.3, rough=0.03)
     else:
         accent = material(f"{type_id}_Accent", color, emission=1.5, neon=True)
         orbit = material(f"{type_id}_Orbit", color, emission=1.3, neon=True)
@@ -575,6 +892,7 @@ def build_type(type_id):
         coll = bpy.data.collections.new(f"{type_id}_{size}")
         bpy.context.scene.collection.children.link(coll)
         parts = BUILDERS[type_id](coll, cfg, rng, SEED[type_id] + cfg["d"])
+        fx = parts.pop("_fx", {})
         if cfg["orbit"]:
             bm = bmesh.new()
             orbit_ring(bm, cfg["orbit"], rng, orbit_maker(type_id, rng, SEED[type_id]))
@@ -592,7 +910,7 @@ def build_type(type_id):
             coll.objects.link(e)
         counts = {k: tris(o) for k, o in parts.items()}
         total = sum(counts.values())
-        result[size] = {"coll": coll, "parts": parts, "zones": zs, "tris": counts, "total": total,
+        result[size] = {"coll": coll, "parts": parts, "zones": zs, "fx": fx, "tris": counts, "total": total,
                         "ok": total <= BUDGET[size]}
     return result
 
@@ -712,70 +1030,74 @@ def camera(loc, target, lens=50):
 VIEW_SCALE = {"Small": 0.55, "Medium": 0.75, "Large": 1.0, "Huge": 1.3}
 
 
-def layout_row(result, gap=1.15):
+def x_extent(objs):
+    xs = [v.co.x for ob in objs if ob.type == "MESH" for v in ob.data.vertices]
+    return min(xs), max(xs)
+
+
+def place_row(groups, gap=0.35):
+    """groups: lista (obiekty, skala) — układa obok siebie wg prawdziwej szerokości (ogon Comet itd.).
+    Zwraca szerokość rzędu; rząd wyśrodkowany w x=0."""
     x = 0.0
-    xs = {}
-    for size in SIZES:
-        s = VIEW_SCALE[size]
-        span = (2.6 if SIZE_CFG[size]["orbit"] else 1.7) * s
-        x += span * gap
-        xs[size] = x
-        x += span * gap
-        for ob in result[size]["coll"].objects:
+    for objs, s in groups:
+        lo, hi = x_extent(objs)
+        off = x - lo * s
+        for ob in objs:
             ob.scale = (s, s, s)
-            ob.location = ob.location * s + Vector((xs[size], 0, 0))
-    mid = x / 2
-    for size in SIZES:
-        for ob in result[size]["coll"].objects:
-            ob.location.x -= mid
-    return x
+            ob.location = ob.location * s + Vector((off, 0, 0))
+        x += (hi - lo) * s + gap
+    width = x - gap
+    for objs, _ in groups:
+        for ob in objs:
+            ob.location.x -= width / 2
+    return width
+
+
+def frame_camera(width, height, aspect, lens=40, z=0.0):
+    half = 18 / lens  # tan(fov/2) przy matrycy 36 mm (szerokość)
+    dist = max(width * 1.08 / (2 * half), height * 1.15 * aspect / (2 * half))
+    camera((0, -dist, z + dist * 0.12), (0, 0, z), lens=lens)
 
 
 def render_type(type_id, result):
-    width = layout_row(result)
+    width = place_row([(list(result[s]["coll"].objects), VIEW_SCALE[s]) for s in SIZES])
     setup_render(1920, 640)
-    camera((0, -width * 1.15, width * 0.22), (0, 0, 0), lens=40)
+    frame_camera(width, 3.6, 1920 / 640)
     bpy.context.scene.render.filepath = str(IMG / f"star_{type_id.lower()}.png")
     bpy.ops.render.render(write_still=True)
 
 
-def render_lineup(types):
-    """Huge wszystkich rodzajów obok siebie, w kolorze, z bloomem — główny podgląd do akceptacji."""
+def render_grid(rows, name, silhouette=False):
+    """Huge podanych rodzajów: rzędy (lista list) jeden pod drugim. silhouette=True: czarne na białym."""
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    for i, t in enumerate(types):
-        res = build_type(t)
-        for size in SIZES:
-            for ob in res[size]["coll"].objects:
+    black = material("Black", (0, 0, 0), rough=1.0) if silhouette else None
+    widths = []
+    for r, types in enumerate(rows):
+        groups = []
+        for t in types:
+            res = build_type(t)
+            for size in SIZES:
                 if size != "Huge":
-                    ob.hide_render = True
-                    continue
-                ob.location.x += (i % 2 - 0.5) * 5.4
-                ob.location.z += (0.5 - i // 2) * 4.6
-    setup_render(1600, 1500)
-    camera((0, -15.5, 2.0), (0, 0, 0), lens=42)
-    bpy.context.scene.render.filepath = str(IMG / "star_lineup.png")
-    bpy.ops.render.render(write_still=True)
-
-
-def render_silhouettes(types):
-    """Sylwetki Huge wszystkich rodzajów: czarne na białym — test „rozpoznawalny bez koloru”."""
-    bpy.ops.wm.read_factory_settings(use_empty=True)
-    black = material("Black", (0, 0, 0), rough=1.0)
-    for i, t in enumerate(types):
-        res = build_type(t)
-        for size in SIZES:
-            for ob in res[size]["coll"].objects:
-                if size != "Huge":
-                    ob.hide_render = True
-                    continue
-                ob.location.x += (i - (len(types) - 1) / 2) * 6.2
-                if ob.type == "MESH":
-                    ob.data.materials.clear()
-                    ob.data.materials.append(black)
-    setup_render(1920, 560, bg=(1, 1, 1), space=False)
-    bpy.context.scene.view_settings.view_transform = "Standard"
-    camera((0, -30, 1.5), (0, 0, 0), lens=45)
-    bpy.context.scene.render.filepath = str(IMG / "star_silhouettes.png")
+                    for ob in res[size]["coll"].objects:
+                        ob.hide_render = True
+            objs = list(res["Huge"]["coll"].objects)
+            if black:
+                for ob in objs:
+                    if ob.type == "MESH":
+                        ob.data.materials.clear()
+                        ob.data.materials.append(black)
+            groups.append((objs, 1.0))
+        widths.append(place_row(groups, gap=0.8))
+        for objs, _ in groups:
+            for ob in objs:
+                ob.location.z += ((len(rows) - 1) / 2 - r) * 4.4
+    w, h = (1920, 560 * len(rows)) if silhouette else (1920, 700 * len(rows))
+    if silhouette:
+        setup_render(w, h, bg=(1, 1, 1), space=False)
+    else:
+        setup_render(w, h)
+    frame_camera(max(widths), 4.4 * len(rows), w / h, lens=45)
+    bpy.context.scene.render.filepath = str(IMG / f"{name}.png")
     bpy.ops.render.render(write_still=True)
 
 
@@ -791,8 +1113,9 @@ def to_roblox(v):
 IMPORT_TEMPLATE = (OUT / "import_stars.template.luau").read_text(encoding="utf-8")
 
 
-def write_import_script(zones_all):
+def write_import_script(zones_all, fx_all):
     (OUT / "import_stars.luau").write_text((IMPORT_TEMPLATE.replace("__ZONES__", json.dumps(zones_all))
+     .replace("__FX__", json.dumps(fx_all))
      .replace("__SIZES__", json.dumps({s: STARS["classes"][s]["size"] for s in SIZES}))
      .replace("__THEMES__", json.dumps({t: {k: THEMES["themes"][t][k] for k in ("shell", "glow", "color")}
                                         for t in zones_all}))), encoding="utf-8")
@@ -804,9 +1127,12 @@ def main():
     if "--types" in argv:
         types = argv[argv.index("--types") + 1].split(",")
     render = "--render" in argv
+    lineup = argv[argv.index("--lineup") + 1] if "--lineup" in argv else "star_lineup"
     IMG.mkdir(parents=True, exist_ok=True)
     zones_path = OUT / "zones.json"
     zones_all = json.loads(zones_path.read_text(encoding="utf-8")) if zones_path.exists() else {}
+    fx_path = OUT / "fx.json"
+    fx_all = json.loads(fx_path.read_text(encoding="utf-8")) if fx_path.exists() else {}
     report = {}
     for t in types:
         bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -824,14 +1150,24 @@ def main():
             hi = Vector((max(v.x for v in xs), max(v.y for v in xs), max(v.z for v in xs)))
             c, m = (lo + hi) / 2, max(hi - lo)
             zones_all[t][s] = [to_roblox((p - c) / m) for p in res[s]["zones"]]
+            fx = res[s]["fx"]
+            if fx:
+                fx_all.setdefault(t, {})[s] = {
+                    "beams": [[to_roblox((a - c) / m), to_roblox((b - c) / m)] for a, b in fx.get("beams", [])],
+                    "tail": [to_roblox((fx["tail"][0] - c) / m), to_roblox(fx["tail"][1])] if "tail" in fx else None,
+                }
         bpy.ops.wm.save_as_mainfile(filepath=str(folder / f"star_{t.lower()}.blend"))
         if render:
             render_type(t, res)
     zones_path.write_text(json.dumps(zones_all, indent=1), encoding="utf-8")
-    write_import_script(zones_all)
+    fx_path.write_text(json.dumps(fx_all, indent=1), encoding="utf-8")
+    write_import_script(zones_all, fx_all)
     if render and len(types) > 1:
-        render_silhouettes(types)
-        render_lineup(types)
+        everything = list(BUILDERS)
+        render_grid([everything[:4], everything[4:]], "star_silhouettes", silhouette=True)
+        render_grid([types], lineup)
+        if set(types) != set(everything[:4]):
+            render_grid([everything[:4], everything[4:]], "star_lineup_all")
     print("STAR_REPORT", json.dumps(report))
 
 

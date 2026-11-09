@@ -5,7 +5,7 @@ nazwa: "Toxic Star"
 nr: 6
 mnoznik: 2.4
 waga: 10
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Toxic Star

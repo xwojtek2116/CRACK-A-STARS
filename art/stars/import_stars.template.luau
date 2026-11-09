@@ -36,7 +36,29 @@ local LOOK: { [string]: { [string]: Look } } = {
 		Accent = { material = Enum.Material.Neon, color = "color" },
 		Orbit = { material = Enum.Material.Neon, color = "color" },
 	},
+	Comet = {
+		Shell = { material = Enum.Material.Ice, color = "shell" },
+		Accent = { material = Enum.Material.Neon, color = "color" },
+		Orbit = { material = Enum.Material.Glass, color = "color", transparency = 0.3 },
+	},
+	Toxic = {
+		Shell = { material = Enum.Material.Slate, color = "shell" },
+		Accent = { material = Enum.Material.Neon, color = "color" },
+		Orbit = { material = Enum.Material.Neon, color = "color" },
+	},
+	Electric = {
+		Shell = { material = Enum.Material.Metal, color = "shell", reflectance = 0.15 },
+		Accent = { material = Enum.Material.Neon, color = "color" },
+		Orbit = { material = Enum.Material.Metal, color = "shell", reflectance = 0.15 },
+	},
+	Nebula = {
+		Shell = { material = Enum.Material.Glass, color = "color", transparency = 0.55 },
+		Accent = { material = Enum.Material.Neon, color = "color" },
+		Orbit = { material = Enum.Material.Neon, color = "glow" },
+	},
 }
+-- Dodatkowe efekty z Blendera (art/stars/fx.json): Comet `tail` = [początek, kierunek], Electric `beams` = pary punktów.
+local EXTRA = HttpService:JSONDecode([==[__FX__]==])
 
 -- Poświata i cząsteczki (tekstury wbudowane w Roblox — bez uploadu). Ilość rośnie z rozmiarem, nisko dla telefonów.
 type Fx = { texture: string, color: string, rate: number, life: NumberRange, speed: NumberRange, size: number, accel: number, transparency: number, emission: number }
@@ -45,6 +67,10 @@ local FX: { [string]: Fx } = {
 	Lava = { texture = "rbxasset://textures/particles/fire_sparks_main.dds", color = "color", rate = 8, life = NumberRange.new(1, 2), speed = NumberRange.new(1, 3), size = 0.12, accel = 3, transparency = 0, emission = 1 },
 	Frost = { texture = "rbxasset://textures/particles/sparkles_main.dds", color = "glow", rate = 6, life = NumberRange.new(1.5, 3), speed = NumberRange.new(0.2, 0.8), size = 0.1, accel = -0.3, transparency = 0.1, emission = 1 },
 	Geode = { texture = "rbxasset://textures/particles/sparkles_main.dds", color = "color", rate = 6, life = NumberRange.new(1.5, 3), speed = NumberRange.new(0.3, 1), size = 0.1, accel = 0.4, transparency = 0, emission = 1 },
+	Comet = { texture = "rbxasset://textures/particles/sparkles_main.dds", color = "glow", rate = 4, life = NumberRange.new(1, 2), speed = NumberRange.new(0.2, 0.6), size = 0.08, accel = 0, transparency = 0, emission = 1 },
+	Toxic = { texture = "rbxasset://textures/particles/smoke_main.dds", color = "color", rate = 4, life = NumberRange.new(2, 3.5), speed = NumberRange.new(0.3, 0.9), size = 0.3, accel = 1, transparency = 0.6, emission = 0.6 },
+	Electric = { texture = "rbxasset://textures/particles/sparkles_main.dds", color = "color", rate = 8, life = NumberRange.new(0.3, 0.8), speed = NumberRange.new(2, 4), size = 0.08, accel = 0, transparency = 0, emission = 1 },
+	Nebula = { texture = "rbxasset://textures/particles/sparkles_main.dds", color = "glow", rate = 5, life = NumberRange.new(2, 3.5), speed = NumberRange.new(0.1, 0.4), size = 0.08, accel = 0, transparency = 0, emission = 1 },
 }
 local SIZE_RATE = { Small = 1, Medium = 1.5, Large = 2.5, Huge = 4 }
 -- Rodzaje skalowane po całym ciele (bez orbity), a nie po samym Shell.
@@ -78,6 +104,86 @@ local function addFx(core: BasePart, typeId: string, size: string, starSize: num
 	e.Rotation = NumberRange.new(0, 360)
 	e.LightInfluence = 0
 	e.Parent = core
+end
+
+-- Efekty specjalne rodzajów 5-8 (T33). Ruch/miganie dokłada T12.
+local function addExtra(model: Model, typeId: string, size: string, starSize: number, theme: { [string]: string }, m: number)
+	local shell = model.PrimaryPart :: BasePart
+	local core = model:FindFirstChild("Core") :: BasePart
+	local data = EXTRA[typeId] and EXTRA[typeId][size]
+	local function at(v: { number }): Vector3
+		return shell.Position + Vector3.new(v[1], v[2], v[3]) * m
+	end
+	if typeId == "Comet" and data and data.tail then
+		-- Iskry lecące wzdłuż ogona.
+		local a = Instance.new("Attachment")
+		a.Name = "Tail"
+		a.Parent = shell
+		local o = at(data.tail[1])
+		local dir = Vector3.new(data.tail[2][1], data.tail[2][2], data.tail[2][3])
+		a.WorldCFrame = CFrame.lookAt(o, o + dir)
+		local e = Instance.new("ParticleEmitter")
+		e.Name = "TailSparks"
+		e.Texture = "rbxasset://textures/particles/sparkles_main.dds"
+		e.Color = ColorSequence.new(Color3.fromHex(theme.glow), Color3.fromHex(theme.color))
+		e.EmissionDirection = Enum.NormalId.Front
+		e.SpreadAngle = Vector2.new(10, 10)
+		e.Rate = 6 * SIZE_RATE[size]
+		e.Lifetime = NumberRange.new(1.2, 2)
+		e.Speed = NumberRange.new(starSize * 0.6, starSize * 1.0)
+		e.Drag = 1
+		local s = 0.07 * starSize
+		e.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, s), NumberSequenceKeypoint.new(1, 0) })
+		e.LightEmission = 1
+		e.LightInfluence = 0
+		e.Parent = a
+	elseif typeId == "Electric" and data then
+		-- Błyskawice między kulą a prętami (Beam bez tekstury = jednolity świecący pasek).
+		for i, pair in data.beams do
+			local a0 = Instance.new("Attachment")
+			a0.Name = "Arc" .. i .. "_A"
+			a0.Parent = shell
+			a0.WorldPosition = at(pair[1])
+			local a1 = Instance.new("Attachment")
+			a1.Name = "Arc" .. i .. "_B"
+			a1.Parent = shell
+			a1.WorldPosition = at(pair[2])
+			local b = Instance.new("Beam")
+			b.Name = "Arc" .. i
+			b.Attachment0 = a0
+			b.Attachment1 = a1
+			b.Color = ColorSequence.new(Color3.fromHex(theme.color), Color3.fromHex(theme.glow))
+			b.LightEmission = 1
+			b.LightInfluence = 0
+			b.FaceCamera = true
+			b.Segments = 12
+			b.Width0 = starSize * 0.03
+			b.Width1 = starSize * 0.015
+			b.CurveSize0 = starSize * 0.08
+			b.CurveSize1 = -starSize * 0.08
+			b.Transparency = NumberSequence.new(0)
+			b.Parent = shell
+		end
+	elseif typeId == "Nebula" then
+		-- Wirująca mgiełka w szklanej kuli.
+		local e = Instance.new("ParticleEmitter")
+		e.Name = "Mist"
+		e.Texture = "rbxasset://textures/particles/smoke_main.dds"
+		e.Color = ColorSequence.new(Color3.fromHex(theme.glow), Color3.fromHex(theme.color))
+		e.Shape = Enum.ParticleEmitterShape.Sphere
+		e.ShapeStyle = Enum.ParticleEmitterShapeStyle.Volume
+		e.Rate = 3 * SIZE_RATE[size]
+		e.Lifetime = NumberRange.new(3, 5)
+		e.Speed = NumberRange.new(0, starSize * 0.03)
+		e.RotSpeed = NumberRange.new(-40, 40)
+		e.Rotation = NumberRange.new(0, 360)
+		local s = 0.3 * starSize
+		e.Size = NumberSequence.new({ NumberSequenceKeypoint.new(0, s * 0.5), NumberSequenceKeypoint.new(0.5, s), NumberSequenceKeypoint.new(1, s * 0.6) })
+		e.Transparency = NumberSequence.new({ NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(0.4, 0.75), NumberSequenceKeypoint.new(1, 1) })
+		e.LightEmission = 1
+		e.LightInfluence = 0
+		e.Parent = core
+	end
 end
 
 local import = ServerStorage:FindFirstChild("StarImport")
@@ -160,6 +266,7 @@ for typeId, zonesBySize in ZONES do
 			a.WorldPosition = shell.Position + Vector3.new(v[1], v[2], v[3]) * m
 		end
 		addFx(core, typeId, size, target, theme)
+		addExtra(model, typeId, size, target, theme, m)
 		model:SetAttribute("Type", typeId)
 		model:SetAttribute("Size", size)
 		model.Parent = folder

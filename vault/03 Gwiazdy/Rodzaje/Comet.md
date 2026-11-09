@@ -5,7 +5,7 @@ nazwa: "Comet"
 nr: 5
 mnoznik: 2.0
 waga: 12
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Comet

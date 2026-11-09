@@ -5,7 +5,7 @@ nazwa: "Nebula Star"
 nr: 8
 mnoznik: 3.3
 waga: 6
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Nebula Star

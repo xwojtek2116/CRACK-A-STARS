@@ -5,7 +5,7 @@ nazwa: "Storm Star"
 nr: 7
 mnoznik: 2.8
 waga: 8
-model: "brak"
+model: "gotowy"
 tags: ["gwiazda", "rodzaj"]
 ---
 # Storm Star
