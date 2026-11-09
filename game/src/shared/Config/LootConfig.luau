@@ -147,6 +147,28 @@ local LootConfig = {
 		bannerSeconds = 4.5,
 		flashAlpha = 0.55, -- siła błysku ekranu przy Mythic/Secret u wszystkich
 		sparks = table.freeze({ Rare = 6, Epic = 10, Legendary = 16, Mythic = 22, Secret = 30 }),
+		-- Przechył karty za wskaźnikiem (T14): stopnie, zasięg (1 = krawędź karty), szybkość podążania,
+		-- kołysanie bez wskaźnika (od Epic), widoczność odbłysku (0 = pełny), przerwa shine od Rare.
+		tilt = table.freeze({
+			degrees = 9,
+			reach = 1.25,
+			follow = 12,
+			idleDegrees = 2,
+			idleSpeed = 1.6,
+			sheenAlpha = 0.72,
+			rareShinePause = 3.2,
+		}),
+		-- Promienie od Legendary: rozmiar (× szerokość karty), +rozmiar na stopień rzadkości wyżej, liczba pasków
+		-- (każdy = 2 promienie, +2 na stopień), grubość (px), obrót (s / obrót), puls (s), przezroczystość.
+		rays = table.freeze({
+			backSize = 2.4,
+			backGrowth = 0.4,
+			beams = 8,
+			beamWidth = 12,
+			backSpin = 14,
+			pulse = 0.9,
+			backTransparency = 0.45,
+		}),
 	}),
 }
 

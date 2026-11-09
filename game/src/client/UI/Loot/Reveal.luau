@@ -4,10 +4,16 @@
 --   Karta: poświata i promienie w kolorze rzadkości, klejnot (do czasu renderów przedmiotów), pigułka
 --   rzadkości, nazwa, $/s, mutacja (Shiny = błysk, Golden = złota ramka), NEW!, PITY!, postument/ekwipunek.
 --   Od Epic karta najpierw jest zakryta i pulsuje kolorem rzadkości (napięcie, max 1,5 s — GDD), potem obrót.
--- Nie blokuje sterowania; dotknięcie kart zamyka wcześniej. Pełne animacje dropu: T35.
+--   T14: karta przechyla się za kursorem/palcem (tilt) z odbłyskiem, który wędruje po karcie, przy odkryciu
+--   rozbłysk na karcie i fala światła; od Rare co chwilę przelatuje shine; od Legendary drugie, przeciwbieżne
+--   promienie, które pulsują (Mythic/Secret większe). Liczby: LootConfig.REVEAL.tilt / rays.
+-- Nie blokuje sterowania; dotknięcie kart zamyka wcześniej. Pełne animacje dropu (kamera): T35.
 
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local LootConfig = require(Shared.Config.LootConfig)
@@ -25,6 +31,8 @@ local COLORS = Theme.COLORS
 local CARD = Vector2.new(150, 214)
 local GAP = 30
 local MAX_ROW_WIDTH = 940 -- szerszy rząd (Supernova, 6 kart) dostaje mniejszą skalę
+local TILT = REVEAL.tilt
+local RAYS = REVEAL.rays
 
 local player = Players.LocalPlayer
 
@@ -54,6 +62,8 @@ export type Payload = {
 
 local screen: ScreenGui? = nil
 local token = 0
+-- Ostatnia pozycja dotyku (telefon nie ma kursora) — do przechyłu kart.
+local pointer: Vector2? = nil
 
 local Reveal = {}
 
@@ -242,6 +252,51 @@ local function buildCard(drop: Drop): (Frame, Frame, Frame?)
 		rays.Parent = wrapper
 		Fx.loop(rays, 9 - r, { Rotation = 360 }, false)
 	end
+	if r >= rank("Legendary") then
+		-- Promienie „sunburst” z pasków (niezależne od tekstur): obracają się w drugą stronę i pulsują,
+		-- Mythic/Secret mają ich więcej i dłuższe; Secret w tęczy.
+		local back = Instance.new("Frame")
+		back.Name = "RaysBack"
+		back.BackgroundTransparency = 1
+		back.AnchorPoint = Vector2.new(0.5, 0.5)
+		back.Position = UDim2.fromScale(0.5, 0.45)
+		back.SizeConstraint = Enum.SizeConstraint.RelativeXX
+		local size = RAYS.backSize + (r - rank("Legendary")) * RAYS.backGrowth
+		back.Size = UDim2.fromScale(size, size)
+		back.ZIndex = 0
+		local beams = RAYS.beams + (r - rank("Legendary")) * 2
+		local fade = NumberSequence.new({
+			NumberSequenceKeypoint.new(0, 1),
+			NumberSequenceKeypoint.new(0.2, RAYS.backTransparency),
+			NumberSequenceKeypoint.new(0.5, RAYS.backTransparency - 0.2),
+			NumberSequenceKeypoint.new(0.8, RAYS.backTransparency),
+			NumberSequenceKeypoint.new(1, 1),
+		})
+		for i = 1, beams do
+			local beam = Instance.new("Frame")
+			beam.Name = `Beam{i}`
+			beam.AnchorPoint = Vector2.new(0.5, 0.5)
+			beam.Position = UDim2.fromScale(0.5, 0.5)
+			beam.Size = UDim2.new(0, RAYS.beamWidth, 1, 0)
+			beam.Rotation = (i - 1) * 180 / beams
+			beam.BackgroundColor3 = Theme.lighten(color, 0.3)
+			beam.BorderSizePixel = 0
+			beam.ZIndex = 0
+			local gradient = Instance.new("UIGradient")
+			gradient.Rotation = 90
+			gradient.Transparency = fade
+			if drop.rarity == "Secret" then
+				gradient.Color = Theme.SECRET_GRADIENT
+			end
+			gradient.Parent = beam
+			beam.Parent = back
+		end
+		local backScale = Instance.new("UIScale")
+		backScale.Parent = back
+		back.Parent = wrapper
+		Fx.loop(back, RAYS.backSpin, { Rotation = -360 }, false)
+		Fx.loop(backScale, RAYS.pulse, { Scale = 1.12 })
+	end
 	local glow = Instance.new("ImageLabel")
 	glow.Name = "Glow"
 	glow.Image = Theme.FX.flare
@@ -344,9 +399,35 @@ local function buildCard(drop: Drop): (Frame, Frame, Frame?)
 		tag.ZIndex = 6
 		Fx.shine(tag, 0.6, 1.2)
 	end
-	if drop.mutation == "Shiny" or r >= rank("Legendary") then
-		Fx.shine(card, 0.8, if drop.mutation == "Shiny" then 0.9 else 2.2)
+	if drop.mutation == "Shiny" or r >= rank("Rare") then
+		Fx.shine(
+			card,
+			0.8,
+			if drop.mutation == "Shiny" then 0.9 elseif r >= rank("Legendary") then 2.2 else TILT.rareShinePause
+		)
 	end
+
+	-- Odbłysk „tilt”: miękka smuga światła przesuwana za kursorem/palcem (Reveal.show → tiltStep).
+	local sheen = Instance.new("Frame")
+	sheen.Name = "Sheen"
+	sheen.Size = UDim2.fromScale(1, 1)
+	sheen.BackgroundColor3 = Color3.new(1, 1, 1)
+	sheen.BackgroundTransparency = 0
+	sheen.ZIndex = 7
+	Fx.corner(sheen)
+	local sheenGradient = Instance.new("UIGradient")
+	sheenGradient.Name = "SheenGradient"
+	sheenGradient.Rotation = 35
+	sheenGradient.Transparency = NumberSequence.new({
+		NumberSequenceKeypoint.new(0, 1),
+		NumberSequenceKeypoint.new(0.4, 1),
+		NumberSequenceKeypoint.new(0.5, TILT.sheenAlpha),
+		NumberSequenceKeypoint.new(0.6, 1),
+		NumberSequenceKeypoint.new(1, 1),
+	})
+	sheenGradient.Offset = Vector2.new(0.6, 0)
+	sheenGradient.Parent = sheen
+	sheen.Parent = card
 
 	local badges = Instance.new("Frame")
 	badges.Name = "Badges"
@@ -498,6 +579,84 @@ local function close(holder: Frame)
 	end)
 end
 
+-- Rozbłysk przy odkryciu: biała klatka na karcie gaśnie, fala światła w kolorze rzadkości rośnie zza karty.
+local function cardFlash(wrapper: Frame, card: Frame, rarity: string)
+	local r = rank(rarity)
+	local flash = Instance.new("Frame")
+	flash.Name = "RevealFlash"
+	flash.Size = UDim2.fromScale(1, 1)
+	flash.BackgroundColor3 = Color3.new(1, 1, 1)
+	flash.BackgroundTransparency = 0.1
+	flash.ZIndex = 12
+	Fx.corner(flash)
+	flash.Parent = card
+	Fx.tween(flash, 0.35 + r * 0.03, { BackgroundTransparency = 1 }, Enum.EasingStyle.Quad)
+	local ring = Instance.new("ImageLabel")
+	ring.Name = "RevealWave"
+	ring.Image = Theme.FX.flare
+	ring.ImageColor3 = Theme.lighten(Fx.rarityColor(rarity), 0.3)
+	ring.ImageTransparency = 0.05
+	ring.BackgroundTransparency = 1
+	ring.AnchorPoint = Vector2.new(0.5, 0.5)
+	ring.Position = UDim2.fromScale(0.5, 0.45)
+	ring.SizeConstraint = Enum.SizeConstraint.RelativeXX
+	ring.Size = UDim2.fromScale(0.4, 0.4)
+	ring.ZIndex = 1
+	ring.Parent = wrapper
+	local reach = 2 + r * 0.25
+	Fx.tween(ring, 0.6, { Size = UDim2.fromScale(reach, reach), ImageTransparency = 1 }, Enum.EasingStyle.Quart)
+	task.delay(0.7, function()
+		flash:Destroy()
+		ring:Destroy()
+	end)
+end
+
+local function pointerPosition(): Vector2?
+	if UserInputService.MouseEnabled then
+		local inset = GuiService:GetGuiInset()
+		return UserInputService:GetMouseLocation() - inset
+	end
+	return pointer
+end
+
+type TiltCard = { wrapper: Frame, card: Frame, rank: number, ready: boolean }
+
+-- Przechył kart i odbłysk: karta pod wskaźnikiem przechyla się w jego stronę, reszta (od Epic) lekko się kołysze.
+local function tiltStep(cards: { TiltCard }, alpha: number)
+	local at = pointerPosition()
+	local t = os.clock()
+	for i, entry in cards do
+		if not entry.ready or not entry.wrapper.Parent then
+			continue
+		end
+		local card = entry.card
+		local half = card.AbsoluteSize / 2
+		local center = card.AbsolutePosition + half
+		local rel = Vector2.zero
+		local hovered = false
+		if at and half.X > 0 and half.Y > 0 then
+			rel = (at - center) / half
+			hovered = math.abs(rel.X) <= TILT.reach and math.abs(rel.Y) <= TILT.reach
+		end
+		local targetRotation, targetOffset
+		if hovered then
+			targetRotation = math.clamp(rel.X, -1, 1) * TILT.degrees
+			targetOffset = math.clamp(rel.X * 0.5 + rel.Y * 0.3, -0.9, 0.9)
+		else
+			local sway = if entry.rank >= rank("Epic") then TILT.idleDegrees else 0
+			targetRotation = math.sin(t * TILT.idleSpeed + i) * sway
+			targetOffset = 0.6 + math.sin(t * TILT.idleSpeed * 0.5 + i) * 0.15
+		end
+		entry.wrapper.Rotation += (targetRotation - entry.wrapper.Rotation) * alpha
+		local sheen = card:FindFirstChild("Sheen")
+		local gradient = sheen and sheen:FindFirstChild("SheenGradient") :: UIGradient?
+		if gradient then
+			local x = gradient.Offset.X + (targetOffset - gradient.Offset.X) * alpha
+			gradient.Offset = Vector2.new(x, 0)
+		end
+	end
+end
+
 function Reveal.show(payload: Payload)
 	token += 1
 	local myToken = token
@@ -586,9 +745,34 @@ function Reveal.show(payload: Payload)
 		close(root)
 	end)
 
+	local tiltCards: { TiltCard } = {}
+	local connections = {
+		RunService.RenderStepped:Connect(function(dt)
+			tiltStep(tiltCards, math.min(1, dt * TILT.follow))
+		end),
+		UserInputService.InputChanged:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.Touch then
+				pointer = Vector2.new(input.Position.X, input.Position.Y)
+			end
+		end),
+		UserInputService.InputBegan:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.Touch then
+				pointer = Vector2.new(input.Position.X, input.Position.Y)
+			end
+		end),
+	}
+	root.Destroying:Connect(function()
+		for _, connection in connections do
+			connection:Disconnect()
+		end
+		pointer = nil
+	end)
+
 	local lastReveal = 0
 	for i, drop in drops do
 		local wrapper, card, cover = buildCard(drop)
+		local tiltEntry: TiltCard = { wrapper = wrapper, card = card, rank = rank(drop.rarity), ready = false }
+		table.insert(tiltCards, tiltEntry)
 		wrapper.LayoutOrder = i
 		wrapper.Parent = row
 		local scale = wrapper:FindFirstChildOfClass("UIScale") :: UIScale
@@ -619,6 +803,7 @@ function Reveal.show(payload: Payload)
 				card.Rotation = 0
 				badges.Visible = true
 				revealSound(drop.rarity)
+				cardFlash(wrapper, card, drop.rarity)
 				local color = Fx.rarityColor(drop.rarity)
 				local sparks = REVEAL.sparks[drop.rarity]
 				if sparks then
@@ -637,6 +822,10 @@ function Reveal.show(payload: Payload)
 			else
 				onFlipped()
 			end
+			-- Od odkrycia karta reaguje na wskaźnik (wcześniej obrót wejścia i drżenie zasłony).
+			task.delay(0.35, function()
+				tiltEntry.ready = true
+			end)
 		end)
 	end
 

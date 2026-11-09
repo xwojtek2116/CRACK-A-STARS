@@ -8,6 +8,7 @@
 -- Otwarcie = pop z overshootem + fala światła z środka + uiPop; zamknięcie (X, klik w tło, ButtonB) =
 -- szybki zjazd + uiClose, potem onClose. Treść okna = `children`.
 
+local GuiService = game:GetService("GuiService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
@@ -134,9 +135,22 @@ local function Window(props: Props)
 				close()
 			end
 		end)
+		-- Pad: po otwarciu zaznacz pierwszy przycisk w oknie (nawigacja krzyżakiem/gałką, A = klik, B = zamknij).
+		local windowFrame = scaleRef.current and scaleRef.current.Parent
+		if windowFrame and string.find(UserInputService:GetLastInputType().Name, "Gamepad") then
+			task.defer(function()
+				if windowFrame.Parent then
+					GuiService:Select(windowFrame)
+				end
+			end)
+		end
 		return function()
 			connection:Disconnect()
 			blur:Destroy()
+			local selected = GuiService.SelectedObject
+			if windowFrame and selected and selected:IsDescendantOf(windowFrame) then
+				GuiService.SelectedObject = nil
+			end
 		end
 	end, {})
 

@@ -28,6 +28,14 @@ local BUCKETS: { [string]: Bucket } = {
 	SellItem = { capacity = 8, refillPerSecond = 4 },
 	SellBelow = { capacity = 2, refillPerSecond = 0.5 },
 	WelcomeInfo = { capacity = 2, refillPerSecond = 0.2 },
+	-- Sklepy i rebirth (T14 UI; logika T09/T10/T19): pojedyncze kliknięcia.
+	BuyTool = { capacity = 3, refillPerSecond = 1 },
+	EquipTool = { capacity = 4, refillPerSecond = 2 },
+	BuyVehicle = { capacity = 3, refillPerSecond = 1 },
+	BuyJetpack = { capacity = 3, refillPerSecond = 1 },
+	Rebirth = { capacity = 2, refillPerSecond = 0.2 },
+	-- Return to Lobby: właściwy cooldown (Economy.map.returnToLobbyCooldown) pilnuje LobbyService.
+	ReturnToLobby = { capacity = 2, refillPerSecond = 0.5 },
 }
 
 return {

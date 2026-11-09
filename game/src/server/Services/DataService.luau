@@ -257,6 +257,16 @@ function DataService.Start()
 	Remotes.onInvoke("RequestState", function(player)
 		return replicated[player]
 	end)
+	-- Ustawienia (okno SETTINGS). Klucz sprawdza schemat remota (DataConfig.SETTING_KEYS), wartość = boolean.
+	Remotes.onInvoke("SetSetting", function(player, key: string, value: boolean)
+		local ok = DataService.update(player, function(data)
+			local settings = table.clone(data.settings)
+			-- Wartość domyślna nie zajmuje miejsca w zapisie.
+			settings[key] = if value == DataConfig.SETTING_DEFAULTS[key] then nil else value
+			data.settings = settings
+		end)
+		return { ok = ok, reason = if ok then nil else "NotLoaded" }
+	end)
 
 	Players.PlayerAdded:Connect(loadPlayer)
 	Players.PlayerRemoving:Connect(function(player)

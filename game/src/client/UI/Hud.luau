@@ -17,6 +17,7 @@ local Sfx = require(UI.Sfx)
 local StarBar = require(UI.Components.StarBar)
 local Store = require(UI.Store)
 local Theme = require(UI.Theme)
+local HudSide = require(UI.Screens.HudSide)
 
 local e = React.createElement
 
@@ -495,6 +496,7 @@ local function Hud(props: { compact: boolean })
 		Timer = e(StarBar, { frameRef = timerRef }),
 		Menu = e(Menu, { compact = props.compact, frameRef = menuRef }),
 		Fuel = e(Fuel, { compact = props.compact }),
+		Side = e(HudSide, { compact = props.compact }),
 		Coins = e(FlyingCoins, { coinRef = coinRef }),
 	})
 end

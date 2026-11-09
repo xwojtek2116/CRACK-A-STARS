@@ -20,7 +20,7 @@ export type Incoming = {
 	launchedAt: number,
 	impactAt: number,
 }
-export type WindowId = "Shop" | "Base" | "Index" | "Rides" | "Premium" | "Sell" | "Pedestal" | "Welcome"
+export type WindowId = "Shop" | "Base" | "Index" | "Rides" | "Premium" | "Sell" | "Pedestal" | "Welcome" | "Settings"
 -- Przedmiot gracza (kopia z PlayerState.items, BaseController).
 export type OwnedItem = { itemId: string, mutation: string, obtainedAt: number, slot: number? }
 -- Podsumowanie offline do okna „Welcome back” (EconomyService → WelcomeInfo).
@@ -46,6 +46,15 @@ export type State = {
 	incomeMult: number,
 	pedestal: number?, -- slot otwarty w oknie Pedestal
 	welcome: Welcome?,
+	-- Dane gracza dla ekranów T14 (UIController ← StateController): narzędzia, pojazdy, indeks, rebirth, ustawienia.
+	tools: { [string]: boolean },
+	equippedTool: string,
+	vehicles: { [string]: boolean },
+	jetpackLevel: number,
+	rebirths: number,
+	index: { [string]: boolean },
+	settings: { [string]: boolean }, -- brak klucza = DataConfig.SETTING_DEFAULTS
+	lobbyReadyAt: number?, -- czas serwera, od kiedy Return to Lobby znowu działa
 }
 
 local state: State = {
@@ -67,6 +76,14 @@ local state: State = {
 	incomeMult = 1,
 	pedestal = nil,
 	welcome = nil,
+	tools = {},
+	equippedTool = "",
+	vehicles = {},
+	jetpackLevel = 1,
+	rebirths = 0,
+	index = {},
+	settings = {},
+	lobbyReadyAt = nil,
 }
 local listeners: { (State) -> () } = {}
 local nextId = 0

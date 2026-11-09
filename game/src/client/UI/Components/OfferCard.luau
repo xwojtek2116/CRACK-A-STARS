@@ -29,6 +29,9 @@ export type Props = {
 	owned: boolean?,
 	disabled: boolean?,
 	onBuy: (() -> ())?,
+	actionText: string?, -- napis na przycisku zamiast ceny ("EQUIP", "EQUIPPED", "LOCKED")
+	actionColor: Color3?,
+	dimmed: boolean?, -- zablokowana oferta: przyciemniony render
 	layoutOrder: number?,
 	index: number?, -- kolejność na liście → przesunięcie faz animacji
 }
@@ -248,6 +251,8 @@ local function OfferCard(props: Props)
 						layoutOrder = 2,
 						shineDelay = phase,
 						onActivated = props.onBuy,
+						label = props.actionText,
+						color = props.actionColor,
 					}),
 				}),
 			}),
@@ -286,6 +291,8 @@ local function OfferCard(props: Props)
 				}, {
 					Image = e("ImageLabel", {
 						Image = props.image,
+						ImageColor3 = if props.dimmed then Color3.fromRGB(30, 24, 48) else Color3.new(1, 1, 1),
+						ImageTransparency = if props.dimmed then 0.25 else 0,
 						Size = UDim2.fromScale(1, 1),
 						BackgroundTransparency = 1,
 					}),

@@ -36,7 +36,8 @@ local function reducedMotion(): boolean
 	end
 	local state = StateController.get()
 	local settings = state and (state :: any).settings
-	return typeof(settings) == "table" and settings.lowGraphics == true
+	-- „Skip cinematics” (okno SETTINGS) i tryb wydajności wyłączają ujęcia kamery.
+	return typeof(settings) == "table" and (settings.lowGraphics == true or settings.skipCinematics == true)
 end
 
 -- Wstrząs kamery (siła ~0..3, zanika kwadratowo). Słabszy nie nadpisuje trwającego mocniejszego.

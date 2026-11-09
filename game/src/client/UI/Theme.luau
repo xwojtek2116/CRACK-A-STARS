@@ -65,6 +65,8 @@ Theme.ICONS = {
 	index = "rbxassetid://89753898429765",
 	rides = "rbxassetid://90527318240283",
 	premium = "rbxassetid://120994393070841",
+	-- Zębatka ustawień i powrót do lobby (T14): wbudowane ikony Roblox do czasu renderów z Blendera.
+	settings = "rbxasset://textures/ui/Settings/MenuBarIcons/GameSettingsTab.png",
 }
 
 -- Rendery narzędzi do kart sklepu (art/ui/build_tool_icons.py). Klucze = Tools.json → order.

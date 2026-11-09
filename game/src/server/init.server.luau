@@ -24,6 +24,8 @@ local SERVICES = {
 	"StarService",
 	"CrackService",
 	"LootService",
+	"LobbyService",
+	"ShopStubService", -- tymczasowy (T14): usuwają go T09/T10/T19
 }
 
 local log = Logger.new("Boot")

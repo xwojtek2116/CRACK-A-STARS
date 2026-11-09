@@ -32,3 +32,13 @@ Dane HUD: atrybuty gracza `IncomePerSec`, `Fuel`, `FuelMax`; `Workspace.NextStar
 ![[T13 HUD PC.jpg]]
 ![[T13 HUD telefon.jpg]]
 ![[T13 sklep.jpg]]
+
+## Stan po T14 (9.11)
+
+Ekrany w `game/src/client/UI/Screens/`:
+- sklep narzędzi (EQUIP/LOCKED), GARAGE (pojazdy + jetpack), STAR INDEX (indeks z sylwetkami + zakładka REBIRTH), SETTINGS (zapis w profilu),
+- w HUD przycisk LOBBY (cooldown 10 s, nie w minigrze) i zębatka.
+
+Karta łupu: tilt za palcem/kursorem, rozbłysk, shine, promienie od Legendary. Kupowanie i rebirth czekają na T09/T10/T19 (serwer odpowiada „Coming soon”). Decyzje: [[2026-11-09 Ekrany gry T14]].
+![[T14 sklep narzedzi.jpg]]
+![[T14 indeks PC.jpg]]

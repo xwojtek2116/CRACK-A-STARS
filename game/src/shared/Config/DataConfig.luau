@@ -10,8 +10,17 @@ return {
 	STARTING_TOOL = "stone_pickaxe",
 	STARTING_JETPACK = 1,
 
-	-- Ustawienia gracza, które klient może zmieniać przez SetSetting.
-	SETTING_KEYS = { "music", "sfx", "lowGraphics", "cameraShake" },
+	-- Ustawienia gracza, które klient może zmieniać przez SetSetting (okno SETTINGS, T14).
+	-- Brak klucza w data.settings = wartość domyślna z SETTING_DEFAULTS (bez migracji schematu).
+	SETTING_KEYS = { "music", "sfx", "lowGraphics", "cameraShake", "skipCinematics", "hideAnnouncements" },
+	SETTING_DEFAULTS = table.freeze({
+		music = true,
+		sfx = true,
+		lowGraphics = false,
+		cameraShake = true,
+		skipCinematics = false,
+		hideAnnouncements = false,
+	}),
 
 	SESSION_LOST_KICK = "Your save was opened on another server. Please rejoin.",
 	LOAD_FAILED_KICK = "Could not load your save. Please rejoin.",

@@ -1,8 +1,9 @@
 --!strict
--- Windows — okna otwierane z menu HUD. Sklep narzędzi: zakładki TOOLS (Tools.json, kasa) i EXCLUSIVES
--- (Monetization.json → exclusives, Robux) — wygląd gotowy, kupowanie podłączy T09/T14 (na razie toast).
+-- Windows — okna otwierane z menu HUD. Sklep narzędzi: zakładki TOOLS (Screens/ToolsScreen, BuyTool/EquipTool)
+-- i EXCLUSIVES (Monetization.json → exclusives, Robux — kupowanie podłączy T16, na razie toast).
 -- Baza (T08): MY BASE (postumenty/ekwipunek), PEDESTAL (menu postumentu), SELL STATION, WELCOME BACK.
--- Pozostałe okna (indeks, pojazdy, R$) = „Coming soon” w tym samym stylu, ekrany robi T14.
+-- Ekrany T14 (Screens/): GARAGE (okno Rides), STAR INDEX (zakładki INDEX i REBIRTH), SETTINGS.
+-- R$ SHOP = „Coming soon” (T16).
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -10,7 +11,6 @@ local React = require(ReplicatedStorage:WaitForChild("Packages").React)
 
 local Data = ReplicatedStorage:WaitForChild("Shared").Config.Data
 local Monetization = require(Data.Monetization) :: any
-local Tools = require(Data.Tools) :: any
 
 local UI = script.Parent
 local Label = require(UI.Components.Label)
@@ -25,6 +25,12 @@ local PedestalWindow = require(UI.Base.PedestalWindow)
 local SellWindow = require(UI.Base.SellWindow)
 local WelcomeWindow = require(UI.Base.WelcomeWindow)
 
+local GarageScreen = require(UI.Screens.GarageScreen)
+local IndexScreen = require(UI.Screens.IndexScreen)
+local RebirthScreen = require(UI.Screens.RebirthScreen)
+local SettingsScreen = require(UI.Screens.SettingsScreen)
+local ToolsScreen = require(UI.Screens.ToolsScreen)
+
 local e = React.createElement
 
 type WindowInfo = { title: string, icon: string, color: Color3 }
@@ -38,11 +44,17 @@ local INFO: { [Store.WindowId]: WindowInfo } = {
 	Shop = { title = "TOOLS SHOP", icon = Theme.ICONS.shop, color = Theme.COLORS.shop },
 	Base = { title = "MY BASE", icon = Theme.ICONS.base, color = Theme.COLORS.base },
 	Index = { title = "STAR INDEX", icon = Theme.ICONS.index, color = Theme.COLORS.index },
-	Rides = { title = "RIDES", icon = Theme.ICONS.rides, color = Theme.COLORS.rides },
+	Rides = { title = "GARAGE", icon = Theme.ICONS.rides, color = Theme.COLORS.rides },
 	Premium = { title = "R$ SHOP", icon = Theme.ICONS.premium, color = Theme.COLORS.premium },
 	Sell = { title = "SELL STATION", icon = Theme.ICONS.coin, color = Theme.COLORS.price },
 	Pedestal = { title = "PEDESTAL", icon = Theme.ICONS.base, color = Theme.COLORS.base },
 	Welcome = { title = "WELCOME BACK!", icon = Theme.ICONS.coin, color = Theme.COLORS.gold },
+	Settings = { title = "SETTINGS", icon = Theme.ICONS.settings, color = Theme.COLORS.neonCyan },
+}
+
+local INDEX_TABS = {
+	{ id = "index", text = "INDEX" },
+	{ id = "rebirth", text = "REBIRTH" },
 }
 
 -- Zakładki i rozmiary okien bazy.
@@ -50,6 +62,8 @@ local TABS: { [string]: { Window.Tab } } = {
 	Shop = SHOP_TABS,
 	Base = BaseWindow.TABS,
 	Sell = SellWindow.TABS,
+	Index = INDEX_TABS,
+	Rides = GarageScreen.TABS,
 }
 local SIZES: { [string]: Vector2 } = {
 	Shop = Vector2.new(880, 540),
@@ -57,6 +71,9 @@ local SIZES: { [string]: Vector2 } = {
 	Sell = Vector2.new(880, 540),
 	Pedestal = Vector2.new(800, 500),
 	Welcome = Vector2.new(560, 360),
+	Index = Vector2.new(880, 540),
+	Rides = Vector2.new(880, 540),
+	Settings = Vector2.new(720, 520),
 }
 
 -- Obrazek oferty Exclusives: render podobnego narzędzia albo ikona rodzaju (własne rendery → T11/T24).
@@ -93,31 +110,6 @@ end
 
 local function comingSoonToast()
 	Store.toast("The shop opens soon!", "info")
-end
-
-local function ToolsList()
-	local cards = {}
-	for i, id in Tools.order do
-		local tool = Tools.tools[id]
-		cards[id] = e(OfferCard, {
-			name = tool.name,
-			rarity = Theme.tierRarity(tool.tier),
-			image = Theme.TOOL_RENDERS[id] or Theme.ICONS.star,
-			stats = {
-				{ label = "DMG", value = tostring(tool.damage) },
-				{ label = "CD", value = `{tool.cooldown}s` },
-				{ label = "TIER", value = tostring(tool.tier) },
-			},
-			price = tool.price,
-			currency = "cash",
-			owned = tool.price == 0,
-			tag = if i == #Tools.order then "LEGENDARY!" elseif i == #Tools.order - 1 then "NEW!" else nil,
-			layoutOrder = i,
-			index = i,
-			onBuy = comingSoonToast,
-		})
-	end
-	return e(List, { children = cards })
 end
 
 local function ExclusivesList()
@@ -192,12 +184,18 @@ local function Windows(props: { viewport: Vector2 })
 		body = e(PedestalWindow.Body, { key = "pedestal" })
 	elseif window == "Welcome" then
 		body = e(WelcomeWindow.Body, { key = "welcome" })
+	elseif window == "Rides" then
+		body = e(GarageScreen.Body, { key = `rides_{tab}`, tab = tab })
+	elseif window == "Index" then
+		body = if tab == "rebirth" then e(RebirthScreen, { key = "rebirth" }) else e(IndexScreen, { key = "index" })
+	elseif window == "Settings" then
+		body = e(SettingsScreen.Body, { key = "settings" })
 	elseif not isShop then
 		body = e(ComingSoon, { color = info.color })
 	elseif tab == "exclusives" then
 		body = e(ExclusivesList, { key = "ex" })
 	else
-		body = e(ToolsList, { key = "tools" })
+		body = e(ToolsScreen, { key = "tools" })
 	end
 	local onClose = if window == "Welcome" then WelcomeWindow.collect else Store.closeWindow
 	-- Okno + nagłówek/X wystające poza ramkę muszą zmieścić się na ekranie (telefon poziomo).

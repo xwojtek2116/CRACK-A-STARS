@@ -43,6 +43,22 @@ local function syncAttributes()
 	})
 end
 
+-- Pola stanu gracza kopiowane 1:1 do Store (ekrany T14). Wartość nil zostawia domyślną.
+local PROFILE_KEYS = { "tools", "equippedTool", "vehicles", "jetpackLevel", "rebirths", "index", "settings" }
+
+local function syncProfile(state: { [string]: any }?)
+	if not state then
+		return
+	end
+	local patch = {}
+	for _, key in PROFILE_KEYS do
+		if state[key] ~= nil then
+			patch[key] = state[key]
+		end
+	end
+	Store.set(patch)
+end
+
 local function syncNextStar()
 	local at = number(Workspace:GetAttribute(ATTR_NEXT_STAR))
 	Store.set({ nextStarAt = if at then at else Store.none })
@@ -66,7 +82,13 @@ function UIController.Start()
 
 	StateController.onLoaded(function(state)
 		Store.setCash(state.cash)
+		syncProfile(state :: any)
 	end)
+	for _, key in PROFILE_KEYS do
+		StateController.onChanged(key, function()
+			syncProfile(StateController.get() :: any)
+		end)
+	end
 	StateController.onChanged("cash", function(newValue)
 		if type(newValue) == "number" then
 			Store.setCash(newValue)
@@ -75,6 +97,7 @@ function UIController.Start()
 	local current = StateController.get()
 	if current then
 		Store.setCash(current.cash)
+		syncProfile(current :: any)
 	end
 
 	for _, name in { ATTR_INCOME, ATTR_FUEL, ATTR_FUEL_MAX } do

@@ -12,6 +12,8 @@ local NetConfig = require(script.Parent.Config.NetConfig)
 local RateLimiter = require(script.Parent.Net.RateLimiter)
 local Validate = require(script.Parent.Net.Validate)
 local BaseMath = require(script.Parent.BaseMath)
+local Tools = require(script.Parent.Config.Data.Tools) :: any
+local Vehicles = require(script.Parent.Config.Data.Vehicles) :: any
 
 -- „Sell all below X”: X od Uncommon do Legendary (Legendary+ zawsze pojedynczo, z potwierdzeniem).
 local SELL_BELOW = { "Uncommon", "Rare", "Epic", "Legendary" }
@@ -46,6 +48,12 @@ export type RemoteName =
 	| "SellBelow"
 	| "WelcomeInfo"
 	| "BaseNotice"
+	| "BuyTool"
+	| "EquipTool"
+	| "BuyVehicle"
+	| "BuyJetpack"
+	| "Rebirth"
+	| "ReturnToLobby"
 
 local DEFINITIONS: { [RemoteName]: Definition } = {
 	-- Stan gracza: pełny stan po wczytaniu, potem delty { [klucz] = nowa wartość }.
@@ -104,6 +112,16 @@ local DEFINITIONS: { [RemoteName]: Definition } = {
 	WelcomeInfo = { kind = "Function", direction = "ToServer", args = {} },
 	-- Komunikaty bazy dla gracza: { kind = "Replaced" | "AutoSold" | "Full", ... } (toasty).
 	BaseNotice = { kind = "Event", direction = "ToClient" },
+	-- Sklep narzędzi (ToolService, T09). BuyTool(toolId) / EquipTool(toolId) → { ok, reason? }.
+	BuyTool = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(Tools.order) } },
+	EquipTool = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(Tools.order) } },
+	-- Garaż (VehicleService, T10). BuyVehicle(vehicleId) / BuyJetpack() (następny poziom) → { ok, reason? }.
+	BuyVehicle = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(Vehicles.order) } },
+	BuyJetpack = { kind = "Function", direction = "ToServer", args = {} },
+	-- Rebirth (RebirthService, T19). Rebirth() → { ok, reason? }. Klient pyta „Are you sure?” przed wysłaniem.
+	Rebirth = { kind = "Function", direction = "ToServer", args = {} },
+	-- ReturnToLobby() → { ok, reason?, readyAt? } (LobbyService: cooldown, nie w trakcie minigry).
+	ReturnToLobby = { kind = "Function", direction = "ToServer", args = {} },
 }
 
 local FOLDER_NAME = "Remotes"

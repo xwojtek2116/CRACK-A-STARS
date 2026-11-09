@@ -66,6 +66,7 @@
     "plotRadius": 320,
     "ceiling": 600,
     "returnToLobbyCooldown": 10,
+    "lobbyTeleportSpread": 14,
     "notes": "Średni dystans do gwiazdy ~1200 studs: sprint ~45 s, Hoverboard ~30 s, Rocket Bike ~16 s."
   }
 }

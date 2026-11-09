@@ -289,6 +289,16 @@ local function giveTool(player: Player)
 	PlaceholderTool.create(data.equippedTool).Parent = backpack
 end
 
+-- Czy gracz jest w trakcie rundy minigry (LobbyService blokuje wtedy Return to Lobby).
+function CrackService.isInRound(player: Player): boolean
+	local state = states[player]
+	local active = state and state.active
+	if not active then
+		return false
+	end
+	return os.clock() - active.startedAt <= active.round.duration + MINIGAME.latencyGrace * 2
+end
+
 -- Inne serwisy (boosty, eventy) podają mnożnik obrażeń gracza.
 function CrackService.setBoostProvider(provider: BoostProvider)
 	boostProvider = provider

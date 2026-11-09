@@ -14,6 +14,7 @@ local LootConfig = require(Shared.Config.LootConfig)
 local Logger = require(Shared.Logger)
 
 local UI = script.Parent.Parent
+local Store = require(UI.Store)
 local Theme = require(UI.Theme)
 local Fx = require(script.Parent.Fx)
 local SoundController = require(UI.Parent.Controllers.SoundController)
@@ -150,7 +151,8 @@ function Announce.handle(data: LootAnnouncement)
 			best = drop
 		end
 	end
-	if data.userId == player.UserId then
+	-- Własny łup ma kartę łupu; „Hide others' drops” (SETTINGS) chowa banery i błysk (czat zostaje).
+	if data.userId == player.UserId or Store.get().settings.hideAnnouncements == true then
 		return
 	end
 
