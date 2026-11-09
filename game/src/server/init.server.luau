@@ -19,6 +19,7 @@ local SERVICES = {
 	"DataService",
 	"StarService",
 	"CrackService",
+	"LootService",
 }
 
 local log = Logger.new("Boot")

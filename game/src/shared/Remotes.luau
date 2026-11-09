@@ -33,6 +33,7 @@ export type RemoteName =
 	| "CrackStart"
 	| "CrackFinish"
 	| "CrackResult"
+	| "LootDrop"
 
 local DEFINITIONS: { [RemoteName]: Definition } = {
 	-- Stan gracza: pełny stan po wczytaniu, potem delty { [klucz] = nowa wartość }.
@@ -62,6 +63,9 @@ local DEFINITIONS: { [RemoteName]: Definition } = {
 	},
 	-- Wynik uderzenia dla wszystkich: { starId, userId, damage, grade, crit, weak, pos }.
 	CrackResult = { kind = "Event", direction = "ToClient" },
+	-- Łup gracza po rozbiciu (LootService → karta łupu): LootService.LootDropPayload.
+	-- Rzadki łup innych graczy idzie przez Announcement { kind = "Loot", userId, name, star, drops }.
+	LootDrop = { kind = "Event", direction = "ToClient" },
 }
 
 local FOLDER_NAME = "Remotes"

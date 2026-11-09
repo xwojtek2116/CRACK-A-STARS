@@ -10,13 +10,16 @@
       "id": "vip",
       "name": "VIP",
       "robux": 299,
-      "effect": "VIP tag, chat color, +1 base slot, +10% luck"
+      "effect": "VIP tag, chat color, +1 base slot, +10% luck",
+      "luckBonus": 0.1,
+      "slotBonus": 1
     },
     {
       "id": "lucky",
       "name": "Lucky",
       "robux": 249,
-      "effect": "+25% luck on every loot roll"
+      "effect": "+25% luck on every loot roll",
+      "luckBonus": 0.25
     },
     {
       "id": "auto_crack",
@@ -34,7 +37,8 @@
       "id": "extra_slots",
       "name": "+5 Base Slots",
       "robux": 179,
-      "effect": "+5 pedestal slots"
+      "effect": "+5 pedestal slots",
+      "slotBonus": 5
     }
   ],
   "products": [
@@ -60,7 +64,9 @@
       "id": "luck_boost",
       "name": "Luck Boost 15m",
       "robux": 79,
-      "effect": "x2 luck for 15 min"
+      "effect": "x2 luck for 15 min",
+      "luckMult": 2,
+      "durationSeconds": 900
     },
     {
       "id": "summon_star",
