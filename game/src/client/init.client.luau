@@ -18,6 +18,7 @@ local CONTROLLERS = {
 	"StateController",
 	"SoundController",
 	"CinematicController",
+	"MapAmbienceController",
 	"StarFxController",
 	"ToolFxController",
 	"ToolController",

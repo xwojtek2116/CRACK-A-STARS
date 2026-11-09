@@ -1,6 +1,6 @@
 ---
 typ: system
-status: plan
+status: gotowe
 taski: [T03, T36, T15]
 tags: [system]
 ---
@@ -42,6 +42,8 @@ tags: [system]
 **Wydajność:** `StreamingEnabled` (już włączone), teren z Terrain + niewiele dużych meshy, propsy z instancjonowanych modeli, `Model.LevelOfDetail` dla dalekich skał. Cel 60 FPS na telefonie.
 
 Blockout w Studio (T03, mały) → **powiększenie i lobby (T36)** → finalne propsy z Blendera (T15). Zapis `.rbxm` w `game/assets/map/`.
+
+**Mapa finalna (T15, 2026-11-09):** niebo `Lighting.NebulaSky` (granat + zorza, z Blendera) i planety `Workspace.Map.Sky` (gazowy olbrzym z pierścieniem, czerwona, lodowy księżyc; klient przesuwa je za kamerą); 8 budynków stacji w stylu stacji kosmicznej (`Stations.<Stacja>.Building` + niewidzialna kotwica `Body` dla witryny `ToolService`); 765 propsów z Blendera w `Workspace.Map.Props.<Biom>` (skupiska, mieszanie w pasie ±12° granicy biomów, punkty orientacyjne: łuk lawy, łuk lodu, iglica kryształu, monolit mgławicy, 8 wież-latarni, 2 wraki), 16 pylonów pola siłowego na r = 1995, neonowe krawędzie ramp, wystrój obrzeża działek (`Plot_N.Decor`). Klimat biomów (Atmosphere, tint, cząsteczki) robi `MapAmbienceController` z `MapAmbienceConfig`. Szczegóły: [[2026-11-09 Mapa finalna T15]]. Zrzuty: ![[T15 lobby niebo.jpg]] ![[T15 Lava Fields.jpg]]
 
 **Duża mapa (T36, 2026-11-08):** teren z Terrain generowany skryptem `tools/studio/T36_map_gen.luau`; `Workspace.Map` = `Lobby` (płaskowyż +20, stacje z tagiem `LobbyStation` + atrybut `Station`), `Biomes/<Theme>/LandingZone` (tag `StarLandingZone`, atrybuty `Theme`, `AngleMin/Max`, `RadiusMin/Max`), `Ramps`, `Bounds`; działki `Workspace.Plots/Plot_1..8` na r=320. Sprint do średniej gwiazdy ~42–51 s. Szczegóły: [[2026-11-08 Teren i lobby T36]]. Zrzut: ![[T36 mapa z gory.jpg]]
 

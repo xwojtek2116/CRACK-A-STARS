@@ -1,0 +1,15 @@
+{
+ "GasGiant": {
+  "radius": 700,
+  "tris": 2208,
+  "ringOuter": 1609.9999999999998
+ },
+ "Ember": {
+  "radius": 260,
+  "tris": 1520
+ },
+ "IceMoon": {
+  "radius": 150,
+  "tris": 960
+ }
+}
