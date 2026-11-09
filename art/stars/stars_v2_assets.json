@@ -1,0 +1,15 @@
+{
+ "note": "Gwiazdy v2 (T40): asset FBX (Open Cloud, Model) i wygląd przekazany do require(ServerStorage.StarImportV2)(typ, look). Ponowny import: insert_asset(assetId) jako ServerStorage.StarV2Import, potem wywołanie z look. Solar: po imporcie Core.Color i Glow.Color = #FFB52E (theme glow przepala się na biało).",
+ "Iron": {"assetId": "114703979320483", "look": {"shellMat": "CorrodedMetal", "rock": "#4A4440", "ground": "#3E3A38"}},
+ "Lava": {"assetId": "71528200639698", "look": {"shellMat": "Basalt", "rock": "#2B211D", "ground": "#2A2220"}},
+ "Frost": {"assetId": "107455782370382", "look": {"shellMat": "Ice", "rock": "#A9D9F2", "ground": "#8FB4CC"}},
+ "Geode": {"assetId": "105152212118880", "look": {"shellMat": "Rock", "rock": "#5B4A3E", "ground": "#4E433B"}},
+ "Comet": {"assetId": "88521856856112", "look": {"shellMat": "Glacier", "rock": "#4E6A80", "ground": "#3D4E5C"}},
+ "Toxic": {"assetId": "128301287050294", "look": {"shellMat": "Basalt", "rock": "#3B3842", "ground": "#46434C", "coreColor": "#A6FF3D"}},
+ "Electric": {"assetId": "139730727430774", "look": {"shellMat": "DiamondPlate", "rock": "#3A3F4C", "ground": "#34373F"}},
+ "Nebula": {"assetId": "132965966406832", "look": {"shellMat": "Slate", "rock": "#2A1F3D", "ground": "#2A2433"}},
+ "Diamond": {"assetId": "88630486272273", "look": {"shellMat": "Glass", "rock": "#CFEFFF", "ground": "#8FA6B8", "glass": true}},
+ "Ringed": {"assetId": "98806378065677", "look": {"shellMat": "Sandstone", "rock": "#6B4A35", "ground": "#4F3B2E"}},
+ "Solar": {"assetId": "76781071108520", "look": {"shellMat": "Foil", "rock": "#C99A2E", "ground": "#5A3A10"}},
+ "Void": {"assetId": "122684251952035", "look": {"shellMat": "Basalt", "rock": "#1A1524", "ground": "#141019", "coreColor": "#120A1E"}}
+}

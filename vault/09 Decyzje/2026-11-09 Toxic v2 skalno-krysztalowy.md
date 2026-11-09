@@ -17,3 +17,5 @@ tags: [decyzja, gwiazdy, art]
 - Latający gruz i VFX tylko na kliencie; serwer ma statyczny model z atrybutami.
 - Nowy moduł klienta `StarVisual` z API `SetState` / `PlayAnimation` / `SetEnergyLevel`, wspólny dla wszystkich rodzajów.
 - Karta Toxic na płótnie konceptów (5 ramion) jest nieaktualna. Pozostałe 11 gwiazd czeka na decyzję, czy dostaną podobne arkusze.
+
+**Rozszerzenie (9.11, decyzja użytkownika „projektuj sam”):** pozostałe 11 rodzajów i Supernowa dostały ten sam szkielet części co Toxic v2 (generator `art/stars/build_star_v2.py`), z własnym stylem skorupy, kolorami i materiałami Roblox. Jeden `StarVisual` i jeden import obsługują wszystkie gwiazdy.

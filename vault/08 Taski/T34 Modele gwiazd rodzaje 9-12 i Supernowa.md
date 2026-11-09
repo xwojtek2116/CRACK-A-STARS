@@ -1,7 +1,7 @@
 ---
 id: T34
 tytul: "Modele gwiazd rodzaje 9-12 i Supernowa"
-status: todo
+status: done
 dzien: 9
 data: 2026-11-15
 tor: B
@@ -40,3 +40,5 @@ Modele gwiazd rodzaje 9-12 i Supernowa.
 
 ## Raport
 _(uzupełnia Claude po zakończeniu: co zrobiono, pliki, użyte skille, wynik testów, problemy; „Zaległe kroki” tylko dla tego, czego żadne narzędzie nie pozwoliło zrobić)_
+
+✔ Zrobione w [[T40]] (9.11): Diamond, Ringed, Solar, Void i Supernowa każdego rodzaju jako gwiazdy v2 (`art/stars/build_star_v2.py`, import `ServerStorage.StarImportV2`).
