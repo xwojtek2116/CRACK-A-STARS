@@ -2,16 +2,19 @@
 -- ToolsScreen — zakładka TOOLS sklepu: 8 narzędzi z Tools.json (kolejne tiery kupuje się po kolei).
 -- Stan karty z danych gracza (Store.tools / equippedTool):
 --   wyposażone → „EQUIPPED”, posiadane → „EQUIP”, następny tier → cena (kasa), dalsze → „LOCKED” (przyciemnione).
--- Kupno i wyposażanie liczy serwer (BuyTool / EquipTool; logika T09, do tego czasu „Coming soon”).
+-- Kupno i wyposażanie liczy serwer (BuyTool / EquipTool → ToolService, T09). Po kupnie ekran „NEW TOOL UNLOCKED!”
+-- (Tools/Unlock) i zamknięcie sklepu — narzędzie jest już w ręku.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local React = require(ReplicatedStorage:WaitForChild("Packages").React)
 
 local Tools = require(ReplicatedStorage:WaitForChild("Shared").Config.Data.Tools) :: any
+local ToolConfig = require(ReplicatedStorage:WaitForChild("Shared").Config.ToolConfig)
 
 local UI = script.Parent.Parent
 local OfferCard = require(UI.Components.OfferCard)
+local Unlock = require(UI.Tools.Unlock)
 local Store = require(UI.Store)
 local Theme = require(UI.Theme)
 local Common = require(script.Parent.Common)
@@ -44,7 +47,13 @@ local function ToolsScreen()
 		elseif isNext then
 			tag = "NEXT UP!"
 			onBuy = function()
-				Request.send("BuyTool", { id }, `{tool.name} unlocked!`)
+				local before = Store.get().equippedTool
+				Request.send("BuyTool", { id }, nil, function(result)
+					if result.ok then
+						Store.closeWindow()
+						task.delay(ToolConfig.UNLOCK.delay, Unlock.show, id, before)
+					end
+				end)
 			end
 		else
 			actionText, actionColor = "LOCKED", Theme.COLORS.panelLight

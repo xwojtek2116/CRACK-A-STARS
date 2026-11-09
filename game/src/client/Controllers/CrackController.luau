@@ -23,6 +23,7 @@ local Client = script.Parent.Parent
 local CinematicController = require(script.Parent.CinematicController)
 local SoundController = require(script.Parent.SoundController)
 local StateController = require(script.Parent.StateController)
+local ToolController = require(script.Parent.ToolController)
 local CrackFx = require(Client.Fx.CrackFx)
 local Banner = require(Client.UI.Minigame.Banner)
 local DamageNumbers = require(Client.UI.Minigame.DamageNumbers)
@@ -155,7 +156,7 @@ local function onGrade(target: CrackRound.Target, grade: Grade, position: Vector
 	end
 	combo += 1
 	Banner.setCombo(combo)
-	Feel.swing(equipped)
+	ToolController.strike()
 	if target.weak then
 		SoundController.play2D("hitWeak")
 	end

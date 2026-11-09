@@ -211,9 +211,6 @@ return table.freeze({
 		vignetteFlash = 0.15, -- przezroczystość winiety w błysku Perfect
 		fadeSeconds = 0.4,
 		shoulderOffset = Vector3.new(2.6, 0.8, 0), -- Humanoid.CameraOffset w rundzie: kamera zza ramienia, gwiazda nie chowa się za postacią
-		swingBack = 0.08, -- s zamachu kilofem
-		swingHit = 0.14, -- s uderzenia i powrotu
-		swingAngle = 1.1, -- rad
 		-- Baner rundy i combo
 		bannerSeconds = 1.2,
 		comboPitchStep = 0.035, -- PlaybackSpeed hitPerfect za każde trafienie w serii

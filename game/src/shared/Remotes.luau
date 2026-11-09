@@ -12,6 +12,7 @@ local NetConfig = require(script.Parent.Config.NetConfig)
 local RateLimiter = require(script.Parent.Net.RateLimiter)
 local Validate = require(script.Parent.Net.Validate)
 local BaseMath = require(script.Parent.BaseMath)
+local CrackRound = require(script.Parent.CrackRound)
 local Tools = require(script.Parent.Config.Data.Tools) :: any
 local Vehicles = require(script.Parent.Config.Data.Vehicles) :: any
 
@@ -112,9 +113,10 @@ local DEFINITIONS: { [RemoteName]: Definition } = {
 	WelcomeInfo = { kind = "Function", direction = "ToServer", args = {} },
 	-- Komunikaty bazy dla gracza: { kind = "Replaced" | "AutoSold" | "Full", ... } (toasty).
 	BaseNotice = { kind = "Event", direction = "ToClient" },
-	-- Sklep narzędzi (ToolService, T09). BuyTool(toolId) / EquipTool(toolId) → { ok, reason? }.
+	-- Sklep narzędzi (ToolService, T09). BuyTool(toolId) — następny tier za kasę; EquipTool(toolId) — dowolne
+	-- posiadane (tiery i ekskluzywy) → { ok, reason? }.
 	BuyTool = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(Tools.order) } },
-	EquipTool = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(Tools.order) } },
+	EquipTool = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(CrackRound.allToolIds()) } },
 	-- Garaż (VehicleService, T10). BuyVehicle(vehicleId) / BuyJetpack() (następny poziom) → { ok, reason? }.
 	BuyVehicle = { kind = "Function", direction = "ToServer", args = { Validate.oneOf(Vehicles.order) } },
 	BuyJetpack = { kind = "Function", direction = "ToServer", args = {} },

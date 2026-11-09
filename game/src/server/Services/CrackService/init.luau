@@ -20,7 +20,6 @@ local StarConfig = require(Shared.Config.StarConfig)
 local Services = script.Parent
 local DataService = require(Services.DataService)
 local StarService = require(Services.StarService)
-local PlaceholderTool = require(script.PlaceholderTool)
 
 type Round = CrackRound.Round
 type Grade = CrackRound.Grade
@@ -267,28 +266,6 @@ local function onFinish(player: Player, roundId: number, times: { number })
 	})
 end
 
--- Tymczasowo (do T09): narzędzie z danych gracza do plecaka po każdym odrodzeniu.
-local function giveTool(player: Player)
-	local data = DataService.get(player)
-	if not data then
-		return
-	end
-	local backpack = player:FindFirstChildOfClass("Backpack")
-	if not backpack then
-		return
-	end
-	for _, container in { backpack, player.Character } do
-		if container then
-			for _, child in container:GetChildren() do
-				if child:IsA("Tool") and child:GetAttribute("Placeholder") then
-					child:Destroy()
-				end
-			end
-		end
-	end
-	PlaceholderTool.create(data.equippedTool).Parent = backpack
-end
-
 -- Czy gracz jest w trakcie rundy minigry (LobbyService blokuje wtedy Return to Lobby).
 function CrackService.isInRound(player: Player): boolean
 	local state = states[player]
@@ -312,12 +289,6 @@ end
 function CrackService.Start()
 	DataService.onLoaded(function(player: Player)
 		task.spawn(refreshAutoCrack, player)
-		player.CharacterAdded:Connect(function()
-			task.defer(giveTool, player)
-		end)
-		if player.Character then
-			giveTool(player)
-		end
 	end)
 	if AUTO_CRACK_PASS then
 		MarketplaceService.PromptGamePassPurchaseFinished:Connect(function(player, passId, purchased)

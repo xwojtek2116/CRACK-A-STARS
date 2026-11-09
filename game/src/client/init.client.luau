@@ -20,6 +20,7 @@ local CONTROLLERS = {
 	"CinematicController",
 	"StarFxController",
 	"ToolFxController",
+	"ToolController",
 	"CrackController",
 	"LootController",
 	"BaseController",

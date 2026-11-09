@@ -4,6 +4,7 @@
 -- Ocena: faza = (t − spawnAt) / shrinkTime, błąd = |faza − 1|; ≤ perfect.window/2 → Perfect,
 -- ≤ good.window/2 → Good, reszta albo brak trafienia → Miss. Pozycje i słaby punkt wynikają z seed.
 
+local MonetizationData = require(script.Parent.Config.Data.Monetization) :: any
 local ToolsData = require(script.Parent.Config.Data.Tools) :: any
 
 export type Grade = "Perfect" | "Good" | "Miss"
@@ -62,8 +63,27 @@ export type Round = {
 	duration: number,
 }
 
-local TOOLS: { [string]: ToolDef } = ToolsData.tools
 local MINIGAME: Minigame = ToolsData.minigame
+
+-- Katalog narzędzi: 8 tierów z Tools.json + ekskluzywy (Monetization.json → exclusives, type = "tool"; T09).
+-- Ekskluzywy mają tier 0 i cenę 0 (kupowane za Robux, T16) — statystyki z `stats`.
+local TOOLS: { [string]: ToolDef } = table.clone(ToolsData.tools)
+for _, offer in (MonetizationData.exclusives or {}) :: { any } do
+	local stats = offer.stats
+	if offer.type == "tool" and type(stats) == "table" and not TOOLS[offer.id] then
+		TOOLS[offer.id] = {
+			name = offer.name,
+			tier = 0,
+			price = 0,
+			damage = stats.damage,
+			cooldown = stats.cooldown,
+			targets = stats.targets,
+			targetSize = stats.targetSize,
+			shrinkTime = stats.shrinkTime,
+			crit = stats.crit,
+		}
+	end
+end
 
 local CrackRound = {
 	TOOLS = TOOLS,
@@ -84,6 +104,22 @@ end
 
 function CrackRound.getTool(toolId: string): ToolDef?
 	return TOOLS[toolId]
+end
+
+-- Czy narzędzie jest ekskluzywem (Robux), a nie tierem z Tools.json.
+function CrackRound.isExclusive(toolId: string): boolean
+	return TOOLS[toolId] ~= nil and ToolsData.tools[toolId] == nil
+end
+
+-- Wszystkie id narzędzi: tiery w kolejności, potem ekskluzywy.
+function CrackRound.allToolIds(): { string }
+	local ids = table.clone(ToolsData.order)
+	for _, offer in (MonetizationData.exclusives or {}) :: { any } do
+		if TOOLS[offer.id] and ToolsData.tools[offer.id] == nil then
+			table.insert(ids, offer.id)
+		end
+	end
+	return ids
 end
 
 -- Buduje rundę z seed. Ten sam seed i narzędzie = te same punkty na serwerze i kliencie.

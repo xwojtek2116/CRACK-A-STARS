@@ -1,6 +1,7 @@
 --!strict
 -- Windows — okna otwierane z menu HUD. Sklep narzędzi: zakładki TOOLS (Screens/ToolsScreen, BuyTool/EquipTool)
--- i EXCLUSIVES (Monetization.json → exclusives, Robux — kupowanie podłączy T16, na razie toast).
+-- i EXCLUSIVES (Monetization.json → exclusives, Robux — kupowanie podłączy T16, na razie toast; posiadane
+-- narzędzia-ekskluzywy mają EQUIP / EQUIPPED przez EquipTool, T09).
 -- Baza (T08): MY BASE (postumenty/ekwipunek), PEDESTAL (menu postumentu), SELL STATION, WELCOME BACK.
 -- Ekrany T14 (Screens/): GARAGE (okno Rides), STAR INDEX (zakładki INDEX i REBIRTH), SETTINGS.
 -- R$ SHOP = „Coming soon” (T16).
@@ -28,6 +29,7 @@ local WelcomeWindow = require(UI.Base.WelcomeWindow)
 local GarageScreen = require(UI.Screens.GarageScreen)
 local IndexScreen = require(UI.Screens.IndexScreen)
 local RebirthScreen = require(UI.Screens.RebirthScreen)
+local Request = require(UI.Screens.Request)
 local SettingsScreen = require(UI.Screens.SettingsScreen)
 local ToolsScreen = require(UI.Screens.ToolsScreen)
 
@@ -113,8 +115,15 @@ local function comingSoonToast()
 end
 
 local function ExclusivesList()
+	local owned = Store.use(function(s)
+		return s.tools
+	end)
+	local equipped = Store.use(function(s)
+		return s.equippedTool
+	end)
 	local cards = {}
 	for i, offer in Monetization.exclusives or {} do
+		local isOwnedTool = offer.type == "tool" and owned[offer.id] == true
 		local stats = {}
 		if offer.stats and offer.stats.damage then
 			stats = {
@@ -133,10 +142,19 @@ local function ExclusivesList()
 			stats = stats,
 			price = offer.robux,
 			currency = "robux",
-			tag = "LIMITED TIME ONLY!",
+			tag = if isOwnedTool then nil else "LIMITED TIME ONLY!",
+			actionText = if isOwnedTool then (if equipped == offer.id then "EQUIPPED" else "EQUIP") else nil,
+			actionColor = if isOwnedTool
+				then (if equipped == offer.id then Theme.COLORS.index else Theme.COLORS.neonCyan)
+				else nil,
 			layoutOrder = i,
 			index = i,
-			onBuy = comingSoonToast,
+			onBuy = if isOwnedTool and equipped ~= offer.id
+				then function()
+					Request.send("EquipTool", { offer.id }, `{offer.name} equipped!`)
+				end
+				elseif isOwnedTool then nil
+				else comingSoonToast,
 		})
 	end
 	return e(List, { children = cards })

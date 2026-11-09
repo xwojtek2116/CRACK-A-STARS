@@ -1,7 +1,7 @@
 --!strict
 -- Feel — odczucie minigry (T06 v2): skupienie kamery na gwieździe (DepthOfField), winieta w kolorze gwiazdy,
 -- błysk przy Perfect, wibracja (pad: HapticService, telefon: HapticEffect, jeśli dostępny),
--- zamach narzędziem (lokalny tween Tool.Grip) i obrót postaci do gwiazdy.
+-- obrót postaci do gwiazdy (zamach narzędziem: ToolController.strike, T09).
 -- Wszystko lokalne; przy lowGraphics bez rozmycia. Liczby: AnimConfig.CRACK.
 
 local HapticService = game:GetService("HapticService")
@@ -25,7 +25,6 @@ local focus: DepthOfFieldEffect? = nil
 local vignette: ImageLabel? = nil
 local focusCenter: Vector3? = nil
 local active = false
-local swinging: { [Tool]: CFrame } = {}
 local shoulderHumanoid: Humanoid? = nil
 local hapticEffects: { [string]: Instance } = {}
 
@@ -167,40 +166,6 @@ function Feel.haptic(kind: string)
 			HapticService:SetMotor(pad, Enum.VibrationMotor.Small, 0)
 		end)
 	end
-end
-
--- Zamach narzędziem w ręku: Grip obraca się do tyłu i uderza (lokalnie, wraca do bazowego).
-function Feel.swing(tool: Tool?)
-	if not tool or tool.Parent ~= player.Character then
-		return
-	end
-	local base = swinging[tool] or tool.Grip
-	swinging[tool] = base
-	local back = base * CFrame.Angles(-CRACK.swingAngle, 0, 0)
-	local hit = base * CFrame.Angles(CRACK.swingAngle * 0.35, 0, 0)
-	TweenService:Create(tool, TweenInfo.new(CRACK.swingBack, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-		Grip = back,
-	}):Play()
-	task.delay(CRACK.swingBack, function()
-		local strike = TweenService:Create(
-			tool,
-			TweenInfo.new(CRACK.swingHit * 0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
-			{ Grip = hit }
-		)
-		strike:Play()
-		strike.Completed:Wait()
-		TweenService:Create(
-			tool,
-			TweenInfo.new(CRACK.swingHit * 0.6, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-			{ Grip = base }
-		):Play()
-	end)
-	tool.AncestryChanged:Once(function()
-		if swinging[tool] then
-			tool.Grip = swinging[tool]
-			swinging[tool] = nil
-		end
-	end)
 end
 
 return Feel

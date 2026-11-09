@@ -60,6 +60,17 @@ local SOUNDS: { [string]: SoundDef } = {
 	hitCrit = { id = "rbxassetid://76102274344653", volume = 0.8, rolloff = { 20, 260 } }, -- hit_crit.wav (3D, słyszą inni)
 	roundPerfect = { id = "rbxassetid://72160258473855", volume = 0.5 }, -- round_perfect.wav
 	roundEnd = { id = "rbxassetid://130704310366274", volume = 0.3 }, -- round_end.wav
+	-- Narzędzia (T09, tools/tool_sfx_gen.py → art/audio/tools/). Zamachy 3D przy narzędziu, słyszą inni.
+	swingStone = { id = "rbxassetid://138814038252293", volume = 0.5, rolloff = { 8, 120 }, pitchVariance = 0.08 },
+	swingMetal = { id = "rbxassetid://137646814951668", volume = 0.5, rolloff = { 8, 120 }, pitchVariance = 0.08 },
+	swingCrystal = { id = "rbxassetid://72363291579877", volume = 0.5, rolloff = { 8, 130 }, pitchVariance = 0.06 },
+	swingPlasma = { id = "rbxassetid://108705179473948", volume = 0.5, rolloff = { 8, 130 }, pitchVariance = 0.05 },
+	swingLaser = { id = "rbxassetid://126789616200488", volume = 0.55, rolloff = { 8, 140 }, pitchVariance = 0.05 },
+	swingGravity = { id = "rbxassetid://87431207171072", volume = 0.6, rolloff = { 10, 160 }, pitchVariance = 0.05 },
+	swingCannon = { id = "rbxassetid://116784056364838", volume = 0.6, rolloff = { 12, 220 }, pitchVariance = 0.05 },
+	swingLegend = { id = "rbxassetid://134460698555237", volume = 0.6, rolloff = { 12, 200 }, pitchVariance = 0.04 },
+	toolEquip = { id = "rbxassetid://130240915563874", volume = 0.45, pitchVariance = 0.05 }, -- tool_equip.wav (2D)
+	toolUnlock = { id = "rbxassetid://92666381671661", volume = 0.6 }, -- tool_unlock.wav (2D, ekran NEW TOOL)
 }
 
 -- Dźwięk uderzenia dla rozmiaru gwiazdy.
