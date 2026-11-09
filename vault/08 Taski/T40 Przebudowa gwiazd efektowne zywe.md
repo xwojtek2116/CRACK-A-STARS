@@ -57,7 +57,11 @@ Wszystkie gwiazdy (rodzaje 1-12 i Supernowa) od nowa, naprawdę „wow”: zło�
 - [x] Zdjęcia referencyjne: zdjęcia od użytkownika i linki w `vault/_ref/`
 - [ ] Plansze konceptów w Claude Design dla 13 gwiazd → akceptacja
 - [x] Toxic v2: prototyp techniczny (Toxic Star Lab) + specyfikacja produkcyjna → akceptacja
-- [ ] Generator v2: gęstsze modele, tekstury PBR, zacieki (Toxic: `build_toxic_v2.py` według specyfikacji)
+- [x] Użytkownik zaakceptował Toxic v2 (prototyp + specyfikację) — 9.11
+- [x] Toxic v2 w Blenderze: `art/stars/toxic/build_toxic_v2.py` → `star_toxic_v2.fbx/.blend` (Large ~10,5k tris + gruz, Small ~2,2k), `toxic_v2_anchors.json` (ANCHOR_*, 12 stref), rendery `vault/_img/T40 toxic v2 studio.png`, `T40 toxic v2 noc.png` — czeka na akceptację modelu
+- [ ] Toxic v2: bake tekstur PBR (Color/Normal/Roughness 1024²) dla MAT_Rock i MAT_Ground
+- [ ] Toxic v2: import do Studio (upload FBX, rozszerzenie `import_stars.luau`, `Themes.json` Toxic `shell` → #3B3842), `.rbxm`
+- [ ] Generator v2 dla pozostałych gwiazd (po akceptacji Toxica w grze)
 - [ ] `StarFX` (klient): idle obrót/unoszenie, puls jądra, miganie, kapanie, dym, aura; więcej efektów z rozmiarem; „Ogranicz ruch”
 - [ ] Prototyp Toxic (4 rozmiary) w Studio → zrzuty + nagranie → akceptacja
 - [ ] Pozostałe 12 gwiazd × 4 rozmiary, import do `ServerStorage.Stars`, kolizja (`PreciseConvexDecomposition` dla Shell)
