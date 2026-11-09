@@ -4,7 +4,7 @@ id: "stone_pickaxe"
 tier: 1
 cena: 0
 obrazenia: 10
-model: "brak"
+model: "gotowy"
 tags: ["narzedzie"]
 ---
 # Stone Pickaxe
@@ -20,10 +20,13 @@ Tier **1** · cena **$0**
 | Czas kurczenia | 1.4 s |
 | Szansa na krytyk | 2% |
 | Wygląd | chunky stone head on wooden handle |
-| Model | `art/tools/stone_pickaxe.blend` |
+| Model | `art/tools/tools.blend` (obiekty `stone_pickaxe_*`), w grze `ServerStorage.Tools.stone_pickaxe` |
 
 ![[stone_pickaxe.png|220]]
 
 <!-- notatki: wszystko poniżej edytuj ręcznie, sync_vault.py tego nie nadpisze -->
 ## Notatki
+**Model 3D (T11):** Kamienny kilof na drewnianym trzonku z owijką; bez poświaty (tier 1). W grze: `ServerStorage.Tools.<id>` (Tool z Handle, Grip, smuga/cząsteczki).
+Porównanie wszystkich: ![[T11 narzedzia.png]] · w grze: ![[T11 narzedzia w grze.jpg]]
+
 

@@ -69,16 +69,19 @@ Theme.ICONS = {
 	settings = "rbxasset://textures/ui/Settings/MenuBarIcons/GameSettingsTab.png",
 }
 
--- Rendery narzędzi do kart sklepu (art/ui/build_tool_icons.py). Klucze = Tools.json → order.
+-- Rendery narzędzi do kart sklepu i hotbaru (T11: art/tools/build_tools.py --icons → art/ui/tools/).
+-- Klucze = Tools.json → order + ekskluzywy z Monetization.json.
 Theme.TOOL_RENDERS = {
-	stone_pickaxe = "rbxassetid://111934838668648",
-	iron_hammer = "rbxassetid://130751804546775",
-	crystal_axe = "rbxassetid://123525833261720",
-	plasma_saw = "rbxassetid://130523779856707",
-	laser_sword = "rbxassetid://129320924967145",
-	gravity_hammer = "rbxassetid://140000492473746",
-	nova_cannon = "rbxassetid://113112919754407",
-	starbreaker = "rbxassetid://84499103926215",
+	stone_pickaxe = "rbxassetid://137983318054320",
+	iron_hammer = "rbxassetid://100904785238663",
+	crystal_axe = "rbxassetid://78254779475884",
+	plasma_saw = "rbxassetid://88740279393871",
+	laser_sword = "rbxassetid://131127245057878",
+	gravity_hammer = "rbxassetid://107680470583354",
+	nova_cannon = "rbxassetid://91457310960082",
+	starbreaker = "rbxassetid://123877129584869",
+	comet_blade = "rbxassetid://116445645736549",
+	galaxy_hammer = "rbxassetid://70530177242384",
 } :: { [string]: string }
 
 -- Tekstury efektów UI (te same co VFX gwiazd, T38): mgławica (bezszwowa), flara, błysk-gwiazdka, iskra.

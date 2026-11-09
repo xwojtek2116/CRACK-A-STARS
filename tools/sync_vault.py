@@ -167,7 +167,7 @@ def main() -> int:
             f"# {t['name']}\n\nTier **{t['tier']}** · cena **{money(t['price'])}**\n\n"
             f"| Pole | Wartość |\n| --- | --- |\n| Obrażenia | {t['damage']} |\n| Cooldown | {t['cooldown']} s |\n"
             f"| Punkty w minigrze | {t['targets']} |\n| Rozmiar punktu | {t['targetSize']} |\n| Czas kurczenia | {t['shrinkTime']} s |\n"
-            f"| Szansa na krytyk | {t['crit']:.0%} |\n| Wygląd | {t['look']} |\n| Model | `art/tools/{tid}.blend` |\n\n![[{tid}.png|220]]\n"
+            f"| Szansa na krytyk | {t['crit']:.0%} |\n| Wygląd | {t['look']} |\n| Model | `art/tools/tools.blend` (obiekty `{tid}_*`), w grze `ServerStorage.Tools.{tid}` |\n\n![[{tid}.png|220]]\n"
         )
         write_note(VAULT / "05 Narzędzia" / f"{t['name']}.md", props, body, written)
 

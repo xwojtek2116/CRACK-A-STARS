@@ -833,6 +833,59 @@ def render_row(ids, name, silhouette=False, turn=0.0, scale_ref=False):
     bpy.ops.render.render(write_still=True)
 
 
+ICONS = ROOT / "art" / "ui" / "tools"
+
+
+def render_icons(ids, tilt=38.0, turn=-28.0, res=512):
+    """Ikony sklepu (T11): każde narzędzie osobno, ukośnie (trzonek z lewego dołu, głowica w prawym górnym rogu),
+    3/4 obrót, kreskówkowy obrys (jak ikony UI z T13), przezroczyste tło → art/ui/tools/<id>.png."""
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    _MATS.clear()
+    tools = build_all(ids)
+    setup_render(False, res, res)
+    sc = bpy.context.scene
+    sc.render.film_transparent = True
+    sc.render.image_settings.file_format = "PNG"
+    sc.render.image_settings.color_mode = "RGBA"
+    ink = flat_mat("_Ink", (0.004, 0.002, 0.008))
+    ink.use_backface_culling = True
+    cam = bpy.data.cameras.new("Cam")
+    cam.type = "ORTHO"
+    cob = bpy.data.objects.new("Cam", cam)
+    sc.collection.objects.link(cob)
+    cob.rotation_euler = (math.radians(90), 0, 0)
+    sc.camera = cob
+    rot = Matrix.Rotation(math.radians(tilt), 4, "Y") @ Matrix.Rotation(math.radians(90 + turn), 4, "Z")
+    ICONS.mkdir(parents=True, exist_ok=True)
+    for tid in ids:
+        t, obs, c = tools[tid]
+        length = max(max(bbox(ob)[1].z for ob in obs.values()), 1.0)
+        for ob in obs.values():
+            ob.matrix_world = rot @ ob.matrix_world
+            m = ob.data.materials[0] if ob.data.materials else None
+            glowy = m is None or m.name not in PAL or PAL[m.name][1] in ("Neon", "Glass") or PAL[m.name][2] > 0
+            if not glowy:
+                ob.data.materials.append(ink)
+                so = ob.modifiers.new("Outline", "SOLIDIFY")
+                so.thickness, so.offset, so.use_flip_normals = 0.012 * length, 1.0, True
+                so.material_offset = len(ob.data.materials) - 1
+                so.use_rim = False
+        bpy.context.view_layer.update()
+        lo = Vector((1e9,) * 3)
+        hi = Vector((-1e9,) * 3)
+        for ob in obs.values():
+            a, b = bbox(ob)
+            lo = Vector([min(p, q) for p, q in zip(lo, a)])
+            hi = Vector([max(p, q) for p, q in zip(hi, b)])
+        cam.ortho_scale = max(hi.x - lo.x, hi.z - lo.z) * 1.14
+        cob.location = ((lo.x + hi.x) / 2, -60, (lo.z + hi.z) / 2)
+        for other, (_, _, oc) in tools.items():
+            oc.hide_render = other != tid
+        sc.render.filepath = str(ICONS / f"{tid}.png")
+        bpy.ops.render.render(write_still=True)
+    print("ICONS_DONE", ids)
+
+
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     ids = argv[argv.index("--only") + 1].split(",") if "--only" in argv else IDS
@@ -856,6 +909,8 @@ def main():
     if "--render" in argv:
         render_row(ids, "T11 narzedzia", turn=-28)
         render_row(ids, "T11 skala", scale_ref=True, turn=-15)
+    if "--icons" in argv:
+        render_icons(ids)
     print("TOOLS_DONE")
 
 

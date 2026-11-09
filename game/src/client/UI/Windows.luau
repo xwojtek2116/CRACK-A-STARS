@@ -76,10 +76,10 @@ local SIZES: { [string]: Vector2 } = {
 	Settings = Vector2.new(720, 520),
 }
 
--- Obrazek oferty Exclusives: render podobnego narzędzia albo ikona rodzaju (własne rendery → T11/T24).
+-- Obrazek oferty Exclusives: własny render narzędzia (T11) albo ikona rodzaju (pojazd/kosmetyki → T24).
 local EXCLUSIVE_IMAGES: { [string]: string } = {
-	comet_blade = Theme.TOOL_RENDERS.laser_sword,
-	galaxy_hammer = Theme.TOOL_RENDERS.gravity_hammer,
+	comet_blade = Theme.TOOL_RENDERS.comet_blade,
+	galaxy_hammer = Theme.TOOL_RENDERS.galaxy_hammer,
 	comet_board = Theme.ICONS.rides,
 	star_trail = Theme.ICONS.star,
 	aura_nebula = Theme.ICONS.premium,
