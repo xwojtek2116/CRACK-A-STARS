@@ -6,7 +6,7 @@ motyw: "Frost"
 rzadkosc: "Uncommon"
 szansa: "1/3"
 dochod_s: 5.6
-model: "brak"
+model: "gotowy"
 tags: ["lup/frost", "rarity/uncommon"]
 ---
 # Icicle Shard
@@ -19,7 +19,7 @@ tags: ["lup/frost", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
-| Model | `art/items/frost/frost_shard.blend` |
+| Model | `art/items/frost/items_frost.blend` (obiekty `frost_shard_*`), w grze `ServerStorage.Items.frost_shard` |
 
 ![[frost_shard.png|220]]
 

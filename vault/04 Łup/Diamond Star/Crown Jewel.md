@@ -19,7 +19,7 @@ tags: ["lup/diamond", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | giant faceted octahedron gem surrounded by smaller gems |
 | Kolor / poświata | `#BFF6FF` / `#FFFFFF` |
-| Model | `art/items/diamond/diamond_heart.blend` |
+| Model | `art/items/diamond/items_diamond.blend` (obiekty `diamond_heart_*`), w grze `ServerStorage.Items.diamond_heart` |
 
 ![[diamond_heart.png|220]]
 

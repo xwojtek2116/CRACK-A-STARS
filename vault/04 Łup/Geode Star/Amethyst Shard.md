@@ -6,7 +6,7 @@ motyw: "Geode"
 rzadkosc: "Uncommon"
 szansa: "1/3"
 dochod_s: 6.8
-model: "brak"
+model: "gotowy"
 tags: ["lup/geode", "rarity/uncommon"]
 ---
 # Amethyst Shard
@@ -19,7 +19,7 @@ tags: ["lup/geode", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | rough rock egg split open, amethyst crystal cave inside |
 | Kolor / poświata | `#B06BFF` / `#E3C4FF` |
-| Model | `art/items/geode/geode_shard.blend` |
+| Model | `art/items/geode/items_geode.blend` (obiekty `geode_shard_*`), w grze `ServerStorage.Items.geode_shard` |
 
 ![[geode_shard.png|220]]
 

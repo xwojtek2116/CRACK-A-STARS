@@ -19,7 +19,7 @@ tags: ["lup/comet", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | icy dirty nucleus with long glowing tail ribbon and sparkle trail |
 | Kolor / poświata | `#9EE7FF` / `#FFFFFF` |
-| Model | `art/items/comet/comet_pebble.blend` |
+| Model | `art/items/comet/items_comet.blend` (obiekty `comet_pebble_*`), w grze `ServerStorage.Items.comet_pebble` |
 
 ![[comet_pebble.png|220]]
 

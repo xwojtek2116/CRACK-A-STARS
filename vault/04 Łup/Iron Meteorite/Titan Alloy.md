@@ -6,7 +6,7 @@ motyw: "Iron"
 rzadkosc: "Legendary"
 szansa: "1/100"
 dochod_s: 300.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/iron", "rarity/legendary"]
 ---
 # Titan Alloy
@@ -19,7 +19,7 @@ tags: ["lup/iron", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | pitted metallic rock with thumbprint dents, hot orange seams, smoking |
 | Kolor / poświata | `#9A9AA6` / `#FF9A3C` |
-| Model | `art/items/iron/iron_orb.blend` |
+| Model | `art/items/iron/items_iron.blend` (obiekty `iron_orb_*`), w grze `ServerStorage.Items.iron_orb` |
 
 ![[iron_orb.png|220]]
 

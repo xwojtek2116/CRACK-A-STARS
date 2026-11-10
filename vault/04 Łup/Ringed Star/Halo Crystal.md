@@ -19,7 +19,7 @@ tags: ["lup/ringed", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | mini planet with tilted rings of orbiting rock shards |
 | Kolor / poświata | `#FFB36B` / `#FFE2B8` |
-| Model | `art/items/ringed/ringed_crystal.blend` |
+| Model | `art/items/ringed/items_ringed.blend` (obiekty `ringed_crystal_*`), w grze `ServerStorage.Items.ringed_crystal` |
 
 ![[ringed_crystal.png|220]]
 

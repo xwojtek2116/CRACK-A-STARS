@@ -6,7 +6,7 @@ motyw: "Lava"
 rzadkosc: "Common"
 szansa: "1/1"
 dochod_s: 1.2
-model: "brak"
+model: "gotowy"
 tags: ["lup/lava", "rarity/common"]
 ---
 # Magma Pebble
@@ -19,7 +19,7 @@ tags: ["lup/lava", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | black basalt plates floating on magma, glowing veins, dripping lava blobs |
 | Kolor / poświata | `#FF5A1F` / `#FFB347` |
-| Model | `art/items/lava/lava_pebble.blend` |
+| Model | `art/items/lava/items_lava.blend` (obiekty `lava_pebble_*`), w grze `ServerStorage.Items.lava_pebble` |
 
 ![[lava_pebble.png|220]]
 

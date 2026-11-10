@@ -19,7 +19,7 @@ tags: ["lup/toxic", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | bubbling slime blob with glowing spore pods and drips |
 | Kolor / poświata | `#7CFF2E` / `#D9FF5C` |
-| Model | `art/items/toxic/toxic_orb.blend` |
+| Model | `art/items/toxic/items_toxic.blend` (obiekty `toxic_orb_*`), w grze `ServerStorage.Items.toxic_orb` |
 
 ![[toxic_orb.png|220]]
 

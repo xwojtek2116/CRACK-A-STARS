@@ -19,7 +19,7 @@ tags: ["lup/ringed", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | mini planet with tilted rings of orbiting rock shards |
 | Kolor / poświata | `#FFB36B` / `#FFE2B8` |
-| Model | `art/items/ringed/ringed_shard.blend` |
+| Model | `art/items/ringed/items_ringed.blend` (obiekty `ringed_shard_*`), w grze `ServerStorage.Items.ringed_shard` |
 
 ![[ringed_shard.png|220]]
 

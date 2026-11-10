@@ -19,7 +19,7 @@ tags: ["lup/nebula", "rarity/secret"]
 | Kształt | unique cosmic relic |
 | Styl rodzaju | swirling purple-pink gas trapped in a faceted glass shell |
 | Kolor / poświata | `#8A5CFF` / `#FF7AE6` |
-| Model | `art/items/nebula/secret_cosmicegg.blend` |
+| Model | `art/items/nebula/items_nebula.blend` (obiekty `secret_cosmicegg_*`), w grze `ServerStorage.Items.secret_cosmicegg` |
 
 ![[secret_cosmicegg.png|220]]
 

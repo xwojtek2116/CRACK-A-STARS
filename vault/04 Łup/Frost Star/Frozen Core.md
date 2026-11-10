@@ -6,7 +6,7 @@ motyw: "Frost"
 rzadkosc: "Epic"
 szansa: "1/30"
 dochod_s: 84.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/frost", "rarity/epic"]
 ---
 # Frozen Core
@@ -19,7 +19,7 @@ tags: ["lup/frost", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
-| Model | `art/items/frost/frost_core.blend` |
+| Model | `art/items/frost/items_frost.blend` (obiekty `frost_core_*`), w grze `ServerStorage.Items.frost_core` |
 
 ![[frost_core.png|220]]
 

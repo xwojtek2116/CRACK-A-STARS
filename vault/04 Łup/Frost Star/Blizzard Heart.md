@@ -6,7 +6,7 @@ motyw: "Frost"
 rzadkosc: "Mythic"
 szansa: "1/500"
 dochod_s: 2800.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/frost", "rarity/mythic"]
 ---
 # Blizzard Heart
@@ -19,7 +19,7 @@ tags: ["lup/frost", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
-| Model | `art/items/frost/frost_heart.blend` |
+| Model | `art/items/frost/items_frost.blend` (obiekty `frost_heart_*`), w grze `ServerStorage.Items.frost_heart` |
 
 ![[frost_heart.png|220]]
 

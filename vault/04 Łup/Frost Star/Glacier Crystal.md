@@ -6,7 +6,7 @@ motyw: "Frost"
 rzadkosc: "Rare"
 szansa: "1/10"
 dochod_s: 21.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/frost", "rarity/rare"]
 ---
 # Glacier Crystal
@@ -19,7 +19,7 @@ tags: ["lup/frost", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
-| Model | `art/items/frost/frost_crystal.blend` |
+| Model | `art/items/frost/items_frost.blend` (obiekty `frost_crystal_*`), w grze `ServerStorage.Items.frost_crystal` |
 
 ![[frost_crystal.png|220]]
 

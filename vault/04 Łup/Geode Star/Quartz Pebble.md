@@ -6,7 +6,7 @@ motyw: "Geode"
 rzadkosc: "Common"
 szansa: "1/1"
 dochod_s: 1.7
-model: "brak"
+model: "gotowy"
 tags: ["lup/geode", "rarity/common"]
 ---
 # Quartz Pebble
@@ -19,7 +19,7 @@ tags: ["lup/geode", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | rough rock egg split open, amethyst crystal cave inside |
 | Kolor / poświata | `#B06BFF` / `#E3C4FF` |
-| Model | `art/items/geode/geode_pebble.blend` |
+| Model | `art/items/geode/items_geode.blend` (obiekty `geode_pebble_*`), w grze `ServerStorage.Items.geode_pebble` |
 
 ![[geode_pebble.png|220]]
 

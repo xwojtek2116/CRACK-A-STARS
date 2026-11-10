@@ -6,7 +6,7 @@ motyw: "Iron"
 rzadkosc: "Mythic"
 szansa: "1/500"
 dochod_s: 2000.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/iron", "rarity/mythic"]
 ---
 # Ironheart Relic
@@ -19,7 +19,7 @@ tags: ["lup/iron", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | pitted metallic rock with thumbprint dents, hot orange seams, smoking |
 | Kolor / poświata | `#9A9AA6` / `#FF9A3C` |
-| Model | `art/items/iron/iron_heart.blend` |
+| Model | `art/items/iron/items_iron.blend` (obiekty `iron_heart_*`), w grze `ServerStorage.Items.iron_heart` |
 
 ![[iron_heart.png|220]]
 

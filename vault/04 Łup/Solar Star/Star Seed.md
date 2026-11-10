@@ -19,7 +19,7 @@ tags: ["lup/solar", "rarity/secret"]
 | Kształt | unique cosmic relic |
 | Styl rodzaju | liquid gold sun with flare arcs and corona spikes |
 | Kolor / poświata | `#FFD23F` / `#FFF5B8` |
-| Model | `art/items/solar/secret_starseed.blend` |
+| Model | `art/items/solar/items_solar.blend` (obiekty `secret_starseed_*`), w grze `ServerStorage.Items.secret_starseed` |
 
 ![[secret_starseed.png|220]]
 

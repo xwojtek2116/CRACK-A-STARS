@@ -106,7 +106,8 @@ def main() -> int:
             f"| Kształt | {shapes[it['rarity']]} |\n"
             f"| Styl rodzaju | {t['shape']} |\n"
             f"| Kolor / poświata | `{t['color']}` / `{t['glow']}` |\n"
-            f"| Model | `art/items/{it['theme'].lower()}/{it['id']}.blend` |\n\n"
+            f"| Model | `art/items/{it['theme'].lower()}/items_{it['theme'].lower()}.blend` (obiekty `{it['id']}_*`), "
+            f"w grze `ServerStorage.Items.{it['id']}` |\n\n"
             f"![[{it['id']}.png|220]]\n"
         )
         write_note(VAULT / "04 Łup" / t["displayName"] / f"{it['name']}.md", props, body, written)

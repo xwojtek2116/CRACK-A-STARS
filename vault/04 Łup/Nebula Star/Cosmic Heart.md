@@ -19,7 +19,7 @@ tags: ["lup/nebula", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | swirling purple-pink gas trapped in a faceted glass shell |
 | Kolor / poświata | `#8A5CFF` / `#FF7AE6` |
-| Model | `art/items/nebula/nebula_heart.blend` |
+| Model | `art/items/nebula/items_nebula.blend` (obiekty `nebula_heart_*`), w grze `ServerStorage.Items.nebula_heart` |
 
 ![[nebula_heart.png|220]]
 

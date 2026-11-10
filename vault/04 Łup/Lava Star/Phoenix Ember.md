@@ -6,7 +6,7 @@ motyw: "Lava"
 rzadkosc: "Legendary"
 szansa: "1/100"
 dochod_s: 360.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/lava", "rarity/legendary"]
 ---
 # Phoenix Ember
@@ -19,7 +19,7 @@ tags: ["lup/lava", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | black basalt plates floating on magma, glowing veins, dripping lava blobs |
 | Kolor / poświata | `#FF5A1F` / `#FFB347` |
-| Model | `art/items/lava/lava_orb.blend` |
+| Model | `art/items/lava/items_lava.blend` (obiekty `lava_orb_*`), w grze `ServerStorage.Items.lava_orb` |
 
 ![[lava_orb.png|220]]
 

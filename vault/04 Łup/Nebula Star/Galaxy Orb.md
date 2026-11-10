@@ -19,7 +19,7 @@ tags: ["lup/nebula", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | swirling purple-pink gas trapped in a faceted glass shell |
 | Kolor / poświata | `#8A5CFF` / `#FF7AE6` |
-| Model | `art/items/nebula/nebula_orb.blend` |
+| Model | `art/items/nebula/items_nebula.blend` (obiekty `nebula_orb_*`), w grze `ServerStorage.Items.nebula_orb` |
 
 ![[nebula_orb.png|220]]
 

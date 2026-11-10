@@ -19,7 +19,7 @@ tags: ["lup/electric", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | metal core inside a cage of floating rods, lightning arcs |
 | Kolor / poświata | `#FFE14D` / `#9FE8FF` |
-| Model | `art/items/electric/electric_core.blend` |
+| Model | `art/items/electric/items_electric.blend` (obiekty `electric_core_*`), w grze `ServerStorage.Items.electric_core` |
 
 ![[electric_core.png|220]]
 

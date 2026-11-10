@@ -6,7 +6,7 @@ motyw: "Frost"
 rzadkosc: "Legendary"
 szansa: "1/100"
 dochod_s: 420.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/frost", "rarity/legendary"]
 ---
 # Aurora Prism
@@ -19,7 +19,7 @@ tags: ["lup/frost", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
-| Model | `art/items/frost/frost_orb.blend` |
+| Model | `art/items/frost/items_frost.blend` (obiekty `frost_orb_*`), w grze `ServerStorage.Items.frost_orb` |
 
 ![[frost_orb.png|220]]
 

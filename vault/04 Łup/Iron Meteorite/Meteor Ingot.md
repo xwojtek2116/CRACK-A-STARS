@@ -6,7 +6,7 @@ motyw: "Iron"
 rzadkosc: "Rare"
 szansa: "1/10"
 dochod_s: 15.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/iron", "rarity/rare"]
 ---
 # Meteor Ingot
@@ -19,7 +19,7 @@ tags: ["lup/iron", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | pitted metallic rock with thumbprint dents, hot orange seams, smoking |
 | Kolor / poświata | `#9A9AA6` / `#FF9A3C` |
-| Model | `art/items/iron/iron_crystal.blend` |
+| Model | `art/items/iron/items_iron.blend` (obiekty `iron_crystal_*`), w grze `ServerStorage.Items.iron_crystal` |
 
 ![[iron_crystal.png|220]]
 

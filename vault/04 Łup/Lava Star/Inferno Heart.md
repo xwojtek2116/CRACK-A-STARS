@@ -6,7 +6,7 @@ motyw: "Lava"
 rzadkosc: "Mythic"
 szansa: "1/500"
 dochod_s: 2400.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/lava", "rarity/mythic"]
 ---
 # Inferno Heart
@@ -19,7 +19,7 @@ tags: ["lup/lava", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | black basalt plates floating on magma, glowing veins, dripping lava blobs |
 | Kolor / poświata | `#FF5A1F` / `#FFB347` |
-| Model | `art/items/lava/lava_heart.blend` |
+| Model | `art/items/lava/items_lava.blend` (obiekty `lava_heart_*`), w grze `ServerStorage.Items.lava_heart` |
 
 ![[lava_heart.png|220]]
 

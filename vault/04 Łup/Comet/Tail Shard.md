@@ -19,7 +19,7 @@ tags: ["lup/comet", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | icy dirty nucleus with long glowing tail ribbon and sparkle trail |
 | Kolor / poświata | `#9EE7FF` / `#FFFFFF` |
-| Model | `art/items/comet/comet_shard.blend` |
+| Model | `art/items/comet/items_comet.blend` (obiekty `comet_shard_*`), w grze `ServerStorage.Items.comet_shard` |
 
 ![[comet_shard.png|220]]
 

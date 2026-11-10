@@ -19,7 +19,7 @@ tags: ["lup/nebula", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | swirling purple-pink gas trapped in a faceted glass shell |
 | Kolor / poświata | `#8A5CFF` / `#FF7AE6` |
-| Model | `art/items/nebula/nebula_crystal.blend` |
+| Model | `art/items/nebula/items_nebula.blend` (obiekty `nebula_crystal_*`), w grze `ServerStorage.Items.nebula_crystal` |
 
 ![[nebula_crystal.png|220]]
 

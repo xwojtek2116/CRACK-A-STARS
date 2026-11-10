@@ -19,7 +19,7 @@ tags: ["lup/comet", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | icy dirty nucleus with long glowing tail ribbon and sparkle trail |
 | Kolor / poświata | `#9EE7FF` / `#FFFFFF` |
-| Model | `art/items/comet/comet_orb.blend` |
+| Model | `art/items/comet/items_comet.blend` (obiekty `comet_orb_*`), w grze `ServerStorage.Items.comet_orb` |
 
 ![[comet_orb.png|220]]
 

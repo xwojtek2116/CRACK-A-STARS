@@ -19,7 +19,7 @@ tags: ["lup/electric", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | metal core inside a cage of floating rods, lightning arcs |
 | Kolor / poświata | `#FFE14D` / `#9FE8FF` |
-| Model | `art/items/electric/electric_orb.blend` |
+| Model | `art/items/electric/items_electric.blend` (obiekty `electric_orb_*`), w grze `ServerStorage.Items.electric_orb` |
 
 ![[electric_orb.png|220]]
 

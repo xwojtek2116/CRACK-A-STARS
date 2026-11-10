@@ -19,7 +19,7 @@ tags: ["lup/void", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | black sphere with violet accretion disk and warped edges |
 | Kolor / poświata | `#14101F` / `#9D4DFF` |
-| Model | `art/items/void/void_heart.blend` |
+| Model | `art/items/void/items_void.blend` (obiekty `void_heart_*`), w grze `ServerStorage.Items.void_heart` |
 
 ![[void_heart.png|220]]
 

@@ -6,7 +6,7 @@ motyw: "Geode"
 rzadkosc: "Mythic"
 szansa: "1/500"
 dochod_s: 3400.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/geode", "rarity/mythic"]
 ---
 # Heart of Amethyst
@@ -19,7 +19,7 @@ tags: ["lup/geode", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | rough rock egg split open, amethyst crystal cave inside |
 | Kolor / poświata | `#B06BFF` / `#E3C4FF` |
-| Model | `art/items/geode/geode_heart.blend` |
+| Model | `art/items/geode/items_geode.blend` (obiekty `geode_heart_*`), w grze `ServerStorage.Items.geode_heart` |
 
 ![[geode_heart.png|220]]
 

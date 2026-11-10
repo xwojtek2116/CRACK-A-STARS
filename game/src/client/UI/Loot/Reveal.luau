@@ -1,7 +1,7 @@
 --!strict
 -- Loot/Reveal — karta łupu po rozbiciu gwiazdy (T07), tylko u gracza, który dostał łup.
 --   nagłówek „<GWIAZDA> CRACKED!” + luck, rząd kart (po jednej na losowanie), pod spodem postęp pity.
---   Karta: poświata i promienie w kolorze rzadkości, klejnot (do czasu renderów przedmiotów), pigułka
+--   Karta: poświata i promienie w kolorze rzadkości, render przedmiotu (Theme.ITEM_RENDERS; klejnot gdy brak), pigułka
 --   rzadkości, nazwa, $/s, mutacja (Shiny = błysk, Golden = złota ramka), NEW!, PITY!, postument/ekwipunek.
 --   Od Epic karta najpierw jest zakryta i pulsuje kolorem rzadkości (napięcie, max 1,5 s — GDD), potem obrót.
 --   T14: karta przechyla się za kursorem/palcem (tilt) z odbłyskiem, który wędruje po karcie, przy odkryciu
@@ -9,6 +9,7 @@
 --   promienie, które pulsują (Mythic/Secret większe). Liczby: LootConfig.REVEAL.tilt / rays.
 -- Nie blokuje sterowania; dotknięcie kart zamyka wcześniej. Pełne animacje dropu (kamera): T35.
 
+local ContentProvider = game:GetService("ContentProvider")
 local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -66,6 +67,19 @@ local token = 0
 local pointer: Vector2? = nil
 
 local Reveal = {}
+
+-- Rendery przedmiotów wczytujemy od razu po starcie, żeby pierwsza karta łupu nie była pusta (T21).
+task.spawn(function()
+	local images = {}
+	for _, id in Theme.ITEM_RENDERS do
+		local label = Instance.new("ImageLabel")
+		label.Image = id
+		table.insert(images, label)
+	end
+	pcall(function()
+		ContentProvider:PreloadAsync(images)
+	end)
+end)
 
 local function getScreen(): ScreenGui
 	if screen and screen.Parent then
@@ -131,9 +145,11 @@ local function pill(
 	return frame
 end
 
--- Klejnot w kolorze rzadkości (zastępczy obrazek przedmiotu): romb z połyskiem, kształt rośnie z rzadkością.
-local function gem(parent: Instance, rarity: string, mutation: string): Frame
+-- Obrazek przedmiotu: render z Blendera (Theme.ITEM_RENDERS, T21+), a gdy go brak — klejnot w kolorze rzadkości
+-- (romb z połyskiem, kształt rośnie z rzadkością). Poświata, błysk i unoszenie są wspólne.
+local function gem(parent: Instance, rarity: string, mutation: string, itemId: string?): Frame
 	local color = Fx.rarityColor(rarity)
+	local render = if itemId then Theme.ITEM_RENDERS[itemId] else nil
 	local holder = Instance.new("Frame")
 	holder.Name = "Gem"
 	holder.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -154,7 +170,25 @@ local function gem(parent: Instance, rarity: string, mutation: string): Frame
 	Fx.loop(halo, 1.3, { ImageTransparency = 0.5, Size = UDim2.fromScale(1.6, 1.6) })
 
 	local r = rank(rarity)
+	if render then
+		local image = Instance.new("ImageLabel")
+		image.Name = "Render"
+		image.Image = render
+		image.BackgroundTransparency = 1
+		image.AnchorPoint = Vector2.new(0.5, 0.5)
+		image.Position = UDim2.fromScale(0.5, 0.5)
+		image.Size = UDim2.fromScale(1.35, 1.35)
+		image.ScaleType = Enum.ScaleType.Fit
+		-- Golden: złoty odcień całego renderu (model w bazie ma złotą skorupę).
+		image.ImageColor3 = if mutation == "Golden" then Color3.fromRGB(255, 214, 120) else Color3.new(1, 1, 1)
+		image.ZIndex = 2
+		image.Parent = holder
+		if mutation == "Shiny" then
+			Fx.loop(image, 0.7, { ImageColor3 = Color3.fromRGB(205, 250, 255) })
+		end
+	end
 	local body = Instance.new("Frame")
+	body.Visible = render == nil
 	body.AnchorPoint = Vector2.new(0.5, 0.5)
 	body.Position = UDim2.fromScale(0.5, 0.5)
 	local side = 42 + r * 4
@@ -188,7 +222,7 @@ local function gem(parent: Instance, rarity: string, mutation: string): Frame
 	glare.Parent = body
 
 	-- Orbitujące odłamki od Legendary (jak opis kształtu w Items.json → shapes).
-	if r >= rank("Legendary") then
+	if r >= rank("Legendary") and not render then
 		local orbit = Instance.new("Frame")
 		orbit.AnchorPoint = Vector2.new(0.5, 0.5)
 		orbit.Position = UDim2.fromScale(0.5, 0.5)
@@ -356,7 +390,7 @@ local function buildCard(drop: Drop): (Frame, Frame, Frame?)
 		UDim2.fromScale(0.5, 0.08),
 		18
 	)
-	gem(content, drop.rarity, drop.mutation)
+	gem(content, drop.rarity, drop.mutation, drop.itemId)
 
 	local name = Fx.text(content, {
 		text = drop.name,

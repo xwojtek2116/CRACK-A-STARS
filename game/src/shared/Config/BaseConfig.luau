@@ -38,14 +38,28 @@ return table.freeze({
 	}),
 
 	-- Modele: ServerStorage.BaseAssets/{Pedestal, Hologram, Placeholder}; modele łupu (T21–T23):
-	-- ServerStorage.Items/<itemId> (Model albo MeshPart). Brak modelu = placeholder w kolorze motywu.
+	-- ServerStorage.Items/<itemId> (Model albo MeshPart, import art/items/import_items.luau). Brak modelu = placeholder
+	-- w kolorze motywu. Części z atrybutem FxType (Spin/Orbit/Pulse) animuje klient (Fx/ItemFx).
 	ASSETS_FOLDER = "BaseAssets",
 	ITEMS_FOLDER = "Items",
 	ITEM_HEIGHT = 3.2, -- środek przedmiotu nad ItemPoint (wierzch postumentu)
-	ITEM_MAX_SIZE = 4.2, -- przedmiot skalowany do tej największej krawędzi
+	ITEM_MAX_SIZE = 4.2, -- przedmiot skalowany do tej największej krawędzi (× skala rzadkości)
+	-- Rozmiar wg rzadkości (decyzja T21; ta sama tabela w art/items/build_item.py → SIZE, rendery).
+	ITEM_RARITY_SCALE = table.freeze({
+		Common = 0.6,
+		Uncommon = 0.72,
+		Rare = 0.85,
+		Epic = 1.0,
+		Legendary = 1.15,
+		Mythic = 1.3,
+		Secret = 1.3,
+	}),
+	-- Mnożnik jasności poświaty (zasięg × pierwiastek) — Mythic ma się wyróżniać na całej bazie.
+	GLOW_RARITY_BOOST = table.freeze({ Legendary = 1.3, Mythic = 1.8, Secret = 1.8 }),
 	EMPTY_RING_COLOR = Color3.fromHex("#3A2E5C"),
 	HOLOGRAM_COLOR = Color3.fromHex("#3DF2FF"),
 	GOLDEN_COLOR = Color3.fromHex("#FFC83D"),
+	GOLDEN_BLEND = 0.7, -- Golden: skorupa mieszana ze złotem (Neon bez zmian)
 	SHINY_SPARKS = 6, -- cząsteczek/s wokół przedmiotu Shiny
 
 	-- Klient: obrót i poświata (tylko postumenty w zasięgu).

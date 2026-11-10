@@ -19,7 +19,7 @@ tags: ["lup/diamond", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | giant faceted octahedron gem surrounded by smaller gems |
 | Kolor / poświata | `#BFF6FF` / `#FFFFFF` |
-| Model | `art/items/diamond/diamond_shard.blend` |
+| Model | `art/items/diamond/items_diamond.blend` (obiekty `diamond_shard_*`), w grze `ServerStorage.Items.diamond_shard` |
 
 ![[diamond_shard.png|220]]
 

@@ -1,0 +1,2774 @@
+{
+ "iron_pebble": {
+  "name": "Rusty Nugget",
+  "theme": "Iron",
+  "rarity": "Common",
+  "scale": 0.6,
+  "parts": {
+   "Body": {
+    "material": "Metal",
+    "color": "#9A9AA6",
+    "tint": false,
+    "center": [
+     -0.0232,
+     -0.0595,
+     0.0226
+    ],
+    "size": [
+     1.5675,
+     1.1682,
+     1.4291
+    ],
+    "tris": 116
+   },
+   "Rust": {
+    "material": "CorrodedMetal",
+    "color": "#8A4B2A",
+    "tint": false,
+    "center": [
+     0.0495,
+     0.0781,
+     0.1346
+    ],
+    "size": [
+     1.2925,
+     0.7298,
+     1.2509
+    ],
+    "tris": 106
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     -0.3407,
+     0.0656,
+     -0.4652
+    ],
+    "size": [
+     0.5342,
+     0.2753,
+     0.3934
+    ],
+    "tris": 32
+   }
+  },
+  "particles": [],
+  "tris": 254,
+  "ok": true,
+  "extent": 1.567
+ },
+ "iron_shard": {
+  "name": "Iron Chunk",
+  "theme": "Iron",
+  "rarity": "Uncommon",
+  "scale": 0.72,
+  "parts": {
+   "Body": {
+    "material": "Metal",
+    "color": "#9A9AA6",
+    "tint": false,
+    "center": [
+     0.0561,
+     0.0623,
+     -0.0131
+    ],
+    "size": [
+     1.2338,
+     1.7617,
+     0.9284
+    ],
+    "tris": 114
+   },
+   "Dents": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.0272,
+     0.0049,
+     -0.0248
+    ],
+    "size": [
+     1.1076,
+     0.823,
+     0.9222
+    ],
+    "tris": 144
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     -0.0047,
+     0.0045,
+     -0.0124
+    ],
+    "size": [
+     0.7432,
+     0.5769,
+     0.8907
+    ],
+    "tris": 72
+   },
+   "Rust": {
+    "material": "CorrodedMetal",
+    "color": "#8A4B2A",
+    "tint": false,
+    "center": [
+     -0.0107,
+     -0.5009,
+     0.0686
+    ],
+    "size": [
+     1.7689,
+     0.2321,
+     0.715
+    ],
+    "tris": 100
+   }
+  },
+  "particles": [],
+  "tris": 430,
+  "ok": true,
+  "extent": 1.769
+ },
+ "iron_crystal": {
+  "name": "Meteor Ingot",
+  "theme": "Iron",
+  "rarity": "Rare",
+  "scale": 0.85,
+  "parts": {
+   "Dark": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.0211,
+     -0.34,
+     0.0034
+    ],
+    "size": [
+     1.5241,
+     0.42,
+     1.3692
+    ],
+    "tris": 88
+   },
+   "Body": {
+    "material": "Metal",
+    "color": "#9A9AA6",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     1.4696,
+     0.46,
+     0.6421
+    ],
+    "tris": 44
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     0.01,
+     -0.0115,
+     -0.209
+    ],
+    "size": [
+     1.18,
+     0.753,
+     1.008
+    ],
+    "tris": 82
+   },
+   "Rust": {
+    "material": "CorrodedMetal",
+    "color": "#8A4B2A",
+    "tint": false,
+    "center": [
+     -0.0103,
+     -0.4438,
+     0.1455
+    ],
+    "size": [
+     2.1531,
+     0.3279,
+     1.0771
+    ],
+    "tris": 344
+   }
+  },
+  "particles": [],
+  "tris": 558,
+  "ok": true,
+  "extent": 2.153
+ },
+ "iron_core": {
+  "name": "Magnet Core",
+  "theme": "Iron",
+  "rarity": "Epic",
+  "scale": 1.0,
+  "parts": {
+   "Core": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.966,
+     1.08,
+     0.9187
+    ],
+    "tris": 80
+   },
+   "Shell": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.0008,
+     0.0006,
+     -0.0024
+    ],
+    "size": [
+     0.8802,
+     0.898,
+     0.8896
+    ],
+    "tris": 528
+   },
+   "Steel": {
+    "material": "Metal",
+    "color": "#C4CAD6",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.2265,
+     0.0
+    ],
+    "size": [
+     0.6897,
+     0.12,
+     0.6845
+    ],
+    "tris": 80
+   },
+   "SpinCage": {
+    "material": "SmoothPlastic",
+    "color": "#D23A3A",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.347,
+     0.0
+    ],
+    "size": [
+     1.8078,
+     1.3539,
+     1.8078
+    ],
+    "tris": 304,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 35
+    }
+   },
+   "SpinTips": {
+    "material": "Metal",
+    "color": "#C4CAD6",
+    "tint": false,
+    "center": [
+     -0.0,
+     -0.43,
+     0.0
+    ],
+    "size": [
+     1.87,
+     0.2,
+     1.87
+    ],
+    "tris": 176,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 35
+    }
+   },
+   "SpinField": {
+    "material": "Neon",
+    "color": "#FF6A2A",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.1551,
+     1.9767,
+     1.1551
+    ],
+    "tris": 304,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 35
+    }
+   }
+  },
+  "particles": [],
+  "tris": 1472,
+  "ok": true,
+  "extent": 2.012
+ },
+ "iron_orb": {
+  "name": "Titan Alloy",
+  "theme": "Iron",
+  "rarity": "Legendary",
+  "scale": 1.15,
+  "parts": {
+   "Body": {
+    "material": "Metal",
+    "color": "#C4CAD6",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.1793,
+     1.24,
+     1.24
+    ],
+    "tris": 80
+   },
+   "Band": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.29,
+     1.29,
+     1.29
+    ],
+    "tris": 248
+   },
+   "Rivets": {
+    "material": "Metal",
+    "color": "#9A9AA6",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.3027,
+     1.374,
+     1.3027
+    ],
+    "tris": 280
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.0796,
+     0.77,
+     1.4612
+    ],
+    "tris": 360
+   },
+   "SpinRingA": {
+    "material": "Metal",
+    "color": "#9A9AA6",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.9175,
+     1.4341,
+     1.7084
+    ],
+    "tris": 224,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.3875,
+      0.7264,
+      -0.5676
+     ],
+     "speed": 45
+    }
+   },
+   "SpinRingAGlow": {
+    "material": "Neon",
+    "color": "#FFD27A",
+    "tint": true,
+    "center": [
+     -0.2259,
+     0.1496,
+     -0.1169
+    ],
+    "size": [
+     1.5072,
+     1.215,
+     1.4822
+    ],
+    "tris": 60,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.3875,
+      0.7264,
+      -0.5676
+     ],
+     "speed": 45
+    }
+   },
+   "SpinRingB": {
+    "material": "Metal",
+    "color": "#9A9AA6",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     2.0422,
+     1.7434,
+     1.7832
+    ],
+    "tris": 224,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      0.4446,
+      0.6443,
+      0.6222
+     ],
+     "speed": -32
+    }
+   },
+   "SpinRingBGlow": {
+    "material": "Neon",
+    "color": "#FFD27A",
+    "tint": true,
+    "center": [
+     -0.2418,
+     -0.1727,
+     -0.1668
+    ],
+    "size": [
+     1.6031,
+     1.4694,
+     1.4902
+    ],
+    "tris": 60,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      0.4446,
+      0.6443,
+      0.6222
+     ],
+     "speed": -32
+    }
+   },
+   "Orbit": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.2003,
+     -0.1264,
+     0.0512
+    ],
+    "size": [
+     2.2044,
+     0.4695,
+     2.1195
+    ],
+    "tris": 166,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 24,
+     "bob": 0.05
+    }
+   },
+   "OrbitGlow": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     -0.2028,
+     -0.1408,
+     0.0554
+    ],
+    "size": [
+     2.0808,
+     0.379,
+     2.0639
+    ],
+    "tris": 60,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 24,
+     "bob": 0.05
+    }
+   }
+  },
+  "particles": [
+   {
+    "part": "Body",
+    "color": "#FF9A3C",
+    "rate": 4,
+    "size": 0.18,
+    "speed": 0.4,
+    "tex": "spark",
+    "life": 1.2
+   }
+  ],
+  "tris": 1762,
+  "ok": true,
+  "extent": 2.324
+ },
+ "iron_heart": {
+  "name": "Ironheart Relic",
+  "theme": "Iron",
+  "rarity": "Mythic",
+  "scale": 1.3,
+  "parts": {
+   "Body": {
+    "material": "Metal",
+    "color": "#9A9AA6",
+    "tint": false,
+    "center": [
+     -0.0,
+     -0.08,
+     0.0
+    ],
+    "size": [
+     1.475,
+     1.48,
+     0.8
+    ],
+    "tris": 140
+   },
+   "Band": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     0.005,
+     -0.05,
+     0.0
+    ],
+    "size": [
+     1.4776,
+     0.26,
+     0.7383
+    ],
+    "tris": 106
+   },
+   "Rivets": {
+    "material": "Metal",
+    "color": "#C4CAD6",
+    "tint": false,
+    "center": [
+     0.0003,
+     -0.0797,
+     -0.2876
+    ],
+    "size": [
+     0.9634,
+     0.0732,
+     0.1808
+    ],
+    "tris": 140
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     -0.075,
+     0.4428,
+     -0.0205
+    ],
+    "size": [
+     1.23,
+     1.0964,
+     0.8105
+    ],
+    "tris": 228
+   },
+   "PulseCore": {
+    "material": "Neon",
+    "color": "#FFD27A",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.1,
+     0.0
+    ],
+    "size": [
+     0.3578,
+     0.48,
+     0.8847
+    ],
+    "tris": 20,
+    "anim": {
+     "type": "pulse",
+     "amount": 0.12,
+     "rate": 1.1
+    }
+   },
+   "Socket": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0368,
+     0.0
+    ],
+    "size": [
+     0.3576,
+     0.492,
+     0.8492
+    ],
+    "tris": 160
+   },
+   "Pipes": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.075,
+     0.6896,
+     0.0
+    ],
+    "size": [
+     1.3185,
+     0.5807,
+     0.2285
+    ],
+    "tris": 408
+   },
+   "SpinHalo": {
+    "material": "Neon",
+    "color": "#FFD27A",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.02,
+     0.05
+    ],
+    "size": [
+     2.121,
+     2.0134,
+     0.1531
+    ],
+    "tris": 384,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "speed": 22
+    }
+   },
+   "Orbit": {
+    "material": "Metal",
+    "color": "#3A3A40",
+    "tint": false,
+    "center": [
+     -0.117,
+     -0.2947,
+     -0.0198
+    ],
+    "size": [
+     2.2221,
+     0.5672,
+     2.3521
+    ],
+    "tris": 258,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 36,
+     "bob": 0.05
+    }
+   },
+   "OrbitGlow": {
+    "material": "Neon",
+    "color": "#FF9A3C",
+    "tint": true,
+    "center": [
+     -0.1311,
+     -0.2895,
+     -0.0256
+    ],
+    "size": [
+     2.1327,
+     0.449,
+     2.3047
+    ],
+    "tris": 100,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 36,
+     "bob": 0.05
+    }
+   }
+  },
+  "particles": [
+   {
+    "part": "PulseCore",
+    "color": "#FF9A3C",
+    "rate": 12,
+    "size": 0.3,
+    "speed": 0.8,
+    "tex": "spark",
+    "life": 1.4,
+    "aura": true
+   },
+   {
+    "part": "Body",
+    "color": "#FFD27A",
+    "rate": 6,
+    "size": 0.16,
+    "speed": 0.3,
+    "tex": "glint",
+    "life": 1.6
+   }
+  ],
+  "tris": 1944,
+  "ok": true,
+  "extent": 2.352
+ },
+ "lava_pebble": {
+  "name": "Magma Pebble",
+  "theme": "Lava",
+  "rarity": "Common",
+  "scale": 0.6,
+  "parts": {
+   "Body": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     0.1175,
+     -0.0643,
+     -0.0172
+    ],
+    "size": [
+     1.5988,
+     1.2071,
+     1.4447
+    ],
+    "tris": 112
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     0.0765,
+     -0.0858,
+     -0.0574
+    ],
+    "size": [
+     1.1995,
+     1.2468,
+     1.3395
+    ],
+    "tris": 130
+   }
+  },
+  "particles": [],
+  "tris": 242,
+  "ok": true,
+  "extent": 1.599
+ },
+ "lava_shard": {
+  "name": "Ember Shard",
+  "theme": "Lava",
+  "rarity": "Uncommon",
+  "scale": 0.72,
+  "parts": {
+   "Body": {
+    "material": "Glass",
+    "color": "#2A0E14",
+    "tint": false,
+    "center": [
+     0.0213,
+     0.186,
+     -0.0002
+    ],
+    "size": [
+     0.8855,
+     1.556,
+     0.3807
+    ],
+    "tris": 52
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FFE08A",
+    "tint": true,
+    "center": [
+     0.0895,
+     0.8817,
+     0.0
+    ],
+    "size": [
+     0.2377,
+     0.3798,
+     0.16
+    ],
+    "tris": 6
+   },
+   "GlowMagma": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.025,
+     -0.3805,
+     0.025
+    ],
+    "size": [
+     1.0931,
+     1.0391,
+     0.5861
+    ],
+    "tris": 112
+   },
+   "Base": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     0.0094,
+     -0.7112,
+     -0.0353
+    ],
+    "size": [
+     0.8706,
+     0.4018,
+     0.7072
+    ],
+    "tris": 100
+   }
+  },
+  "particles": [],
+  "tris": 270,
+  "ok": true,
+  "extent": 1.984
+ },
+ "lava_crystal": {
+  "name": "Cinder Crystal",
+  "theme": "Lava",
+  "rarity": "Rare",
+  "scale": 0.85,
+  "parts": {
+   "Base": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     -0.0471,
+     -0.5493,
+     0.0039
+    ],
+    "size": [
+     1.4426,
+     0.6028,
+     1.1517
+    ],
+    "tris": 104
+   },
+   "Crystal": {
+    "material": "SmoothPlastic",
+    "color": "#C8401A",
+    "tint": false,
+    "center": [
+     0.0127,
+     0.2678,
+     -0.0222
+    ],
+    "size": [
+     1.5952,
+     1.461,
+     0.7333
+    ],
+    "tris": 66
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.223,
+     -0.1704,
+     0.018
+    ],
+    "size": [
+     1.1541,
+     0.6792,
+     1.4009
+    ],
+    "tris": 98
+   },
+   "Tips": {
+    "material": "Neon",
+    "color": "#FFE08A",
+    "tint": true,
+    "center": [
+     0.02,
+     0.5752,
+     -0.0229
+    ],
+    "size": [
+     1.5909,
+     0.8732,
+     0.6554
+    ],
+    "tris": 66
+   }
+  },
+  "particles": [],
+  "tris": 334,
+  "ok": true,
+  "extent": 1.863
+ },
+ "lava_core": {
+  "name": "Molten Core",
+  "theme": "Lava",
+  "rarity": "Epic",
+  "scale": 1.0,
+  "parts": {
+   "Core": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.875,
+     0.92,
+     0.92
+    ],
+    "tris": 80
+   },
+   "CoreHot": {
+    "material": "Neon",
+    "color": "#FFE08A",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.805,
+     0.9,
+     0.7656
+    ],
+    "tris": 80
+   },
+   "Shell": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     -0.0122,
+     -0.0052,
+     0.0137
+    ],
+    "size": [
+     1.1278,
+     1.1293,
+     1.1903
+    ],
+    "tris": 351
+   },
+   "Drips": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     0.04,
+     -0.6996,
+     0.075
+    ],
+    "size": [
+     0.46,
+     0.4392,
+     0.4712
+    ],
+    "tris": 102
+   },
+   "SpinCage": {
+    "material": "Basalt",
+    "color": "#3A2A26",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0442,
+     0.0
+    ],
+    "size": [
+     2.36,
+     1.8716,
+     2.0438
+    ],
+    "tris": 812,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 30
+    }
+   },
+   "SpinSeam": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.065,
+     0.0
+    ],
+    "size": [
+     1.81,
+     0.05,
+     1.7825
+    ],
+    "tris": 144,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 30
+    }
+   },
+   "SpinGlow": {
+    "material": "Neon",
+    "color": "#FFB347",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.09,
+     0.0
+    ],
+    "size": [
+     1.8673,
+     0.12,
+     1.6263
+    ],
+    "tris": 120,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 30
+    }
+   }
+  },
+  "particles": [],
+  "tris": 1689,
+  "ok": true,
+  "extent": 2.36
+ },
+ "lava_orb": {
+  "name": "Phoenix Ember",
+  "theme": "Lava",
+  "rarity": "Legendary",
+  "scale": 1.15,
+  "parts": {
+   "Feather": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     0.0857,
+     0.24,
+     -0.0083
+    ],
+    "size": [
+     0.9239,
+     1.92,
+     0.1599
+    ],
+    "tris": 276
+   },
+   "FeatherB": {
+    "material": "Neon",
+    "color": "#FFB347",
+    "tint": true,
+    "center": [
+     0.3044,
+     0.1895,
+     0.0
+    ],
+    "size": [
+     0.6088,
+     1.819,
+     0.06
+    ],
+    "tris": 84
+   },
+   "FeatherTip": {
+    "material": "Neon",
+    "color": "#FFE08A",
+    "tint": true,
+    "center": [
+     0.0518,
+     1.01,
+     0.0
+    ],
+    "size": [
+     0.22,
+     0.3,
+     0.07
+    ],
+    "tris": 8
+   },
+   "FeatherCore": {
+    "material": "Neon",
+    "color": "#FFE08A",
+    "tint": true,
+    "center": [
+     0.0997,
+     0.1337,
+     0.0
+    ],
+    "size": [
+     0.2755,
+     1.6925,
+     0.08
+    ],
+    "tris": 62
+   },
+   "Quill": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     -0.0051,
+     -0.9126,
+     0.0048
+    ],
+    "size": [
+     0.1049,
+     0.3347,
+     0.0905
+    ],
+    "tris": 18
+   },
+   "SpinRing": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     0.003,
+     0.0007,
+     -0.0052
+    ],
+    "size": [
+     2.1124,
+     0.6871,
+     2.066
+    ],
+    "tris": 300,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      0.1392,
+      0.9609,
+      -0.2396
+     ],
+     "speed": 40
+    }
+   },
+   "SpinRingRock": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     0.011,
+     -0.0066,
+     0.0896
+    ],
+    "size": [
+     2.1324,
+     0.6665,
+     1.9501
+    ],
+    "tris": 520,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      0.1392,
+      0.9609,
+      -0.2396
+     ],
+     "speed": 40
+    }
+   },
+   "OrbitSparks": {
+    "material": "Neon",
+    "color": "#FFE08A",
+    "tint": true,
+    "center": [
+     -0.3125,
+     0.0,
+     0.0
+    ],
+    "size": [
+     2.0897,
+     0.8462,
+     2.3692
+    ],
+    "tris": 60,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": -26,
+     "bob": 0.08
+    }
+   }
+  },
+  "particles": [
+   {
+    "part": "FeatherCore",
+    "color": "#FFB347",
+    "rate": 10,
+    "size": 0.22,
+    "speed": 0.9,
+    "tex": "spark",
+    "life": 1.0,
+    "up": true
+   }
+  ],
+  "tris": 1328,
+  "ok": true,
+  "extent": 2.435
+ },
+ "lava_heart": {
+  "name": "Inferno Heart",
+  "theme": "Lava",
+  "rarity": "Mythic",
+  "scale": 1.3,
+  "parts": {
+   "PulseCore": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.0,
+     -0.0744,
+     0.0
+    ],
+    "size": [
+     1.3233,
+     1.3764,
+     0.6329
+    ],
+    "tris": 48,
+    "anim": {
+     "type": "pulse",
+     "amount": 0.07,
+     "rate": 1.3
+    }
+   },
+   "Body": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     0.0034,
+     -0.0825,
+     0.0019
+    ],
+    "size": [
+     1.5415,
+     1.5661,
+     0.841
+    ],
+    "tris": 577
+   },
+   "Flames": {
+    "material": "Neon",
+    "color": "#FFB347",
+    "tint": true,
+    "center": [
+     0.008,
+     0.8369,
+     0.0097
+    ],
+    "size": [
+     0.9068,
+     0.7263,
+     0.1845
+    ],
+    "tris": 240
+   },
+   "Drips": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.01,
+     -0.895,
+     0.0
+    ],
+    "size": [
+     0.32,
+     0.35,
+     0.1212
+    ],
+    "tris": 68
+   },
+   "SpinHalo": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.02,
+     0.05
+    ],
+    "size": [
+     2.4,
+     2.4,
+     0.1
+    ],
+    "tris": 336,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "speed": -20
+    }
+   },
+   "Orbit": {
+    "material": "Basalt",
+    "color": "#1C1412",
+    "tint": false,
+    "center": [
+     -0.0321,
+     -0.2529,
+     0.0415
+    ],
+    "size": [
+     2.4294,
+     0.5156,
+     2.4071
+    ],
+    "tris": 220,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 34,
+     "bob": 0.05
+    }
+   },
+   "OrbitGlow": {
+    "material": "Neon",
+    "color": "#FF5A1F",
+    "tint": true,
+    "center": [
+     -0.0485,
+     -0.2861,
+     0.0431
+    ],
+    "size": [
+     2.3257,
+     0.3769,
+     2.3503
+    ],
+    "tris": 100,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 34,
+     "bob": 0.05
+    }
+   }
+  },
+  "particles": [
+   {
+    "part": "PulseCore",
+    "color": "#FF7A2A",
+    "rate": 14,
+    "size": 0.32,
+    "speed": 1.0,
+    "tex": "spark",
+    "life": 1.2,
+    "aura": true,
+    "up": true
+   }
+  ],
+  "tris": 1589,
+  "ok": true,
+  "extent": 2.447
+ },
+ "frost_pebble": {
+  "name": "Frost Pebble",
+  "theme": "Frost",
+  "rarity": "Common",
+  "scale": 0.6,
+  "parts": {
+   "Body": {
+    "material": "Ice",
+    "color": "#B9D4E6",
+    "tint": false,
+    "center": [
+     -0.0496,
+     0.0236,
+     -0.0214
+    ],
+    "size": [
+     1.6436,
+     1.0288,
+     1.3378
+    ],
+    "tris": 116
+   },
+   "Snow": {
+    "material": "Snow",
+    "color": "#F4FAFF",
+    "tint": false,
+    "center": [
+     0.0253,
+     0.4406,
+     0.0326
+    ],
+    "size": [
+     1.2475,
+     0.3612,
+     0.9992
+    ],
+    "tris": 80
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#7FD8FF",
+    "tint": true,
+    "center": [
+     -0.0857,
+     -0.0325,
+     -0.5352
+    ],
+    "size": [
+     1.2025,
+     0.4536,
+     0.3039
+    ],
+    "tris": 48
+   }
+  },
+  "particles": [],
+  "tris": 244,
+  "ok": true,
+  "extent": 1.644
+ },
+ "frost_shard": {
+  "name": "Icicle Shard",
+  "theme": "Frost",
+  "rarity": "Uncommon",
+  "scale": 0.72,
+  "parts": {
+   "Body": {
+    "material": "Ice",
+    "color": "#B9D4E6",
+    "tint": false,
+    "center": [
+     -0.0465,
+     0.5472,
+     -0.0372
+    ],
+    "size": [
+     1.1763,
+     0.6329,
+     0.9089
+    ],
+    "tris": 112
+   },
+   "Snow": {
+    "material": "Snow",
+    "color": "#F4FAFF",
+    "tint": false,
+    "center": [
+     -0.0003,
+     0.8187,
+     0.0023
+    ],
+    "size": [
+     1.0932,
+     0.3079,
+     0.8152
+    ],
+    "tris": 80
+   },
+   "Icicles": {
+    "material": "Ice",
+    "color": "#7FB6DA",
+    "tint": false,
+    "center": [
+     -0.0059,
+     -0.2664,
+     0.084
+    ],
+    "size": [
+     1.1302,
+     1.4673,
+     0.6052
+    ],
+    "tris": 184
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#E6FBFF",
+    "tint": true,
+    "center": [
+     -0.0117,
+     -0.3535,
+     -0.0178
+    ],
+    "size": [
+     0.1366,
+     1.513,
+     0.1376
+    ],
+    "tris": 38
+   }
+  },
+  "particles": [],
+  "tris": 414,
+  "ok": true,
+  "extent": 2.083
+ },
+ "frost_crystal": {
+  "name": "Glacier Crystal",
+  "theme": "Frost",
+  "rarity": "Rare",
+  "scale": 0.85,
+  "parts": {
+   "Base": {
+    "material": "Snow",
+    "color": "#F4FAFF",
+    "tint": false,
+    "center": [
+     -0.0373,
+     -0.555,
+     0.0192
+    ],
+    "size": [
+     1.4536,
+     0.5089,
+     1.1204
+    ],
+    "tris": 86
+   },
+   "Crystal": {
+    "material": "Ice",
+    "color": "#B9D4E6",
+    "tint": false,
+    "center": [
+     0.0097,
+     0.2658,
+     0.0036
+    ],
+    "size": [
+     1.6855,
+     1.505,
+     0.807
+    ],
+    "tris": 66
+   },
+   "Tips": {
+    "material": "Neon",
+    "color": "#E6FBFF",
+    "tint": true,
+    "center": [
+     0.3389,
+     0.4676,
+     -0.1659
+    ],
+    "size": [
+     1.0378,
+     1.1292,
+     1.0654
+    ],
+    "tris": 66
+   },
+   "TipsA": {
+    "material": "Neon",
+    "color": "#7FD8FF",
+    "tint": true,
+    "center": [
+     -0.4138,
+     0.1835,
+     0.2048
+    ],
+    "size": [
+     0.8486,
+     0.5267,
+     1.1361
+    ],
+    "tris": 44
+   },
+   "CrystalDk": {
+    "material": "Ice",
+    "color": "#7FB6DA",
+    "tint": false,
+    "center": [
+     0.1122,
+     -0.1769,
+     0.0369
+    ],
+    "size": [
+     0.6794,
+     0.6302,
+     1.4635
+    ],
+    "tris": 44
+   }
+  },
+  "particles": [],
+  "tris": 306,
+  "ok": true,
+  "extent": 1.842
+ },
+ "frost_core": {
+  "name": "Frozen Core",
+  "theme": "Frost",
+  "rarity": "Epic",
+  "scale": 1.0,
+  "parts": {
+   "Core": {
+    "material": "Neon",
+    "color": "#E6FBFF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.9338,
+     1.044,
+     0.8881
+    ],
+    "tris": 80
+   },
+   "Shell": {
+    "material": "Ice",
+    "color": "#B9D4E6",
+    "tint": false,
+    "center": [
+     0.0149,
+     -0.0003,
+     0.0014
+    ],
+    "size": [
+     1.0652,
+     1.1839,
+     1.1491
+    ],
+    "tris": 336
+   },
+   "SpinCage": {
+    "material": "Ice",
+    "color": "#7FB6DA",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.8246,
+     1.8246,
+     1.5972
+    ],
+    "tris": 768,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 28
+    }
+   },
+   "SpinGlow": {
+    "material": "Neon",
+    "color": "#7FD8FF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.44,
+     1.87,
+     0.4021
+    ],
+    "tris": 276,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 28
+    }
+   }
+  },
+  "particles": [],
+  "tris": 1460,
+  "ok": true,
+  "extent": 1.87
+ },
+ "frost_orb": {
+  "name": "Aurora Prism",
+  "theme": "Frost",
+  "rarity": "Legendary",
+  "scale": 1.15,
+  "parts": {
+   "Body": {
+    "material": "Ice",
+    "color": "#B9D4E6",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.8717,
+     1.4427,
+     0.7275
+    ],
+    "tris": 116
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#E6FBFF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.4021,
+     1.733,
+     0.2771
+    ],
+    "tris": 24
+   },
+   "SpinRingA": {
+    "material": "Neon",
+    "color": "#6CFFB8",
+    "tint": true,
+    "center": [
+     -0.0337,
+     0.0408,
+     -0.0037
+    ],
+    "size": [
+     1.9933,
+     1.2061,
+     1.7549
+    ],
+    "tris": 288,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.2588,
+      0.8365,
+      -0.483
+     ],
+     "speed": 40
+    }
+   },
+   "SpinRingB": {
+    "material": "Neon",
+    "color": "#B98CFF",
+    "tint": true,
+    "center": [
+     -0.0343,
+     -0.0419,
+     -0.0171
+    ],
+    "size": [
+     2.199,
+     1.597,
+     1.8707
+    ],
+    "tris": 288,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      0.3256,
+      0.7451,
+      0.5821
+     ],
+     "speed": -30
+    }
+   },
+   "Orbit": {
+    "material": "Snow",
+    "color": "#F4FAFF",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     2.6114,
+     0.6736,
+     2.6114
+    ],
+    "tris": 552,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 22,
+     "bob": 0.06
+    }
+   }
+  },
+  "particles": [
+   {
+    "part": "Body",
+    "color": "#BFF4FF",
+    "rate": 6,
+    "size": 0.18,
+    "speed": 0.3,
+    "tex": "glint",
+    "life": 1.6
+   }
+  ],
+  "tris": 1268,
+  "ok": true,
+  "extent": 2.611
+ },
+ "frost_heart": {
+  "name": "Blizzard Heart",
+  "theme": "Frost",
+  "rarity": "Mythic",
+  "scale": 1.3,
+  "parts": {
+   "PulseCore": {
+    "material": "Neon",
+    "color": "#7FD8FF",
+    "tint": true,
+    "center": [
+     -0.0,
+     -0.0744,
+     0.0
+    ],
+    "size": [
+     1.3233,
+     1.3764,
+     0.6329
+    ],
+    "tris": 48,
+    "anim": {
+     "type": "pulse",
+     "amount": 0.07,
+     "rate": 1.0
+    }
+   },
+   "Body": {
+    "material": "Ice",
+    "color": "#B9D4E6",
+    "tint": false,
+    "center": [
+     0.0021,
+     -0.0833,
+     0.0027
+    ],
+    "size": [
+     1.5416,
+     1.5677,
+     0.8388
+    ],
+    "tris": 613
+   },
+   "Crown": {
+    "material": "Ice",
+    "color": "#7FB6DA",
+    "tint": false,
+    "center": [
+     0.0045,
+     0.8101,
+     0.0
+    ],
+    "size": [
+     0.9795,
+     0.7797,
+     0.1732
+    ],
+    "tris": 110
+   },
+   "Snow": {
+    "material": "Snow",
+    "color": "#F4FAFF",
+    "tint": false,
+    "center": [
+     0.3157,
+     0.5974,
+     0.0242
+    ],
+    "size": [
+     0.6683,
+     0.2096,
+     0.5394
+    ],
+    "tris": 86
+   },
+   "SpinHalo": {
+    "material": "Neon",
+    "color": "#E6FBFF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.02,
+     0.05
+    ],
+    "size": [
+     2.1789,
+     2.056,
+     0.1701
+    ],
+    "tris": 336,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "speed": 18
+    }
+   },
+   "Orbit": {
+    "material": "Ice",
+    "color": "#B9D4E6",
+    "tint": false,
+    "center": [
+     -0.1412,
+     -0.3149,
+     -0.004
+    ],
+    "size": [
+     2.3063,
+     0.5389,
+     2.3661
+    ],
+    "tris": 206,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 30,
+     "bob": 0.05
+    }
+   },
+   "OrbitGlow": {
+    "material": "Neon",
+    "color": "#7FD8FF",
+    "tint": true,
+    "center": [
+     -0.1458,
+     -0.2983,
+     -0.0125
+    ],
+    "size": [
+     2.1645,
+     0.4621,
+     2.3118
+    ],
+    "tris": 100,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 30,
+     "bob": 0.05
+    }
+   }
+  },
+  "particles": [
+   {
+    "part": "PulseCore",
+    "color": "#E6FBFF",
+    "rate": 14,
+    "size": 0.25,
+    "speed": 0.6,
+    "tex": "glint",
+    "life": 1.6,
+    "aura": true
+   }
+  ],
+  "tris": 1499,
+  "ok": true,
+  "extent": 2.384
+ },
+ "geode_pebble": {
+  "name": "Quartz Pebble",
+  "theme": "Geode",
+  "rarity": "Common",
+  "scale": 0.6,
+  "parts": {
+   "Body": {
+    "material": "Glass",
+    "color": "#EDE4FA",
+    "tint": false,
+    "center": [
+     -0.0255,
+     -0.0374,
+     0.0013
+    ],
+    "size": [
+     1.6808,
+     1.1451,
+     1.4121
+    ],
+    "tris": 116
+   },
+   "Crystal": {
+    "material": "Glass",
+    "color": "#B06BFF",
+    "tint": false,
+    "center": [
+     0.0361,
+     0.5069,
+     -0.2266
+    ],
+    "size": [
+     0.9464,
+     0.4637,
+     0.2593
+    ],
+    "tris": 44
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#B06BFF",
+    "tint": true,
+    "center": [
+     -0.3643,
+     -0.1906,
+     -0.512
+    ],
+    "size": [
+     0.7277,
+     0.2238,
+     0.2128
+    ],
+    "tris": 24
+   }
+  },
+  "particles": [],
+  "tris": 184,
+  "ok": true,
+  "extent": 1.681
+ },
+ "geode_shard": {
+  "name": "Amethyst Shard",
+  "theme": "Geode",
+  "rarity": "Uncommon",
+  "scale": 0.72,
+  "parts": {
+   "Base": {
+    "material": "Rock",
+    "color": "#5B4A3E",
+    "tint": false,
+    "center": [
+     0.0535,
+     -0.6323,
+     0.0052
+    ],
+    "size": [
+     1.0558,
+     0.4871,
+     0.7415
+    ],
+    "tris": 112
+   },
+   "Crystal": {
+    "material": "Glass",
+    "color": "#B06BFF",
+    "tint": false,
+    "center": [
+     -0.1169,
+     0.2371,
+     -0.0414
+    ],
+    "size": [
+     0.7654,
+     1.6697,
+     0.5511
+    ],
+    "tris": 22
+   },
+   "CrystalDk": {
+    "material": "Glass",
+    "color": "#7A3CC8",
+    "tint": false,
+    "center": [
+     -0.0469,
+     -0.3279,
+     0.0192
+    ],
+    "size": [
+     1.2764,
+     0.5828,
+     0.5702
+    ],
+    "tris": 44
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#E3C4FF",
+    "tint": true,
+    "center": [
+     -0.1177,
+     0.2811,
+     -0.0107
+    ],
+    "size": [
+     0.2955,
+     1.3868,
+     0.126
+    ],
+    "tris": 8
+   },
+   "GlowTip": {
+    "material": "Neon",
+    "color": "#B06BFF",
+    "tint": true,
+    "center": [
+     -0.2028,
+     0.789,
+     -0.0563
+    ],
+    "size": [
+     0.4331,
+     0.5462,
+     0.3816
+    ],
+    "tris": 22
+   }
+  },
+  "particles": [],
+  "tris": 208,
+  "ok": true,
+  "extent": 1.948
+ },
+ "geode_crystal": {
+  "name": "Geode Cluster",
+  "theme": "Geode",
+  "rarity": "Rare",
+  "scale": 0.85,
+  "parts": {
+   "Body": {
+    "material": "Rock",
+    "color": "#5B4A3E",
+    "tint": false,
+    "center": [
+     -0.0307,
+     -0.0427,
+     0.1112
+    ],
+    "size": [
+     1.7825,
+     1.4316,
+     1.4889
+    ],
+    "tris": 88
+   },
+   "Rim": {
+    "material": "Glass",
+    "color": "#EDE4FA",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0803,
+     -0.0892
+    ],
+    "size": [
+     1.8792,
+     1.2672,
+     1.1532
+    ],
+    "tris": 160
+   },
+   "CrystalDk": {
+    "material": "Glass",
+    "color": "#7A3CC8",
+    "tint": false,
+    "center": [
+     0.1687,
+     0.0261,
+     -0.1703
+    ],
+    "size": [
+     0.9959,
+     1.0894,
+     0.9535
+    ],
+    "tris": 132
+   },
+   "Crystal": {
+    "material": "Glass",
+    "color": "#B06BFF",
+    "tint": false,
+    "center": [
+     -0.1263,
+     0.1234,
+     -0.0816
+    ],
+    "size": [
+     1.2638,
+     1.052,
+     0.9473
+    ],
+    "tris": 220
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#B06BFF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.1204,
+     -0.1338
+    ],
+    "size": [
+     0.3435,
+     0.3577,
+     0.3462
+    ],
+    "tris": 20
+   }
+  },
+  "particles": [],
+  "tris": 620,
+  "ok": true,
+  "extent": 1.879
+ },
+ "geode_core": {
+  "name": "Crystal Egg",
+  "theme": "Geode",
+  "rarity": "Epic",
+  "scale": 1.0,
+  "parts": {
+   "SpinShell": {
+    "material": "Rock",
+    "color": "#5B4A3E",
+    "tint": false,
+    "center": [
+     -0.0129,
+     0.0042,
+     0.0095
+    ],
+    "size": [
+     1.3542,
+     1.8986,
+     1.4301
+    ],
+    "tris": 697,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 18
+    }
+   },
+   "Core": {
+    "material": "Neon",
+    "color": "#B06BFF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.644,
+     0.72,
+     0.6125
+    ],
+    "tris": 80
+   },
+   "CrystalDk": {
+    "material": "Glass",
+    "color": "#7A3CC8",
+    "tint": false,
+    "center": [
+     0.0763,
+     -0.0991,
+     0.0099
+    ],
+    "size": [
+     0.8439,
+     0.8835,
+     1.0777
+    ],
+    "tris": 110
+   },
+   "Crystal": {
+    "material": "Glass",
+    "color": "#B06BFF",
+    "tint": false,
+    "center": [
+     -0.0532,
+     0.0837,
+     0.0145
+    ],
+    "size": [
+     0.6676,
+     0.9192,
+     0.8314
+    ],
+    "tris": 110
+   }
+  },
+  "particles": [
+   {
+    "part": "Core",
+    "color": "#E3C4FF",
+    "rate": 5,
+    "size": 0.16,
+    "speed": 0.3,
+    "tex": "glint",
+    "life": 1.2
+   }
+  ],
+  "tris": 997,
+  "ok": true,
+  "extent": 1.899
+ },
+ "geode_orb": {
+  "name": "Prism Geode",
+  "theme": "Geode",
+  "rarity": "Legendary",
+  "scale": 1.15,
+  "parts": {
+   "Body": {
+    "material": "Glass",
+    "color": "#B06BFF",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     1.0733,
+     1.2,
+     1.0208
+    ],
+    "tris": 20
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#E3C4FF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.0,
+     0.0
+    ],
+    "size": [
+     0.6511,
+     0.728,
+     0.6193
+    ],
+    "tris": 20
+   },
+   "Band": {
+    "material": "Rock",
+    "color": "#5B4A3E",
+    "tint": false,
+    "center": [
+     0.0037,
+     0.0007,
+     -0.0096
+    ],
+    "size": [
+     1.2315,
+     0.3689,
+     1.2663
+    ],
+    "tris": 230
+   },
+   "SpinRingA": {
+    "material": "Glass",
+    "color": "#EDE4FA",
+    "tint": false,
+    "center": [
+     -0.0,
+     0.0,
+     -0.0014
+    ],
+    "size": [
+     2.0806,
+     1.2672,
+     1.8359
+    ],
+    "tris": 432,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.2419,
+      0.8229,
+      -0.5142
+     ],
+     "speed": 35
+    }
+   },
+   "SpinRingB": {
+    "material": "Neon",
+    "color": "#B06BFF",
+    "tint": true,
+    "center": [
+     -0.0394,
+     -0.0452,
+     -0.0246
+    ],
+    "size": [
+     2.2515,
+     1.702,
+     1.8975
+    ],
+    "tris": 288,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      0.342,
+      0.7198,
+      0.604
+     ],
+     "speed": -28
+    }
+   },
+   "Orbit": {
+    "material": "Rock",
+    "color": "#3E322A",
+    "tint": false,
+    "center": [
+     -0.2553,
+     -0.1935,
+     0.0426
+    ],
+    "size": [
+     2.2275,
+     0.3932,
+     2.2767
+    ],
+    "tris": 146,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 22,
+     "bob": 0.05
+    }
+   },
+   "OrbitGlow": {
+    "material": "Neon",
+    "color": "#B06BFF",
+    "tint": true,
+    "center": [
+     -0.2546,
+     -0.1886,
+     0.0545
+    ],
+    "size": [
+     2.1212,
+     0.3483,
+     2.2605
+    ],
+    "tris": 60,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 22,
+     "bob": 0.05
+    }
+   }
+  },
+  "particles": [],
+  "tris": 1196,
+  "ok": true,
+  "extent": 2.455
+ },
+ "geode_heart": {
+  "name": "Heart of Amethyst",
+  "theme": "Geode",
+  "rarity": "Mythic",
+  "scale": 1.3,
+  "parts": {
+   "PulseHeart": {
+    "material": "Glass",
+    "color": "#B06BFF",
+    "tint": false,
+    "center": [
+     -0.0,
+     -0.08,
+     0.0
+    ],
+    "size": [
+     1.475,
+     1.48,
+     0.8
+    ],
+    "tris": 140,
+    "anim": {
+     "type": "pulse",
+     "amount": 0.05,
+     "rate": 1.0
+    }
+   },
+   "Glow": {
+    "material": "Neon",
+    "color": "#B06BFF",
+    "tint": true,
+    "center": [
+     -0.0,
+     -0.04,
+     0.0
+    ],
+    "size": [
+     0.7375,
+     0.74,
+     0.4
+    ],
+    "tris": 140
+   },
+   "Husk": {
+    "material": "Rock",
+    "color": "#5B4A3E",
+    "tint": false,
+    "center": [
+     0.0034,
+     -0.0856,
+     0.0202
+    ],
+    "size": [
+     1.7015,
+     1.7312,
+     0.8961
+    ],
+    "tris": 564
+   },
+   "Crown": {
+    "material": "Glass",
+    "color": "#7A3CC8",
+    "tint": false,
+    "center": [
+     0.002,
+     0.715,
+     0.0
+    ],
+    "size": [
+     0.9673,
+     0.6501,
+     0.1559
+    ],
+    "tris": 110
+   },
+   "SpinHalo": {
+    "material": "Neon",
+    "color": "#E3C4FF",
+    "tint": true,
+    "center": [
+     -0.0,
+     0.02,
+     0.05
+    ],
+    "size": [
+     2.2,
+     2.056,
+     0.0866
+    ],
+    "tris": 360,
+    "anim": {
+     "type": "spin",
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "speed": 20
+    }
+   },
+   "Orbit": {
+    "material": "Glass",
+    "color": "#7A3CC8",
+    "tint": false,
+    "center": [
+     -0.113,
+     -0.2786,
+     0.0
+    ],
+    "size": [
+     2.282,
+     0.5908,
+     2.3741
+    ],
+    "tris": 110,
+    "anim": {
+     "type": "orbit",
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "speed": 30,
+     "bob": 0.05
+    }
+   }
+  },
+  "particles": [
+   {
+    "part": "PulseHeart",
+    "color": "#E3C4FF",
+    "rate": 14,
+    "size": 0.25,
+    "speed": 0.6,
+    "tex": "glint",
+    "life": 1.5,
+    "aura": true
+   }
+  ],
+  "tris": 1424,
+  "ok": true,
+  "extent": 2.374
+ }
+}

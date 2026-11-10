@@ -19,7 +19,7 @@ tags: ["lup/nebula", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | swirling purple-pink gas trapped in a faceted glass shell |
 | Kolor / poświata | `#8A5CFF` / `#FF7AE6` |
-| Model | `art/items/nebula/nebula_shard.blend` |
+| Model | `art/items/nebula/items_nebula.blend` (obiekty `nebula_shard_*`), w grze `ServerStorage.Items.nebula_shard` |
 
 ![[nebula_shard.png|220]]
 

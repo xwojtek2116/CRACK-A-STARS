@@ -19,7 +19,7 @@ tags: ["lup/solar", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | liquid gold sun with flare arcs and corona spikes |
 | Kolor / poświata | `#FFD23F` / `#FFF5B8` |
-| Model | `art/items/solar/solar_core.blend` |
+| Model | `art/items/solar/items_solar.blend` (obiekty `solar_core_*`), w grze `ServerStorage.Items.solar_core` |
 
 ![[solar_core.png|220]]
 

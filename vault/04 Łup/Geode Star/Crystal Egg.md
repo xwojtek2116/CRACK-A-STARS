@@ -6,7 +6,7 @@ motyw: "Geode"
 rzadkosc: "Epic"
 szansa: "1/30"
 dochod_s: 102.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/geode", "rarity/epic"]
 ---
 # Crystal Egg
@@ -19,7 +19,7 @@ tags: ["lup/geode", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | rough rock egg split open, amethyst crystal cave inside |
 | Kolor / poświata | `#B06BFF` / `#E3C4FF` |
-| Model | `art/items/geode/geode_core.blend` |
+| Model | `art/items/geode/items_geode.blend` (obiekty `geode_core_*`), w grze `ServerStorage.Items.geode_core` |
 
 ![[geode_core.png|220]]
 

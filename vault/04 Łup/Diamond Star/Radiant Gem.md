@@ -19,7 +19,7 @@ tags: ["lup/diamond", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | giant faceted octahedron gem surrounded by smaller gems |
 | Kolor / poświata | `#BFF6FF` / `#FFFFFF` |
-| Model | `art/items/diamond/diamond_orb.blend` |
+| Model | `art/items/diamond/items_diamond.blend` (obiekty `diamond_orb_*`), w grze `ServerStorage.Items.diamond_orb` |
 
 ![[diamond_orb.png|220]]
 

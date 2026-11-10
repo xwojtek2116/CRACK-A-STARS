@@ -19,7 +19,7 @@ tags: ["lup/diamond", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | giant faceted octahedron gem surrounded by smaller gems |
 | Kolor / poświata | `#BFF6FF` / `#FFFFFF` |
-| Model | `art/items/diamond/diamond_core.blend` |
+| Model | `art/items/diamond/items_diamond.blend` (obiekty `diamond_core_*`), w grze `ServerStorage.Items.diamond_core` |
 
 ![[diamond_core.png|220]]
 

@@ -6,7 +6,7 @@ motyw: "Iron"
 rzadkosc: "Epic"
 szansa: "1/30"
 dochod_s: 60.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/iron", "rarity/epic"]
 ---
 # Magnet Core
@@ -19,7 +19,7 @@ tags: ["lup/iron", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | pitted metallic rock with thumbprint dents, hot orange seams, smoking |
 | Kolor / poświata | `#9A9AA6` / `#FF9A3C` |
-| Model | `art/items/iron/iron_core.blend` |
+| Model | `art/items/iron/items_iron.blend` (obiekty `iron_core_*`), w grze `ServerStorage.Items.iron_core` |
 
 ![[iron_core.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/electric", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | metal core inside a cage of floating rods, lightning arcs |
 | Kolor / poświata | `#FFE14D` / `#9FE8FF` |
-| Model | `art/items/electric/electric_heart.blend` |
+| Model | `art/items/electric/items_electric.blend` (obiekty `electric_heart_*`), w grze `ServerStorage.Items.electric_heart` |
 
 ![[electric_heart.png|220]]
 

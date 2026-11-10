@@ -19,7 +19,7 @@ tags: ["lup/electric", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | metal core inside a cage of floating rods, lightning arcs |
 | Kolor / poświata | `#FFE14D` / `#9FE8FF` |
-| Model | `art/items/electric/electric_shard.blend` |
+| Model | `art/items/electric/items_electric.blend` (obiekty `electric_shard_*`), w grze `ServerStorage.Items.electric_shard` |
 
 ![[electric_shard.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/toxic", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | bubbling slime blob with glowing spore pods and drips |
 | Kolor / poświata | `#7CFF2E` / `#D9FF5C` |
-| Model | `art/items/toxic/toxic_crystal.blend` |
+| Model | `art/items/toxic/items_toxic.blend` (obiekty `toxic_crystal_*`), w grze `ServerStorage.Items.toxic_crystal` |
 
 ![[toxic_crystal.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/nebula", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | swirling purple-pink gas trapped in a faceted glass shell |
 | Kolor / poświata | `#8A5CFF` / `#FF7AE6` |
-| Model | `art/items/nebula/nebula_core.blend` |
+| Model | `art/items/nebula/items_nebula.blend` (obiekty `nebula_core_*`), w grze `ServerStorage.Items.nebula_core` |
 
 ![[nebula_core.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/ringed", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | mini planet with tilted rings of orbiting rock shards |
 | Kolor / poświata | `#FFB36B` / `#FFE2B8` |
-| Model | `art/items/ringed/ringed_pebble.blend` |
+| Model | `art/items/ringed/items_ringed.blend` (obiekty `ringed_pebble_*`), w grze `ServerStorage.Items.ringed_pebble` |
 
 ![[ringed_pebble.png|220]]
 

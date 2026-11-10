@@ -19,7 +19,7 @@ tags: ["lup/void", "rarity/secret"]
 | Kształt | unique cosmic relic |
 | Styl rodzaju | black sphere with violet accretion disk and warped edges |
 | Kolor / poświata | `#14101F` / `#9D4DFF` |
-| Model | `art/items/void/secret_singularity.blend` |
+| Model | `art/items/void/items_void.blend` (obiekty `secret_singularity_*`), w grze `ServerStorage.Items.secret_singularity` |
 
 ![[secret_singularity.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/void", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | black sphere with violet accretion disk and warped edges |
 | Kolor / poświata | `#14101F` / `#9D4DFF` |
-| Model | `art/items/void/void_shard.blend` |
+| Model | `art/items/void/items_void.blend` (obiekty `void_shard_*`), w grze `ServerStorage.Items.void_shard` |
 
 ![[void_shard.png|220]]
 

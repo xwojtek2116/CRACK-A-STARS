@@ -19,7 +19,7 @@ tags: ["lup/comet", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | icy dirty nucleus with long glowing tail ribbon and sparkle trail |
 | Kolor / poświata | `#9EE7FF` / `#FFFFFF` |
-| Model | `art/items/comet/comet_crystal.blend` |
+| Model | `art/items/comet/items_comet.blend` (obiekty `comet_crystal_*`), w grze `ServerStorage.Items.comet_crystal` |
 
 ![[comet_crystal.png|220]]
 

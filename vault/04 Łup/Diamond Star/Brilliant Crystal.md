@@ -19,7 +19,7 @@ tags: ["lup/diamond", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | giant faceted octahedron gem surrounded by smaller gems |
 | Kolor / poświata | `#BFF6FF` / `#FFFFFF` |
-| Model | `art/items/diamond/diamond_crystal.blend` |
+| Model | `art/items/diamond/items_diamond.blend` (obiekty `diamond_crystal_*`), w grze `ServerStorage.Items.diamond_crystal` |
 
 ![[diamond_crystal.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/nebula", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | swirling purple-pink gas trapped in a faceted glass shell |
 | Kolor / poświata | `#8A5CFF` / `#FF7AE6` |
-| Model | `art/items/nebula/nebula_pebble.blend` |
+| Model | `art/items/nebula/items_nebula.blend` (obiekty `nebula_pebble_*`), w grze `ServerStorage.Items.nebula_pebble` |
 
 ![[nebula_pebble.png|220]]
 

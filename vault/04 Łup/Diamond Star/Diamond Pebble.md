@@ -19,7 +19,7 @@ tags: ["lup/diamond", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | giant faceted octahedron gem surrounded by smaller gems |
 | Kolor / poświata | `#BFF6FF` / `#FFFFFF` |
-| Model | `art/items/diamond/diamond_pebble.blend` |
+| Model | `art/items/diamond/items_diamond.blend` (obiekty `diamond_pebble_*`), w grze `ServerStorage.Items.diamond_pebble` |
 
 ![[diamond_pebble.png|220]]
 

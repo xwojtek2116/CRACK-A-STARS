@@ -19,7 +19,7 @@ tags: ["lup/solar", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | liquid gold sun with flare arcs and corona spikes |
 | Kolor / poświata | `#FFD23F` / `#FFF5B8` |
-| Model | `art/items/solar/solar_orb.blend` |
+| Model | `art/items/solar/items_solar.blend` (obiekty `solar_orb_*`), w grze `ServerStorage.Items.solar_orb` |
 
 ![[solar_orb.png|220]]
 

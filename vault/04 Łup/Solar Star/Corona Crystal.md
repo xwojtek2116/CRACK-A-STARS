@@ -19,7 +19,7 @@ tags: ["lup/solar", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | liquid gold sun with flare arcs and corona spikes |
 | Kolor / poświata | `#FFD23F` / `#FFF5B8` |
-| Model | `art/items/solar/solar_crystal.blend` |
+| Model | `art/items/solar/items_solar.blend` (obiekty `solar_crystal_*`), w grze `ServerStorage.Items.solar_crystal` |
 
 ![[solar_crystal.png|220]]
 

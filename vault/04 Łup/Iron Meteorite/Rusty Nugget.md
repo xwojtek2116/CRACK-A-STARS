@@ -6,7 +6,7 @@ motyw: "Iron"
 rzadkosc: "Common"
 szansa: "1/1"
 dochod_s: 1.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/iron", "rarity/common"]
 ---
 # Rusty Nugget
@@ -19,7 +19,7 @@ tags: ["lup/iron", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | pitted metallic rock with thumbprint dents, hot orange seams, smoking |
 | Kolor / poświata | `#9A9AA6` / `#FF9A3C` |
-| Model | `art/items/iron/iron_pebble.blend` |
+| Model | `art/items/iron/items_iron.blend` (obiekty `iron_pebble_*`), w grze `ServerStorage.Items.iron_pebble` |
 
 ![[iron_pebble.png|220]]
 

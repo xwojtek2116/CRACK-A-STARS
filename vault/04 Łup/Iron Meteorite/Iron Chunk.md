@@ -6,7 +6,7 @@ motyw: "Iron"
 rzadkosc: "Uncommon"
 szansa: "1/3"
 dochod_s: 4.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/iron", "rarity/uncommon"]
 ---
 # Iron Chunk
@@ -19,7 +19,7 @@ tags: ["lup/iron", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | pitted metallic rock with thumbprint dents, hot orange seams, smoking |
 | Kolor / poświata | `#9A9AA6` / `#FF9A3C` |
-| Model | `art/items/iron/iron_shard.blend` |
+| Model | `art/items/iron/items_iron.blend` (obiekty `iron_shard_*`), w grze `ServerStorage.Items.iron_shard` |
 
 ![[iron_shard.png|220]]
 

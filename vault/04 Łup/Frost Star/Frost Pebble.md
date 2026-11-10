@@ -6,7 +6,7 @@ motyw: "Frost"
 rzadkosc: "Common"
 szansa: "1/1"
 dochod_s: 1.4
-model: "brak"
+model: "gotowy"
 tags: ["lup/frost", "rarity/common"]
 ---
 # Frost Pebble
@@ -19,7 +19,7 @@ tags: ["lup/frost", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | snowflake of thick glowing ice crystals around a frozen star inside an ice gem, cold mist |
 | Kolor / poświata | `#7FD8FF` / `#E6FBFF` |
-| Model | `art/items/frost/frost_pebble.blend` |
+| Model | `art/items/frost/items_frost.blend` (obiekty `frost_pebble_*`), w grze `ServerStorage.Items.frost_pebble` |
 
 ![[frost_pebble.png|220]]
 

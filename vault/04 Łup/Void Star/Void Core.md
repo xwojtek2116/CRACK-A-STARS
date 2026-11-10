@@ -19,7 +19,7 @@ tags: ["lup/void", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | black sphere with violet accretion disk and warped edges |
 | Kolor / poświata | `#14101F` / `#9D4DFF` |
-| Model | `art/items/void/void_core.blend` |
+| Model | `art/items/void/items_void.blend` (obiekty `void_core_*`), w grze `ServerStorage.Items.void_core` |
 
 ![[void_core.png|220]]
 

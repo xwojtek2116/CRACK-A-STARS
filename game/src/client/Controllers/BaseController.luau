@@ -22,6 +22,7 @@ local Logger = require(Shared.Logger)
 local Remotes = require(Shared.Remotes)
 
 local StateController = require(script.Parent.StateController)
+local ItemFx = require(script.Parent.Parent:WaitForChild("Fx"):WaitForChild("ItemFx"))
 
 local UI = script.Parent.Parent:WaitForChild("UI")
 local Actions = require(UI.Base.Actions)
@@ -36,6 +37,8 @@ type Entry = {
 	model: Model,
 	item: Model?,
 	itemCFrame: CFrame?, -- położenie przedmiotu od serwera (oś obrotu)
+	fx: { ItemFx.Part }, -- części animowane modelu (klatki, pierścienie, orbity, puls serca)
+	ready: boolean, -- dotarły wszystkie części przedmiotu (atrybut PartCount) — dopiero wtedy ruszamy model
 	light: PointLight?,
 	baseBrightness: number,
 	label: BillboardGui?,
@@ -179,13 +182,17 @@ local function refreshItem(entry: Entry)
 		if entry.item ~= item then
 			entry.item = item
 			entry.itemCFrame = item:GetPivot()
-			local light = item:FindFirstChild("Glow", true)
+			entry.fx = {}
+			entry.ready = false
+			local light = item:FindFirstChildWhichIsA("PointLight", true)
 			entry.light = if light and light:IsA("PointLight") then light else nil
 			entry.baseBrightness = if entry.light then entry.light.Brightness else 0
 		end
 	else
 		entry.item = nil
 		entry.itemCFrame = nil
+		entry.fx = {}
+		entry.ready = false
 		entry.light = nil
 	end
 end
@@ -219,6 +226,8 @@ local function track(model: Instance)
 		model = model,
 		item = nil,
 		itemCFrame = nil,
+		fx = {},
+		ready = false,
 		light = nil,
 		baseBrightness = 0,
 		label = nil,
@@ -283,14 +292,32 @@ local function animate()
 		if (base.Position - eye).Magnitude > maxDistance then
 			continue
 		end
+		if not entry.ready then
+			-- Model jeszcze w pozycji z serwera: czekamy na wszystkie części, potem zbieramy części animowane.
+			local expected = item:GetAttribute("PartCount")
+			local count = 0
+			for _, part in item:GetDescendants() do
+				if part:IsA("BasePart") then
+					count += 1
+				end
+			end
+			if type(expected) == "number" and count < expected then
+				continue
+			end
+			entry.fx = ItemFx.collect(item)
+			entry.ready = true
+			local light = item:FindFirstChildWhichIsA("PointLight", true)
+			entry.light = if light and light:IsA("PointLight") then light else nil
+			entry.baseBrightness = if entry.light then entry.light.Brightness else 0
+		end
 		local wave = math.sin(t * bobOmega + entry.phase)
-		item:PivotTo(
-			CFrame.new(base.Position + Vector3.new(0, wave * BaseConfig.BOB_STUDS, 0))
-				* CFrame.Angles(0, spin + entry.phase, 0)
-				* base.Rotation
-		)
+		local pivot = CFrame.new(base.Position + Vector3.new(0, wave * BaseConfig.BOB_STUDS, 0))
+			* CFrame.Angles(0, spin + entry.phase, 0)
+			* base.Rotation
+		item:PivotTo(pivot)
+		local beat = if #entry.fx > 0 then ItemFx.apply(entry.fx, pivot, t + entry.phase) else 0
 		if entry.light then
-			entry.light.Brightness = entry.baseBrightness * (0.75 + 0.35 * (wave + 1) / 2)
+			entry.light.Brightness = entry.baseBrightness * (0.75 + 0.35 * (wave + 1) / 2 + 0.6 * beat)
 		end
 	end
 end

@@ -19,7 +19,7 @@ tags: ["lup/solar", "rarity/uncommon"]
 | Kształt | shard |
 | Styl rodzaju | liquid gold sun with flare arcs and corona spikes |
 | Kolor / poświata | `#FFD23F` / `#FFF5B8` |
-| Model | `art/items/solar/solar_shard.blend` |
+| Model | `art/items/solar/items_solar.blend` (obiekty `solar_shard_*`), w grze `ServerStorage.Items.solar_shard` |
 
 ![[solar_shard.png|220]]
 

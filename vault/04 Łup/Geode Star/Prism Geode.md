@@ -6,7 +6,7 @@ motyw: "Geode"
 rzadkosc: "Legendary"
 szansa: "1/100"
 dochod_s: 510.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/geode", "rarity/legendary"]
 ---
 # Prism Geode
@@ -19,7 +19,7 @@ tags: ["lup/geode", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | rough rock egg split open, amethyst crystal cave inside |
 | Kolor / poświata | `#B06BFF` / `#E3C4FF` |
-| Model | `art/items/geode/geode_orb.blend` |
+| Model | `art/items/geode/items_geode.blend` (obiekty `geode_orb_*`), w grze `ServerStorage.Items.geode_orb` |
 
 ![[geode_orb.png|220]]
 

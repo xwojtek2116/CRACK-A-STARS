@@ -19,7 +19,7 @@ tags: ["lup/toxic", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | bubbling slime blob with glowing spore pods and drips |
 | Kolor / poświata | `#7CFF2E` / `#D9FF5C` |
-| Model | `art/items/toxic/toxic_heart.blend` |
+| Model | `art/items/toxic/items_toxic.blend` (obiekty `toxic_heart_*`), w grze `ServerStorage.Items.toxic_heart` |
 
 ![[toxic_heart.png|220]]
 

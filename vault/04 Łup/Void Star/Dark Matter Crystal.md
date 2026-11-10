@@ -19,7 +19,7 @@ tags: ["lup/void", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | black sphere with violet accretion disk and warped edges |
 | Kolor / poświata | `#14101F` / `#9D4DFF` |
-| Model | `art/items/void/void_crystal.blend` |
+| Model | `art/items/void/items_void.blend` (obiekty `void_crystal_*`), w grze `ServerStorage.Items.void_crystal` |
 
 ![[void_crystal.png|220]]
 

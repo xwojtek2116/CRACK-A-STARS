@@ -163,29 +163,47 @@ local function itemModel(itemId: string, mutation: string): Model
 		then BaseConfig.GOLDEN_COLOR
 		elseif item then StarConfig.glow(item.theme)
 		else Color3.new(1, 1, 1)
+	-- Modele T21+ mają kolory zapieczone; Tint tylko na placeholderze. Golden: złota skorupa, emisja (Neon) zostaje.
 	for _, part in model:GetDescendants() do
 		if part:IsA("BasePart") and (part:GetAttribute("Tint") or (isPlaceholder and part.Name == "Crystal")) then
 			part.Color = tint
-		elseif part:IsA("BasePart") and mutation == "Golden" and not isPlaceholder then
-			part.Color = part.Color:Lerp(BaseConfig.GOLDEN_COLOR, 0.65)
+		elseif
+			part:IsA("BasePart")
+			and mutation == "Golden"
+			and not isPlaceholder
+			and part.Material ~= Enum.Material.Neon
+		then
+			part.Color = part.Color:Lerp(BaseConfig.GOLDEN_COLOR, BaseConfig.GOLDEN_BLEND)
+			part.Material = Enum.Material.Metal
 		end
 	end
 	setPartDefaults(model, false)
+	-- Klient animuje przedmiot dopiero, gdy dotrą wszystkie części (inaczej spóźnione części zostałyby w miejscu).
+	local partCount = 0
+	for _, part in model:GetDescendants() do
+		if part:IsA("BasePart") then
+			partCount += 1
+		end
+	end
+	model:SetAttribute("PartCount", partCount)
 
+	-- Rozmiar rośnie z rzadkością (decyzja T21): największa krawędź = ITEM_MAX_SIZE × skala rzadkości.
+	local rarity = BaseMath.rarity(itemId)
 	local extents = model:GetExtentsSize()
 	local largest = math.max(extents.X, extents.Y, extents.Z)
 	if largest > 0 then
-		model:ScaleTo(model:GetScale() * BaseConfig.ITEM_MAX_SIZE / largest)
+		local size = BaseConfig.ITEM_MAX_SIZE * (BaseConfig.ITEM_RARITY_SCALE[rarity] or 1)
+		model:ScaleTo(model:GetScale() * size / largest)
 	end
 
 	local primary = model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart", true)
 	if primary then
-		local rarity = BaseMath.rarity(itemId)
+		local boost = BaseConfig.GLOW_RARITY_BOOST[rarity] or 1
 		local light = Instance.new("PointLight")
 		light.Name = "Glow"
 		light.Color = LootConfig.rarityColor(rarity)
-		light.Range = BaseConfig.GLOW_RANGE
-		light.Brightness = BaseConfig.GLOW_BRIGHTNESS
+		light.Range = BaseConfig.GLOW_RANGE * math.sqrt(boost)
+		light.Brightness = BaseConfig.GLOW_BRIGHTNESS * boost
 		light.Shadows = false
 		light.Parent = primary
 		if mutation == "Shiny" then

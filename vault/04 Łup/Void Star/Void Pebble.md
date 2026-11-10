@@ -19,7 +19,7 @@ tags: ["lup/void", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | black sphere with violet accretion disk and warped edges |
 | Kolor / poświata | `#14101F` / `#9D4DFF` |
-| Model | `art/items/void/void_pebble.blend` |
+| Model | `art/items/void/items_void.blend` (obiekty `void_pebble_*`), w grze `ServerStorage.Items.void_pebble` |
 
 ![[void_pebble.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/comet", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | icy dirty nucleus with long glowing tail ribbon and sparkle trail |
 | Kolor / poświata | `#9EE7FF` / `#FFFFFF` |
-| Model | `art/items/comet/comet_heart.blend` |
+| Model | `art/items/comet/items_comet.blend` (obiekty `comet_heart_*`), w grze `ServerStorage.Items.comet_heart` |
 
 ![[comet_heart.png|220]]
 

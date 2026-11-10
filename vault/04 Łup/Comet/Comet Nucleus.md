@@ -19,7 +19,7 @@ tags: ["lup/comet", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | icy dirty nucleus with long glowing tail ribbon and sparkle trail |
 | Kolor / poświata | `#9EE7FF` / `#FFFFFF` |
-| Model | `art/items/comet/comet_core.blend` |
+| Model | `art/items/comet/items_comet.blend` (obiekty `comet_core_*`), w grze `ServerStorage.Items.comet_core` |
 
 ![[comet_core.png|220]]
 

@@ -19,7 +19,7 @@ tags: ["lup/void", "rarity/legendary"]
 | Kształt | floating orb with rings |
 | Styl rodzaju | black sphere with violet accretion disk and warped edges |
 | Kolor / poświata | `#14101F` / `#9D4DFF` |
-| Model | `art/items/void/void_orb.blend` |
+| Model | `art/items/void/items_void.blend` (obiekty `void_orb_*`), w grze `ServerStorage.Items.void_orb` |
 
 ![[void_orb.png|220]]
 

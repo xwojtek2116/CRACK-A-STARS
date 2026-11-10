@@ -6,7 +6,7 @@ motyw: "Lava"
 rzadkosc: "Rare"
 szansa: "1/10"
 dochod_s: 18.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/lava", "rarity/rare"]
 ---
 # Cinder Crystal
@@ -19,7 +19,7 @@ tags: ["lup/lava", "rarity/rare"]
 | Kształt | crystal cluster |
 | Styl rodzaju | black basalt plates floating on magma, glowing veins, dripping lava blobs |
 | Kolor / poświata | `#FF5A1F` / `#FFB347` |
-| Model | `art/items/lava/lava_crystal.blend` |
+| Model | `art/items/lava/items_lava.blend` (obiekty `lava_crystal_*`), w grze `ServerStorage.Items.lava_crystal` |
 
 ![[lava_crystal.png|220]]
 

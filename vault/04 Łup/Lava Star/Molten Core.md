@@ -6,7 +6,7 @@ motyw: "Lava"
 rzadkosc: "Epic"
 szansa: "1/30"
 dochod_s: 72.0
-model: "brak"
+model: "gotowy"
 tags: ["lup/lava", "rarity/epic"]
 ---
 # Molten Core
@@ -19,7 +19,7 @@ tags: ["lup/lava", "rarity/epic"]
 | Kształt | glowing core in cage |
 | Styl rodzaju | black basalt plates floating on magma, glowing veins, dripping lava blobs |
 | Kolor / poświata | `#FF5A1F` / `#FFB347` |
-| Model | `art/items/lava/lava_core.blend` |
+| Model | `art/items/lava/items_lava.blend` (obiekty `lava_core_*`), w grze `ServerStorage.Items.lava_core` |
 
 ![[lava_core.png|220]]
 

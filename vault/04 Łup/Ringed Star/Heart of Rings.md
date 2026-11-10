@@ -19,7 +19,7 @@ tags: ["lup/ringed", "rarity/mythic"]
 | Kształt | heart relic with orbiting fragments |
 | Styl rodzaju | mini planet with tilted rings of orbiting rock shards |
 | Kolor / poświata | `#FFB36B` / `#FFE2B8` |
-| Model | `art/items/ringed/ringed_heart.blend` |
+| Model | `art/items/ringed/items_ringed.blend` (obiekty `ringed_heart_*`), w grze `ServerStorage.Items.ringed_heart` |
 
 ![[ringed_heart.png|220]]
 

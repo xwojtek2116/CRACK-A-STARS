@@ -84,6 +84,36 @@ Theme.TOOL_RENDERS = {
 	galaxy_hammer = "rbxassetid://70530177242384",
 } :: { [string]: string }
 
+-- Rendery przedmiotów łupu na kartę łupu (T21: art/items/build_item.py --icons → art/ui/items/<id>.png,
+-- 512 px, przezroczyste, światło konturowe w kolorze rzadkości). Brak ID = klejnot zastępczy w Reveal.
+-- T22/T23 dopisują kolejne rodzaje.
+Theme.ITEM_RENDERS = {
+	iron_pebble = "rbxassetid://72717650829278",
+	iron_shard = "rbxassetid://91163289524530",
+	iron_crystal = "rbxassetid://133318419730469",
+	iron_core = "rbxassetid://91738479999558",
+	iron_orb = "rbxassetid://123880071743511",
+	iron_heart = "rbxassetid://91576401916615",
+	lava_pebble = "rbxassetid://97798385535913",
+	lava_shard = "rbxassetid://115998145645460",
+	lava_crystal = "rbxassetid://105471181490269",
+	lava_core = "rbxassetid://96575775004845",
+	lava_orb = "rbxassetid://73871591278476",
+	lava_heart = "rbxassetid://121084895106807",
+	frost_pebble = "rbxassetid://78700962162660",
+	frost_shard = "rbxassetid://136881490705728",
+	frost_crystal = "rbxassetid://136146762332070",
+	frost_core = "rbxassetid://85521463690150",
+	frost_orb = "rbxassetid://121124485403178",
+	frost_heart = "rbxassetid://130650863319199",
+	geode_pebble = "rbxassetid://83385737818145",
+	geode_shard = "rbxassetid://90813409503065",
+	geode_crystal = "rbxassetid://92461524459652",
+	geode_core = "rbxassetid://127009937021830",
+	geode_orb = "rbxassetid://125111263456670",
+	geode_heart = "rbxassetid://114041580359197",
+} :: { [string]: string }
+
 -- Tekstury efektów UI (te same co VFX gwiazd, T38): mgławica (bezszwowa), flara, błysk-gwiazdka, iskra.
 Theme.FX = {
 	nebula = VfxIds.NEBULA,

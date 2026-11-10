@@ -19,7 +19,7 @@ tags: ["lup/solar", "rarity/common"]
 | Kształt | pebble |
 | Styl rodzaju | liquid gold sun with flare arcs and corona spikes |
 | Kolor / poświata | `#FFD23F` / `#FFF5B8` |
-| Model | `art/items/solar/solar_pebble.blend` |
+| Model | `art/items/solar/items_solar.blend` (obiekty `solar_pebble_*`), w grze `ServerStorage.Items.solar_pebble` |
 
 ![[solar_pebble.png|220]]
 
